@@ -1,96 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* EchoLight Design System - Peaceful, intimate, softly illuminated */
+    
+    /* Core Colors */
+    --background: 40 33% 97%; /* Ivory haze #FAF9F6 */
+    --foreground: 273 20% 25%;
+    
+    --card: 40 33% 98%;
+    --card-foreground: 273 20% 25%;
+    
+    --popover: 40 33% 98%;
+    --popover-foreground: 273 20% 25%;
+    
+    /* Lavender Dusk - Primary */
+    --primary: 273 30% 65%; /* #A98BBF */
+    --primary-foreground: 40 33% 98%;
+    
+    /* Soft Gold - Accent */
+    --accent: 35 89% 81%; /* #FAD6A5 */
+    --accent-foreground: 273 20% 25%;
+    
+    --secondary: 273 15% 92%;
+    --secondary-foreground: 273 20% 35%;
+    
+    --muted: 273 10% 94%;
+    --muted-foreground: 273 15% 50%;
+    
+    /* Success - Muted Green (Life-affirming) */
+    --success: 122 38% 64%; /* #81C784 */
+    --success-foreground: 40 33% 98%;
+    
+    /* Danger - Gentle Red */
+    --destructive: 0 44% 68%; /* #D18888 */
+    --destructive-foreground: 40 33% 98%;
+    
+    --border: 273 20% 88%;
+    --input: 273 20% 88%;
+    --ring: 273 30% 65%;
+    
+    --radius: 0.75rem;
+    
+    /* Sidebar */
+    --sidebar-background: 40 33% 98%;
+    --sidebar-foreground: 273 20% 30%;
+    --sidebar-primary: 273 30% 65%;
+    --sidebar-primary-foreground: 40 33% 98%;
+    --sidebar-accent: 35 89% 91%;
+    --sidebar-accent-foreground: 273 20% 25%;
+    --sidebar-border: 273 15% 90%;
+    --sidebar-ring: 273 30% 65%;
+    
+    /* Custom EchoLight tokens */
+    --lavender: 273 30% 65%;
+    --gold: 35 89% 81%;
+    --ivory: 40 33% 97%;
+    --gentle-green: 122 38% 64%;
+    --gentle-red: 0 44% 68%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 273 25% 10%;
+    --foreground: 40 33% 95%;
+    
+    --card: 273 25% 12%;
+    --card-foreground: 40 33% 95%;
+    
+    --popover: 273 25% 12%;
+    --popover-foreground: 40 33% 95%;
+    
+    --primary: 273 35% 70%;
+    --primary-foreground: 273 25% 10%;
+    
+    --accent: 35 80% 75%;
+    --accent-foreground: 273 25% 10%;
+    
+    --secondary: 273 20% 18%;
+    --secondary-foreground: 40 33% 90%;
+    
+    --muted: 273 20% 18%;
+    --muted-foreground: 273 15% 60%;
+    
+    --success: 122 38% 55%;
+    --success-foreground: 273 25% 10%;
+    
+    --destructive: 0 44% 60%;
+    --destructive-foreground: 40 33% 95%;
+    
+    --border: 273 20% 20%;
+    --input: 273 20% 20%;
+    --ring: 273 35% 70%;
+    
+    --sidebar-background: 273 25% 8%;
+    --sidebar-foreground: 40 33% 90%;
+    --sidebar-primary: 273 35% 70%;
+    --sidebar-primary-foreground: 273 25% 10%;
+    --sidebar-accent: 273 20% 15%;
+    --sidebar-accent-foreground: 40 33% 90%;
+    --sidebar-border: 273 20% 15%;
+    --sidebar-ring: 273 35% 70%;
+    
+    --lavender: 273 35% 70%;
+    --gold: 35 80% 75%;
+    --ivory: 273 25% 10%;
+    --gentle-green: 122 38% 55%;
+    --gentle-red: 0 44% 60%;
   }
 }
 
@@ -98,8 +117,98 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  h1, h2, h3 {
+    font-family: 'DM Serif Display', serif;
+  }
+}
+
+@layer components {
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+  
+  .glow-soft {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.15);
+  }
+  
+  .glow-gold {
+    box-shadow: 0 0 30px hsl(var(--gold) / 0.25);
+  }
+}
+
+@layer utilities {
+  /* Fade animations */
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes pulse-soft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+  
+  .animate-pulse-soft {
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
   }
 }
