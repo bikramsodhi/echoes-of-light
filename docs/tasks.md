@@ -20,10 +20,10 @@
 - [x] Configure shadcn/ui component library
 - [x] Set up design system (colors, typography, spacing)
 - [x] Create landing page with hero, features, CTA
-- [ ] Connect to Lovable Cloud (Supabase backend)
+- [x] Connect to Lovable Cloud (Supabase backend)
 
-### 1.2 Database Schema
-> Enable Lovable Cloud first, then run migrations
+### 1.2 Database Schema ✅
+> All tables created with RLS policies
 
 **1.2.1 Create profiles table**
 ```sql
