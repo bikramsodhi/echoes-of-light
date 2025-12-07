@@ -21,10 +21,10 @@ const CTA = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="warm" size="xl" asChild>
-                <Link to="/get-started">Create Your Legacy</Link>
+                <Link to="/auth">Create Your Legacy</Link>
               </Button>
               <Button variant="gentle" size="xl" asChild>
-                <Link to="/contact">Talk to Us</Link>
+                <Link to="/auth">Learn More</Link>
               </Button>
             </div>
             
