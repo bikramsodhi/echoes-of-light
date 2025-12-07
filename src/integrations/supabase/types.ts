@@ -14,16 +14,287 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      message_recipients: {
+        Row: {
+          id: string
+          message_id: string
+          recipient_id: string
+          viewed_at: string | null
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          recipient_id: string
+          viewed_at?: string | null
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          recipient_id?: string
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_recipients_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_recipients_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "recipients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          delivery_date: string | null
+          delivery_event: string | null
+          delivery_trigger:
+            | Database["public"]["Enums"]["delivery_trigger"]
+            | null
+          id: string
+          media_urls: string[] | null
+          message_type: Database["public"]["Enums"]["message_type"] | null
+          sent_at: string | null
+          status: Database["public"]["Enums"]["message_status"] | null
+          title: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          delivery_date?: string | null
+          delivery_event?: string | null
+          delivery_trigger?:
+            | Database["public"]["Enums"]["delivery_trigger"]
+            | null
+          id?: string
+          media_urls?: string[] | null
+          message_type?: Database["public"]["Enums"]["message_type"] | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["message_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          delivery_date?: string | null
+          delivery_event?: string | null
+          delivery_trigger?:
+            | Database["public"]["Enums"]["delivery_trigger"]
+            | null
+          id?: string
+          media_urls?: string[] | null
+          message_type?: Database["public"]["Enums"]["message_type"] | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["message_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      recipients: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          relationship: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          relationship?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          relationship?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trusted_contacts: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          invite_sent_at: string | null
+          invite_token: string | null
+          name: string
+          phone: string | null
+          status: Database["public"]["Enums"]["contact_status"] | null
+          updated_at: string | null
+          user_id: string
+          verification_status:
+            | Database["public"]["Enums"]["verification_status"]
+            | null
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          invite_sent_at?: string | null
+          invite_token?: string | null
+          name: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["contact_status"] | null
+          updated_at?: string | null
+          user_id: string
+          verification_status?:
+            | Database["public"]["Enums"]["verification_status"]
+            | null
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          invite_sent_at?: string | null
+          invite_token?: string | null
+          name?: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["contact_status"] | null
+          updated_at?: string | null
+          user_id?: string
+          verification_status?:
+            | Database["public"]["Enums"]["verification_status"]
+            | null
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          created_at: string | null
+          enable_encryption: boolean | null
+          id: string
+          inactivity_check_days: number | null
+          last_wishes_content: string | null
+          last_wishes_enabled: boolean | null
+          min_verifications_required: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          enable_encryption?: boolean | null
+          id?: string
+          inactivity_check_days?: number | null
+          last_wishes_content?: string | null
+          last_wishes_enabled?: boolean | null
+          min_verifications_required?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          enable_encryption?: boolean | null
+          id?: string
+          inactivity_check_days?: number | null
+          last_wishes_content?: string | null
+          last_wishes_enabled?: boolean | null
+          min_verifications_required?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      contact_status: "pending" | "accepted" | "declined"
+      delivery_trigger: "manual" | "scheduled" | "posthumous"
+      message_status: "draft" | "scheduled" | "sent"
+      message_type: "text" | "audio" | "video" | "photo" | "document"
+      verification_status: "unverified" | "verified" | "disputed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +421,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      contact_status: ["pending", "accepted", "declined"],
+      delivery_trigger: ["manual", "scheduled", "posthumous"],
+      message_status: ["draft", "scheduled", "sent"],
+      message_type: ["text", "audio", "video", "photo", "document"],
+      verification_status: ["unverified", "verified", "disputed"],
+    },
   },
 } as const
