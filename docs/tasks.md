@@ -248,20 +248,20 @@ CREATE POLICY "Users can CRUD own settings"
 
 ---
 
-### 1.3 Authentication System
-- [ ] Create `/auth` page with login/signup tabs
-- [ ] Implement email/password authentication
-- [ ] Add Google OAuth provider
-- [ ] Create auth context/hook for session management
-- [ ] Add protected route wrapper component
-- [ ] Implement logout functionality
+### 1.3 Authentication System ✅
+- [x] Create `/auth` page with login/signup tabs
+- [x] Implement email/password authentication
+- [x] Add Google OAuth provider (UI ready, needs Google Cloud config)
+- [x] Create auth context/hook for session management
+- [x] Add protected route wrapper component
+- [x] Implement logout functionality
 - [ ] Add password reset flow
 
-**Files to create:**
+**Files created:**
 - `src/pages/Auth.tsx` — Login/signup page
 - `src/contexts/AuthContext.tsx` — Auth state management
 - `src/components/ProtectedRoute.tsx` — Route guard
-- `src/hooks/useAuth.ts` — Auth hook
+- `src/pages/Dashboard.tsx` — Protected dashboard
 
 **Reference design-guidelines.md for:**
 - Calm, gentle copy: "Welcome back — your space of memory awaits"
