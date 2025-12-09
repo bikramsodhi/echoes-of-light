@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,9 +30,24 @@ export default function Auth() {
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard';
 
   useEffect(() => {
-    if (user) {
-      navigate(from, { replace: true });
-    }
+    if (!user) return;
+
+    // Check onboarding status and redirect accordingly
+    const checkOnboardingAndRedirect = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('onboarding_completed')
+        .eq('id', user.id)
+        .single();
+
+      if (data?.onboarding_completed === false || data?.onboarding_completed === null) {
+        navigate('/onboarding', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
+    };
+
+    checkOnboardingAndRedirect();
   }, [user, navigate, from]);
 
   const validateForm = () => {

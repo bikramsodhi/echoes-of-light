@@ -4,18 +4,28 @@ import MessageSummary from '@/components/dashboard/MessageSummary';
 import EmotionalNudge from '@/components/dashboard/EmotionalNudge';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentActivity from '@/components/dashboard/RecentActivity';
+import OnboardingPrompt from '@/components/dashboard/OnboardingPrompt';
 import { useDashboardData } from '@/hooks/useDashboardData';
+import { useOnboardingStatus } from '@/hooks/useOnboardingStatus';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { messageCounts, recipientCount, activities, isLoading } = useDashboardData();
+  const { isComplete: onboardingComplete, isLoading: onboardingLoading } = useOnboardingStatus();
 
   const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 'there';
 
   return (
     <AppLayout title="Dashboard">
       <div className="max-w-6xl mx-auto space-y-8">
+        {/* Onboarding Prompt - shown if not complete */}
+        {!onboardingLoading && onboardingComplete === false && (
+          <div className="animate-fade-in">
+            <OnboardingPrompt />
+          </div>
+        )}
+
         {/* Welcome Section */}
         <div className="animate-fade-in">
           <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-2">
