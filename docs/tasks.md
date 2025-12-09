@@ -255,10 +255,11 @@ CREATE POLICY "Users can CRUD own settings"
 - [x] Create auth context/hook for session management
 - [x] Add protected route wrapper component
 - [x] Implement logout functionality
-- [ ] Add password reset flow
+- [x] Add password reset flow
 
 **Files created:**
 - `src/pages/Auth.tsx` — Login/signup page
+- `src/pages/ResetPassword.tsx` — Password reset flow
 - `src/contexts/AuthContext.tsx` — Auth state management
 - `src/components/ProtectedRoute.tsx` — Route guard
 - `src/pages/Dashboard.tsx` — Protected dashboard
@@ -270,12 +271,12 @@ CREATE POLICY "Users can CRUD own settings"
 
 ---
 
-### 1.4 Onboarding Experience
-- [ ] Create welcome screen with emotional framing
-- [ ] Design step-by-step onboarding flow (3-4 steps)
-- [ ] Add example message templates for inspiration
-- [ ] Implement "skip to dashboard" option
-- [ ] Store onboarding completion status
+### 1.4 Onboarding Experience ✅
+- [x] Create welcome screen with emotional framing
+- [x] Design step-by-step onboarding flow (3-4 steps)
+- [x] Add example message templates for inspiration
+- [x] Implement "skip to dashboard" option
+- [x] Store onboarding completion status
 
 **Onboarding steps:**
 1. **Welcome** — "This is your space to leave light behind"
@@ -283,7 +284,7 @@ CREATE POLICY "Users can CRUD own settings"
 3. **Inspiration** — Show example messages ("A letter to your daughter on her wedding day")
 4. **Get Started** — Create first recipient or skip to dashboard
 
-**Files to create:**
+**Files created:**
 - `src/pages/Onboarding.tsx` — Onboarding container
 - `src/components/onboarding/WelcomeStep.tsx`
 - `src/components/onboarding/PurposeStep.tsx`
@@ -292,20 +293,22 @@ CREATE POLICY "Users can CRUD own settings"
 
 ---
 
-### 1.5 Dashboard (Home)
-- [ ] Create main dashboard layout with sidebar navigation
-- [ ] Display message summary (drafts, scheduled, sent counts)
-- [ ] Add emotional nudge prompt ("One memory you want to leave today?")
-- [ ] Show recent activity feed
-- [ ] Add quick action buttons (Create Message, Add Recipient)
+### 1.5 Dashboard (Home) ✅
+- [x] Create main dashboard layout with sidebar navigation
+- [x] Display message summary (drafts, scheduled, sent counts)
+- [x] Add emotional nudge prompt ("One memory you want to leave today?")
+- [x] Show recent activity feed
+- [x] Add quick action buttons (Create Message, Add Recipient)
 
-**Files to create:**
+**Files created:**
 - `src/pages/Dashboard.tsx` — Main dashboard
 - `src/components/layout/AppSidebar.tsx` — Navigation sidebar
 - `src/components/layout/AppLayout.tsx` — Authenticated layout wrapper
 - `src/components/dashboard/MessageSummary.tsx`
 - `src/components/dashboard/EmotionalNudge.tsx`
 - `src/components/dashboard/QuickActions.tsx`
+- `src/components/dashboard/RecentActivity.tsx`
+- `src/hooks/useDashboardData.ts`
 
 ---
 

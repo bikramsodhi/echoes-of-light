@@ -175,6 +175,15 @@ export default function Auth() {
                     )}
                   </div>
                   
+                  <div className="flex items-center justify-between">
+                    <a 
+                      href="/reset-password" 
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Forgot password?
+                    </a>
+                  </div>
+
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
                       <>
