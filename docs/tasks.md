@@ -312,46 +312,36 @@ CREATE POLICY "Users can CRUD own settings"
 
 ---
 
-### 1.6 Recipient Management
-- [ ] Create recipients list page with grid/list view
-- [ ] Build add/edit recipient form (name, relationship, contact methods)
+### 1.6 Recipient Management ✅
+- [x] Create recipients list page with grid/list view
+- [x] Build add/edit recipient form (name, relationship, contact methods)
 - [ ] Add recipient avatar upload
-- [ ] Implement delete confirmation with gentle messaging
-- [ ] Add search/filter functionality
+- [x] Implement delete confirmation with gentle messaging
+- [x] Add search/filter functionality
 
-**Files to create:**
+**Files created:**
 - `src/pages/Recipients.tsx` — Recipients list
 - `src/components/recipients/RecipientCard.tsx`
-- `src/components/recipients/RecipientForm.tsx`
 - `src/components/recipients/RecipientDialog.tsx`
-
-**UI Notes from design-guidelines.md:**
-- Cards with soft shadows, rounded edges
-- Relationship shown as subtle badge
-- Empty state: "No recipients yet. Who would you like to leave a message for?"
 
 ---
 
-### 1.7 Message Vault (Text Only for MVP)
-- [ ] Create vault page with folder-per-recipient structure
-- [ ] Build message list with status badges (draft/scheduled/sent)
-- [ ] Create message composer with rich text support
-- [ ] Implement auto-save drafts
-- [ ] Add recipient assignment to messages
-- [ ] Build message preview mode
+### 1.7 Message Vault (Text Only for MVP) ✅
+- [x] Create vault page with folder-per-recipient structure
+- [x] Build message list with status badges (draft/scheduled/sent)
+- [x] Create message composer with rich text support
+- [x] Implement auto-save drafts
+- [x] Add recipient assignment to messages
+- [x] Build message preview mode
 
-**Files to create:**
+**Files created:**
 - `src/pages/Vault.tsx` — Message vault
 - `src/components/vault/RecipientFolder.tsx`
 - `src/components/vault/MessageList.tsx`
 - `src/components/vault/MessageCard.tsx`
 - `src/pages/MessageComposer.tsx` — Create/edit message
 - `src/components/vault/MessagePreview.tsx`
-
-**Status styling:**
-- Draft: Muted/gray badge
-- Scheduled: Soft gold (#FAD6A5) badge
-- Sent: Muted green (#81C784) with subtle glow animation
+- `src/hooks/useDebouncedCallback.ts`
 
 ---
 
