@@ -44,7 +44,7 @@ export default function Onboarding() {
     // Update profile to mark onboarding as complete
     await supabase
       .from('profiles')
-      .update({ onboarding_completed: true })
+      .update({ onboarding_completed: true } as any)
       .eq('id', user.id);
   };
 
