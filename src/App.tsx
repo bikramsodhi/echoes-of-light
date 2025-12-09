@@ -10,6 +10,9 @@ import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
+import Recipients from "./pages/Recipients";
+import Vault from "./pages/Vault";
+import MessageComposer from "./pages/MessageComposer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +41,30 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/recipients"
+              element={
+                <ProtectedRoute>
+                  <Recipients />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vault"
+              element={
+                <ProtectedRoute>
+                  <Vault />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vault/compose/:id?"
+              element={
+                <ProtectedRoute>
+                  <MessageComposer />
                 </ProtectedRoute>
               }
             />

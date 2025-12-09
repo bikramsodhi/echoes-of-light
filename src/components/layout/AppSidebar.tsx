@@ -71,7 +71,7 @@ export default function AppSidebar() {
           <SidebarGroupContent className="px-2 py-2">
             <Button 
               className="w-full justify-start" 
-              onClick={() => navigate('/vault/new')}
+              onClick={() => navigate('/vault/compose')}
             >
               <Plus className="mr-2 h-4 w-4" />
               New Message
