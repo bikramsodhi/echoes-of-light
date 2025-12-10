@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { X, Image as ImageIcon, Film, Music, FileText, ExternalLink, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useSignedUrl } from '@/hooks/useSignedUrl';
 
 interface MediaPreviewProps {
-  urls: string[];
-  onRemove?: (url: string) => void;
+  urls: string[]; // These are file paths, not URLs
+  onRemove?: (path: string) => void;
   readonly?: boolean;
   className?: string;
 }
 
-function getMediaType(url: string): 'image' | 'video' | 'audio' | 'document' {
-  const ext = url.split('.').pop()?.toLowerCase() || '';
+function getMediaType(path: string): 'image' | 'video' | 'audio' | 'document' {
+  const ext = path.split('.').pop()?.toLowerCase() || '';
   
   if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'image';
   if (['mp4', 'webm', 'mov', 'quicktime'].includes(ext)) return 'video';
@@ -19,34 +20,44 @@ function getMediaType(url: string): 'image' | 'video' | 'audio' | 'document' {
   return 'document';
 }
 
-function MediaThumbnail({ url, onRemove, readonly }: { url: string; onRemove?: () => void; readonly?: boolean }) {
-  const [isLoading, setIsLoading] = useState(true);
+function MediaThumbnail({ 
+  filePath, 
+  onRemove, 
+  readonly 
+}: { 
+  filePath: string; 
+  onRemove?: () => void; 
+  readonly?: boolean;
+}) {
+  const { signedUrl, isLoading: isLoadingUrl } = useSignedUrl(filePath);
+  const [isLoadingImage, setIsLoadingImage] = useState(true);
   const [error, setError] = useState(false);
-  const mediaType = getMediaType(url);
+  const mediaType = getMediaType(filePath);
+
+  const isLoading = isLoadingUrl || (mediaType === 'image' && isLoadingImage && !error);
 
   return (
     <div className="group relative aspect-square rounded-lg overflow-hidden bg-muted border border-border">
-      {mediaType === 'image' && !error ? (
-        <>
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            </div>
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      )}
+      
+      {mediaType === 'image' && signedUrl && !error ? (
+        <img
+          src={signedUrl}
+          alt="Uploaded media"
+          className={cn(
+            "w-full h-full object-cover transition-opacity",
+            isLoadingImage ? "opacity-0" : "opacity-100"
           )}
-          <img
-            src={url}
-            alt="Uploaded media"
-            className={cn(
-              "w-full h-full object-cover transition-opacity",
-              isLoading ? "opacity-0" : "opacity-100"
-            )}
-            onLoad={() => setIsLoading(false)}
-            onError={() => {
-              setIsLoading(false);
-              setError(true);
-            }}
-          />
-        </>
+          onLoad={() => setIsLoadingImage(false)}
+          onError={() => {
+            setIsLoadingImage(false);
+            setError(true);
+          }}
+        />
       ) : mediaType === 'video' ? (
         <div className="w-full h-full flex items-center justify-center bg-muted">
           <Film className="h-8 w-8 text-muted-foreground" />
@@ -55,25 +66,31 @@ function MediaThumbnail({ url, onRemove, readonly }: { url: string; onRemove?: (
         <div className="w-full h-full flex items-center justify-center bg-muted">
           <Music className="h-8 w-8 text-muted-foreground" />
         </div>
-      ) : (
+      ) : error || (!isLoadingUrl && !signedUrl) ? (
+        <div className="w-full h-full flex items-center justify-center bg-muted">
+          <ImageIcon className="h-8 w-8 text-muted-foreground" />
+        </div>
+      ) : mediaType === 'document' ? (
         <div className="w-full h-full flex items-center justify-center bg-muted">
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
-      )}
+      ) : null}
       
       {/* Overlay */}
       <div className={cn(
         "absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2",
         readonly ? "pointer-events-none" : ""
       )}>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-8 w-8 text-white hover:bg-white/20"
-          onClick={() => window.open(url, '_blank')}
-        >
-          <ExternalLink className="h-4 w-4" />
-        </Button>
+        {signedUrl && (
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8 text-white hover:bg-white/20"
+            onClick={() => window.open(signedUrl, '_blank')}
+          >
+            <ExternalLink className="h-4 w-4" />
+          </Button>
+        )}
         
         {!readonly && onRemove && (
           <Button
@@ -95,12 +112,12 @@ export default function MediaPreview({ urls, onRemove, readonly = false, classNa
 
   return (
     <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3", className)}>
-      {urls.map((url, index) => (
+      {urls.map((path) => (
         <MediaThumbnail
-          key={url}
-          url={url}
+          key={path}
+          filePath={path}
           readonly={readonly}
-          onRemove={onRemove ? () => onRemove(url) : undefined}
+          onRemove={onRemove ? () => onRemove(path) : undefined}
         />
       ))}
     </div>
