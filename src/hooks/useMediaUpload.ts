@@ -76,14 +76,10 @@ export function useMediaUpload(options: UseMediaUploadOptions = {}) {
 
       if (error) throw error;
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('message-media')
-        .getPublicUrl(filePath);
-
       setProgress({ loaded: file.size, total: file.size, percentage: 100 });
       
-      return urlData.publicUrl;
+      // Return the file path (not URL) - signed URLs are generated on display
+      return filePath;
     } catch (error) {
       console.error('Upload error:', error);
       toast.error('Failed to upload file. Please try again.');
