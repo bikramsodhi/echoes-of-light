@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Sparkles } from 'lucide-react';
+import MediaPreview from '@/components/media/MediaPreview';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Recipient = Tables<'recipients'>;
@@ -16,9 +17,10 @@ interface MessagePreviewProps {
   title: string;
   content: string;
   recipients: Recipient[];
+  mediaUrls?: string[];
 }
 
-export default function MessagePreview({ open, onOpenChange, title, content, recipients }: MessagePreviewProps) {
+export default function MessagePreview({ open, onOpenChange, title, content, recipients, mediaUrls = [] }: MessagePreviewProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -47,10 +49,16 @@ export default function MessagePreview({ open, onOpenChange, title, content, rec
             </h2>
 
             <div className="prose prose-sm max-w-none">
-              <p className="text-foreground leading-relaxed whitespace-pre-wrap">
-                {content || 'Your message content will appear here...'}
-              </p>
+            <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+              {content || 'Your message content will appear here...'}
+            </p>
+          </div>
+
+          {mediaUrls.length > 0 && (
+            <div className="mt-4">
+              <MediaPreview urls={mediaUrls} readonly />
             </div>
+          )}
 
             {recipients.length > 0 && (
               <div className="mt-6 pt-6 border-t border-border/50">

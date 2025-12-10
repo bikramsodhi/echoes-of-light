@@ -5,6 +5,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import AppLayout from '@/components/layout/AppLayout';
 import MessagePreview from '@/components/vault/MessagePreview';
+import MediaUploader from '@/components/media/MediaUploader';
+import MediaPreview from '@/components/media/MediaPreview';
+import DeliveryScheduler from '@/components/delivery/DeliveryScheduler';
+import TestDeliveryDialog from '@/components/delivery/TestDeliveryDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -29,9 +34,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ArrowLeft, Save, Eye, Trash2, Loader2, Check } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Trash2, Loader2, Check, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
+import { useMediaUpload } from '@/hooks/useMediaUpload';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Message = Tables<'messages'>;
@@ -46,11 +52,17 @@ export default function MessageComposer() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [deliveryTrigger, setDeliveryTrigger] = useState<'posthumous' | 'scheduled' | 'manual'>('posthumous');
+  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
+  const [deliveryEvent, setDeliveryEvent] = useState<string | null>(null);
+  const [mediaUrls, setMediaUrls] = useState<string[]>([]);
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
   const [showPreview, setShowPreview] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showTestDelivery, setShowTestDelivery] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+
+  const { deleteFile } = useMediaUpload();
 
   const isEditing = !!id;
 
@@ -108,6 +120,9 @@ export default function MessageComposer() {
       setTitle(message.title || '');
       setContent(message.content || '');
       setDeliveryTrigger(message.delivery_trigger || 'posthumous');
+      setDeliveryDate(message.delivery_date ? new Date(message.delivery_date) : null);
+      setDeliveryEvent(message.delivery_event || null);
+      setMediaUrls(message.media_urls || []);
     }
   }, [message]);
 
@@ -126,6 +141,9 @@ export default function MessageComposer() {
         title: title || null,
         content: content || null,
         delivery_trigger: deliveryTrigger,
+        delivery_date: deliveryDate?.toISOString() || null,
+        delivery_event: deliveryEvent || null,
+        media_urls: mediaUrls.length > 0 ? mediaUrls : null,
         status: 'draft' as const,
         user_id: user.id,
       };
@@ -201,7 +219,7 @@ export default function MessageComposer() {
     if (isEditing) {
       debouncedSave();
     }
-  }, [title, content, deliveryTrigger, selectedRecipients]);
+  }, [title, content, deliveryTrigger, deliveryDate, deliveryEvent, mediaUrls, selectedRecipients]);
 
   // Delete mutation
   const deleteMutation = useMutation({
@@ -232,9 +250,18 @@ export default function MessageComposer() {
   const handleRecipientToggle = (recipientId: string) => {
     setSelectedRecipients(prev => 
       prev.includes(recipientId)
-        ? prev.filter(id => id !== recipientId)
+        ? prev.filter(rid => rid !== recipientId)
         : [...prev, recipientId]
     );
+  };
+
+  const handleMediaUpload = (urls: string[]) => {
+    setMediaUrls(prev => [...prev, ...urls]);
+  };
+
+  const handleMediaRemove = async (url: string) => {
+    await deleteFile(url);
+    setMediaUrls(prev => prev.filter(u => u !== url));
   };
 
   if (messageLoading) {
@@ -276,6 +303,13 @@ export default function MessageComposer() {
               </span>
             )}
             
+            {isEditing && message && (
+              <Button variant="outline" onClick={() => setShowTestDelivery(true)} className="gap-2">
+                <Send className="h-4 w-4" />
+                Test Delivery
+              </Button>
+            )}
+
             <Button variant="outline" onClick={() => setShowPreview(true)} className="gap-2">
               <Eye className="h-4 w-4" />
               Preview
@@ -362,19 +396,47 @@ export default function MessageComposer() {
             )}
           </div>
 
+          <Separator />
+
+          {/* Media Uploads */}
+          <div className="space-y-3">
+            <Label>Attachments</Label>
+            {mediaUrls.length > 0 && (
+              <MediaPreview 
+                urls={mediaUrls} 
+                onRemove={handleMediaRemove}
+              />
+            )}
+            <MediaUploader onUpload={handleMediaUpload} />
+          </div>
+
+          <Separator />
+
           {/* Delivery Trigger */}
-          <div className="space-y-2">
-            <Label>When should this be delivered?</Label>
-            <Select value={deliveryTrigger} onValueChange={(v) => setDeliveryTrigger(v as typeof deliveryTrigger)}>
-              <SelectTrigger className="w-full sm:w-64">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="posthumous">After I pass</SelectItem>
-                <SelectItem value="scheduled">On a specific date</SelectItem>
-                <SelectItem value="manual">When I choose</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>When should this be delivered?</Label>
+              <Select value={deliveryTrigger} onValueChange={(v) => setDeliveryTrigger(v as typeof deliveryTrigger)}>
+                <SelectTrigger className="w-full sm:w-64">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="posthumous">After I pass</SelectItem>
+                  <SelectItem value="scheduled">On a specific date</SelectItem>
+                  <SelectItem value="manual">When I choose</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Show scheduler for scheduled delivery */}
+            {deliveryTrigger === 'scheduled' && (
+              <DeliveryScheduler
+                deliveryDate={deliveryDate}
+                deliveryEvent={deliveryEvent}
+                onDateChange={setDeliveryDate}
+                onEventChange={setDeliveryEvent}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -386,6 +448,7 @@ export default function MessageComposer() {
         title={title}
         content={content}
         recipients={recipients.filter(r => selectedRecipients.includes(r.id))}
+        mediaUrls={mediaUrls}
       />
 
       {/* Delete Dialog */}
@@ -408,6 +471,17 @@ export default function MessageComposer() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Test Delivery Dialog */}
+      {message && (
+        <TestDeliveryDialog
+          open={showTestDelivery}
+          onOpenChange={setShowTestDelivery}
+          message={message}
+          recipients={recipients.filter(r => selectedRecipients.includes(r.id))}
+          onSendTest={() => toast.success('Test delivery sent to your email!')}
+        />
+      )}
     </AppLayout>
   );
 }
