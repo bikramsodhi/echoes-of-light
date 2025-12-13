@@ -418,27 +418,27 @@ USING (
 ---
 
 ### 2.3 Legacy Verification System
-- [ ] Create trusted contacts management page
-- [ ] Build invite flow with email notification
-- [ ] Implement verification link/portal for trusted contacts
+- [x] Create trusted contacts management page
+- [x] Build invite flow with email notification (UI only, mock sends)
+- [x] Implement verification link/portal for trusted contacts
 - [ ] Create "Is everything okay?" check-in system
 - [ ] Build verification consensus logic (2 of N required)
 - [ ] Add dispute resolution flow
 
-**Edge function for sending invites:**
+**Edge function for sending invites (future):**
 ```typescript
 // supabase/functions/send-trusted-contact-invite/index.ts
 // Uses Resend to send invitation emails
 // Includes secure invite token in URL
 ```
 
-**Files to create:**
-- `src/pages/TrustedContacts.tsx`
-- `src/components/trusted/TrustedContactCard.tsx`
-- `src/components/trusted/InviteContactDialog.tsx`
-- `src/pages/VerifyContact.tsx` — Public page for verification
-- `supabase/functions/send-trusted-contact-invite/index.ts`
-- `supabase/functions/check-verification-status/index.ts`
+**Files created:**
+- `src/pages/TrustedContacts.tsx` ✅
+- `src/components/trusted/TrustedContactCard.tsx` ✅
+- `src/components/trusted/InviteContactDialog.tsx` ✅
+- `src/pages/VerifyContact.tsx` ✅ — Public page for verification
+- `supabase/functions/send-trusted-contact-invite/index.ts` — Pending (mock for now)
+- `supabase/functions/check-verification-status/index.ts` — Pending
 
 ---
 
