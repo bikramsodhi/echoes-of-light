@@ -34,15 +34,13 @@ export default function VerifyContact() {
 
   const verifyToken = async () => {
     try {
-      // Look up the contact by invite token
-      const { data: contact, error } = await supabase
-        .from('trusted_contacts')
-        .select('id, name, status, user_id')
-        .eq('invite_token', token)
-        .maybeSingle();
+      // Use secure RPC function to look up contact by invite token
+      const { data: contacts, error } = await supabase
+        .rpc('get_contact_by_invite_token', { _token: token });
 
       if (error) throw error;
 
+      const contact = contacts?.[0];
       if (!contact) {
         setState('invalid');
         return;
@@ -73,20 +71,21 @@ export default function VerifyContact() {
   };
 
   const handleResponse = async (accept: boolean) => {
-    if (!contactInfo) return;
+    if (!token) return;
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from('trusted_contacts')
-        .update({
-          status: accept ? 'accepted' : 'declined',
-          verified_at: accept ? new Date().toISOString() : null,
-          verification_status: accept ? 'verified' : 'unverified',
-        })
-        .eq('id', contactInfo.id);
+      // Use secure RPC function to respond to invite
+      const { data: success, error } = await supabase
+        .rpc('respond_to_invite', { _token: token, _accept: accept });
 
       if (error) throw error;
+
+      if (!success) {
+        toast.error('This invitation is no longer valid.');
+        setState('invalid');
+        return;
+      }
 
       setState(accept ? 'accepted' : 'declined');
       toast.success(accept ? 'You\'ve accepted the invitation' : 'You\'ve declined the invitation');
