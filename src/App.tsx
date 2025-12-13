@@ -15,6 +15,7 @@ import Vault from "./pages/Vault";
 import MessageComposer from "./pages/MessageComposer";
 import TrustedContacts from "./pages/TrustedContacts";
 import VerifyContact from "./pages/VerifyContact";
+import RecipientPortal from "./pages/RecipientPortal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -79,6 +80,7 @@ const App = () => (
               }
             />
             <Route path="/verify" element={<VerifyContact />} />
+            <Route path="/message" element={<RecipientPortal />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -27,9 +27,10 @@ const statusConfig = {
     className: 'bg-accent text-accent-foreground',
   },
   sent: {
-    label: 'Sent',
+    label: 'Delivered',
     icon: Send,
     className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+    glow: true,
   },
 };
 
@@ -42,9 +43,14 @@ export default function MessageCard({ message, recipients, onClick }: MessageCar
     ? message.content.slice(0, 150) + (message.content.length > 150 ? '...' : '')
     : 'No content yet...';
 
+  const isSent = status === 'sent';
+
   return (
     <Card 
-      className="hover:shadow-md transition-all duration-200 cursor-pointer animate-fade-in group"
+      className={cn(
+        "hover:shadow-md transition-all duration-200 cursor-pointer animate-fade-in group",
+        isSent && "ring-1 ring-emerald-200 dark:ring-emerald-800/50 shadow-emerald-100/50 dark:shadow-emerald-900/20"
+      )}
       onClick={onClick}
     >
       <CardContent className="p-4">
