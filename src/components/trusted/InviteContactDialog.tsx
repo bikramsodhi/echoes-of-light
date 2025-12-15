@@ -99,16 +99,45 @@ export default function InviteContactDialog({
 
         if (error) throw error;
       } else {
-        // Create new contact and simulate sending invite
-        const { error } = await supabase
+        // Create new contact
+        const { data: newContact, error } = await supabase
           .from('trusted_contacts')
           .insert({
             ...contactData,
             status: 'pending',
             invite_sent_at: new Date().toISOString(),
-          });
+          })
+          .select('invite_token')
+          .single();
 
         if (error) throw error;
+
+        // Fetch user's profile name for the email
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+
+        const userName = profile?.full_name || user.email?.split('@')[0] || 'Someone';
+
+        // Send the invitation email
+        const { error: emailError } = await supabase.functions.invoke('send-email', {
+          body: {
+            type: 'trusted_contact_invite',
+            contactName: contactData.name,
+            contactEmail: contactData.email,
+            userName,
+            inviteToken: newContact.invite_token,
+          },
+        });
+
+        if (emailError) {
+          console.error('Failed to send invitation email:', emailError);
+          // Don't throw - contact was created, just email failed
+          toast.warning('Contact added but invitation email could not be sent');
+          return;
+        }
       }
     },
     onSuccess: () => {
@@ -116,7 +145,7 @@ export default function InviteContactDialog({
       toast.success(
         isEditing 
           ? 'Contact updated' 
-          : 'Invitation sent (simulated)'
+          : 'Invitation sent!'
       );
       onOpenChange(false);
     },
