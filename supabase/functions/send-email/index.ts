@@ -48,7 +48,7 @@ const handler = async (req: Request): Promise<Response> => {
     let emailConfig: { to: string; subject: string; html: string; from: string; reply_to: string };
 
     const siteUrl = "https://echolight.live";
-    const fromEmail = "EchoLight <bsodhi424@gmail.com>";
+    const fromEmail = "EchoLight <noreply@echolight.live>";
 
     // Handle different email types
     if ("type" in payload && payload.type === "trusted_contact_invite") {
