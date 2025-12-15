@@ -45,15 +45,19 @@ const handler = async (req: Request): Promise<Response> => {
     const payload: EmailPayload = await req.json();
     console.log("Processing email request:", JSON.stringify(payload, null, 2));
 
-    let emailConfig: { to: string; subject: string; html: string; from: string };
+    let emailConfig: { to: string; subject: string; html: string; from: string; reply_to: string };
+
+    const siteUrl = "https://echolight.live";
+    const fromEmail = "EchoLight <bsodhi424@gmail.com>";
 
     // Handle different email types
     if ("type" in payload && payload.type === "trusted_contact_invite") {
       const { contactName, contactEmail, userName, inviteToken } = payload;
-      const verifyUrl = `${Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '.lovable.app')}/verify-contact?token=${inviteToken}`;
+      const verifyUrl = `${siteUrl}/verify-contact?token=${inviteToken}`;
       
       emailConfig = {
-        from: "EchoLight <onboarding@resend.dev>",
+        from: fromEmail,
+        reply_to: "bsodhi424@gmail.com",
         to: contactEmail,
         subject: `${userName} has chosen you as a trusted contact on EchoLight`,
         html: `
@@ -96,7 +100,8 @@ const handler = async (req: Request): Promise<Response> => {
       const { recipientName, recipientEmail, senderName, messageTitle, accessLink } = payload;
       
       emailConfig = {
-        from: "EchoLight <onboarding@resend.dev>",
+        from: fromEmail,
+        reply_to: "bsodhi424@gmail.com",
         to: recipientEmail,
         subject: `A message from ${senderName} awaits you`,
         html: `
@@ -138,7 +143,8 @@ const handler = async (req: Request): Promise<Response> => {
       // Generic email
       const { to, subject, html, from } = payload as EmailRequest;
       emailConfig = {
-        from: from || "EchoLight <onboarding@resend.dev>",
+        from: from || fromEmail,
+        reply_to: "bsodhi424@gmail.com",
         to,
         subject,
         html,
@@ -149,6 +155,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     const emailResponse = await resend.emails.send({
       from: emailConfig.from,
+      reply_to: emailConfig.reply_to,
       to: [emailConfig.to],
       subject: emailConfig.subject,
       html: emailConfig.html,
