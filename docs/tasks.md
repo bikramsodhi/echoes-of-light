@@ -421,7 +421,7 @@ USING (
 - [x] Create trusted contacts management page
 - [x] Build invite flow with email notification (UI only, mock sends)
 - [x] Implement verification link/portal for trusted contacts
-- [x] Add backwards-compatible invite route (/verify → /verify-contact)
+- [x] Support invite verification routes (/verify + /verify-contact)
 - [ ] Create "Is everything okay?" check-in system
 - [ ] Build verification consensus logic (2 of N required)
 - [ ] Add dispute resolution flow

@@ -53,7 +53,8 @@ const handler = async (req: Request): Promise<Response> => {
     // Handle different email types
     if ("type" in payload && payload.type === "trusted_contact_invite") {
       const { contactName, contactEmail, userName, inviteToken } = payload;
-      const verifyUrl = `${siteUrl}/verify-contact?token=${inviteToken}`;
+      // Use /verify as the canonical path (keep /verify-contact as an alias in-app)
+      const verifyUrl = `${siteUrl}/verify?token=${inviteToken}`;
       
       emailConfig = {
         from: fromEmail,
