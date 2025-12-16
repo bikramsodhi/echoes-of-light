@@ -70,20 +70,43 @@ export default function TrustedContacts() {
   });
 
   const resendInviteMutation = useMutation({
-    mutationFn: async (contactId: string) => {
-      // Mock send - in real implementation, this would call an edge function
-      const { error } = await supabase
+    mutationFn: async (contact: TrustedContact) => {
+      // Get user's profile name for the email
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user!.id)
+        .single();
+
+      const userName = profile?.full_name || 'Someone';
+
+      // Call send-email edge function
+      const { error: emailError } = await supabase.functions.invoke('send-email', {
+        body: {
+          type: 'trusted_contact_invite',
+          contactName: contact.name,
+          contactEmail: contact.email,
+          userName,
+          inviteToken: contact.invite_token,
+        },
+      });
+
+      if (emailError) throw emailError;
+
+      // Update invite_sent_at timestamp
+      const { error: updateError } = await supabase
         .from('trusted_contacts')
         .update({ invite_sent_at: new Date().toISOString() })
-        .eq('id', contactId);
+        .eq('id', contact.id);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trusted-contacts'] });
-      toast.success('Invitation resent (simulated)');
+      toast.success('Invitation resent successfully');
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Failed to resend invitation:', error);
       toast.error('Failed to resend invitation');
     },
   });
@@ -183,7 +206,7 @@ export default function TrustedContacts() {
                 contact={contact}
                 onEdit={() => handleEdit(contact)}
                 onDelete={() => deleteMutation.mutate(contact.id)}
-                onResendInvite={() => resendInviteMutation.mutate(contact.id)}
+                onResendInvite={() => resendInviteMutation.mutate(contact)}
               />
             ))}
           </div>
