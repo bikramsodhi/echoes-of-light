@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -42,6 +43,43 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Authentication check - require valid user session
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      console.error("No authorization header provided");
+      return new Response(
+        JSON.stringify({ success: false, error: "Unauthorized - no authorization header" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Create Supabase client with user's auth token
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      {
+        global: { headers: { Authorization: authHeader } },
+      }
+    );
+
+    // Verify user is authenticated
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      console.error("Authentication failed:", authError?.message || "No user found");
+      return new Response(
+        JSON.stringify({ success: false, error: "Unauthorized - invalid session" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log("Authenticated user:", user.id);
+
     const payload: EmailPayload = await req.json();
     console.log("Processing email request:", JSON.stringify(payload, null, 2));
 
@@ -53,7 +91,37 @@ const handler = async (req: Request): Promise<Response> => {
     // Handle different email types
     if ("type" in payload && payload.type === "trusted_contact_invite") {
       const { contactName, contactEmail, userName, inviteToken } = payload;
-      // Use /verify as the canonical path (keep /verify-contact as an alias in-app)
+
+      // Verify user owns this trusted contact by checking the invite token
+      const { data: contact, error: contactError } = await supabaseClient
+        .from("trusted_contacts")
+        .select("user_id")
+        .eq("invite_token", inviteToken)
+        .single();
+
+      if (contactError || !contact) {
+        console.error("Trusted contact not found:", contactError?.message);
+        return new Response(
+          JSON.stringify({ success: false, error: "Trusted contact not found" }),
+          {
+            status: 404,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
+
+      if (contact.user_id !== user.id) {
+        console.error("User does not own this trusted contact");
+        return new Response(
+          JSON.stringify({ success: false, error: "Forbidden - you do not own this contact" }),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
+
+      // Use /verify as the canonical path
       const verifyUrl = `${siteUrl}/verify?token=${inviteToken}`;
       
       emailConfig = {
@@ -100,6 +168,27 @@ const handler = async (req: Request): Promise<Response> => {
     } else if ("type" in payload && payload.type === "message_delivery") {
       const { recipientName, recipientEmail, senderName, messageTitle, accessLink } = payload;
       
+      // For message delivery, verify user has a message with this title
+      // This is a basic check - in production you might want stricter validation
+      const { data: message, error: messageError } = await supabaseClient
+        .from("messages")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .eq("title", messageTitle)
+        .limit(1)
+        .single();
+
+      if (messageError || !message) {
+        console.error("Message not found or not owned by user:", messageError?.message);
+        return new Response(
+          JSON.stringify({ success: false, error: "Message not found or unauthorized" }),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
+
       emailConfig = {
         from: fromEmail,
         reply_to: "bsodhi424@gmail.com",
@@ -141,7 +230,7 @@ const handler = async (req: Request): Promise<Response> => {
         `,
       };
     } else {
-      // Generic email
+      // Generic email - only allow authenticated users
       const { to, subject, html, from } = payload as EmailRequest;
       emailConfig = {
         from: from || fromEmail,
