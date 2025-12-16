@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
+import HowItWorksPage from "./pages/HowItWorks";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Onboarding from "./pages/Onboarding";
@@ -29,6 +30,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route
