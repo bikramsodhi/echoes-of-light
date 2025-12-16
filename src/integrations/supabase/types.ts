@@ -290,6 +290,7 @@ export type Database = {
           name: string
           status: string
           user_id: string
+          user_name: string
         }[]
       }
       has_role: {
