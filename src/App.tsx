@@ -79,7 +79,7 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route path="/verify" element={<VerifyContact />} />
+            <Route path="/verify-contact" element={<VerifyContact />} />
             <Route path="/message" element={<RecipientPortal />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
