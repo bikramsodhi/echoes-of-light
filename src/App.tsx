@@ -79,9 +79,9 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            {/* Backwards-compatible alias for older invite links */}
-            <Route path="/verify" element={<VerifyContact />} />
-            <Route path="/verify-contact" element={<VerifyContact />} />
+            {/* Public invite verification routes (support old + new links, and tolerate trailing slashes) */}
+            <Route path="/verify/*" element={<VerifyContact />} />
+            <Route path="/verify-contact/*" element={<VerifyContact />} />
             <Route path="/message" element={<RecipientPortal />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
