@@ -51,17 +51,11 @@ export default function VerifyContact() {
         return;
       }
 
-      // Get the user's name who sent the invite
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('full_name')
-        .eq('id', contact.user_id)
-        .maybeSingle();
-
+      // User name is now included directly from the RPC function
       setContactInfo({
         id: contact.id,
         name: contact.name,
-        userName: profile?.full_name || 'Someone',
+        userName: contact.user_name || 'Someone',
       });
       setState('valid');
     } catch (error) {

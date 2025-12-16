@@ -34,6 +34,32 @@ function checkRateLimit(userId: string): { allowed: boolean; remaining: number }
   return { allowed: true, remaining: RATE_LIMIT_MAX - record.count };
 }
 
+// HTML escape function to prevent XSS in email templates
+function escapeHtml(str: string): string {
+  const htmlEscapes: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  };
+  return str.replace(/[&<>"']/g, (char) => htmlEscapes[char] || char);
+}
+
+// Mask email for logging (e.g., jo***@example.com)
+function maskEmail(email: string): string {
+  const atIndex = email.indexOf('@');
+  if (atIndex <= 2) {
+    return email.charAt(0) + '***' + email.substring(atIndex);
+  }
+  return email.substring(0, 2) + '***' + email.substring(atIndex);
+}
+
+// Mask UUID for logging (first 8 chars + ***)
+function maskUuid(uuid: string): string {
+  return uuid.substring(0, 8) + '***';
+}
+
 interface EmailRequest {
   to: string;
   subject: string;
@@ -62,6 +88,9 @@ type EmailPayload = EmailRequest | TrustedContactInviteRequest | MessageDelivery
 
 // Email validation
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// UUID validation
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
@@ -95,7 +124,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Verify user is authenticated
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !user) {
-      console.error("Authentication failed:", authError?.message || "No user found");
+      console.error("Authentication failed");
       return new Response(
         JSON.stringify({ success: false, error: "Unauthorized - invalid session" }),
         {
@@ -105,12 +134,12 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log("Authenticated user:", user.id);
+    console.log("Authenticated user:", maskUuid(user.id));
 
     // Check rate limit
     const rateLimitResult = checkRateLimit(user.id);
     if (!rateLimitResult.allowed) {
-      console.warn("Rate limit exceeded for user:", user.id);
+      console.warn("Rate limit exceeded for user:", maskUuid(user.id));
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -129,7 +158,12 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const payload: EmailPayload = await req.json();
-    console.log("Processing email request:", JSON.stringify(payload, null, 2));
+    
+    // Log only minimal non-sensitive info
+    console.log("Processing email request:", {
+      type: "type" in payload ? payload.type : "generic",
+      hasRecipient: "to" in payload || "contactEmail" in payload || "recipientEmail" in payload
+    });
 
     let emailConfig: { to: string; subject: string; html: string; from: string; reply_to?: string };
 
@@ -152,6 +186,17 @@ const handler = async (req: Request): Promise<Response> => {
         );
       }
 
+      // Validate invite token is UUID format
+      if (!uuidRegex.test(inviteToken)) {
+        return new Response(
+          JSON.stringify({ success: false, error: "Invalid invite token format" }),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
+
       // Verify user owns this trusted contact by checking the invite token
       const { data: contact, error: contactError } = await supabaseClient
         .from("trusted_contacts")
@@ -160,7 +205,7 @@ const handler = async (req: Request): Promise<Response> => {
         .single();
 
       if (contactError || !contact) {
-        console.error("Trusted contact not found:", contactError?.message);
+        console.error("Trusted contact not found");
         return new Response(
           JSON.stringify({ success: false, error: "Trusted contact not found" }),
           {
@@ -181,6 +226,10 @@ const handler = async (req: Request): Promise<Response> => {
         );
       }
 
+      // Escape user-controlled content to prevent XSS
+      const safeContactName = escapeHtml(contactName);
+      const safeUserName = escapeHtml(userName);
+
       // Use /verify as the canonical path
       const verifyUrl = `${siteUrl}/verify?token=${inviteToken}`;
       
@@ -188,7 +237,7 @@ const handler = async (req: Request): Promise<Response> => {
         from: fromEmail,
         reply_to: supportEmail,
         to: contactEmail,
-        subject: `${userName} has chosen you as a trusted contact on EchoLight`,
+        subject: `${safeUserName} has chosen you as a trusted contact on EchoLight`,
         html: `
           <!DOCTYPE html>
           <html>
@@ -200,26 +249,26 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background: linear-gradient(135deg, #e8e0f0 0%, #f5f0e8 100%); border-radius: 16px; padding: 40px; text-align: center;">
               <h1 style="color: #6b5b7a; margin-bottom: 24px; font-size: 28px;">You've Been Chosen</h1>
               <p style="font-size: 18px; color: #555; margin-bottom: 16px;">
-                Dear ${contactName},
+                Dear ${safeContactName},
               </p>
               <p style="font-size: 16px; color: #666; margin-bottom: 24px;">
-                <strong>${userName}</strong> has selected you as a trusted contact on EchoLight — 
+                <strong>${safeUserName}</strong> has selected you as a trusted contact on EchoLight — 
                 a platform that helps people leave meaningful messages for their loved ones.
               </p>
               <p style="font-size: 16px; color: #666; margin-bottom: 32px;">
                 As a trusted contact, you may be asked to help verify important information 
-                when the time comes. This is a deeply personal choice, and ${userName} trusts you 
+                when the time comes. This is a deeply personal choice, and ${safeUserName} trusts you 
                 with this responsibility.
               </p>
               <a href="${verifyUrl}" style="display: inline-block; background: linear-gradient(135deg, #8b7a9e 0%, #6b5b7a 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-size: 16px; font-weight: 600;">
                 Accept or Decline Invitation
               </a>
               <p style="font-size: 14px; color: #888; margin-top: 32px;">
-                If you have questions, please reach out to ${userName} directly or contact us at <a href="mailto:${supportEmail}" style="color: #6b5b7a;">${supportEmail}</a>.
+                If you have questions, please reach out to ${safeUserName} directly or contact us at <a href="mailto:${supportEmail}" style="color: #6b5b7a;">${supportEmail}</a>.
               </p>
             </div>
             <p style="text-align: center; font-size: 12px; color: #999; margin-top: 24px;">
-              This email was sent by EchoLight on behalf of ${userName}.
+              This email was sent by EchoLight on behalf of ${safeUserName}.
             </p>
           </body>
           </html>
@@ -250,7 +299,7 @@ const handler = async (req: Request): Promise<Response> => {
         .single();
 
       if (messageError || !message) {
-        console.error("Message not found or not owned by user:", messageError?.message);
+        console.error("Message not found or not owned by user");
         return new Response(
           JSON.stringify({ success: false, error: "Message not found or unauthorized" }),
           {
@@ -260,11 +309,16 @@ const handler = async (req: Request): Promise<Response> => {
         );
       }
 
+      // Escape user-controlled content to prevent XSS
+      const safeRecipientName = escapeHtml(recipientName);
+      const safeSenderName = escapeHtml(senderName);
+      const safeMessageTitle = escapeHtml(messageTitle);
+
       emailConfig = {
         from: fromEmail,
         reply_to: supportEmail,
         to: recipientEmail,
-        subject: `A message from ${senderName} awaits you`,
+        subject: `A message from ${safeSenderName} awaits you`,
         html: `
           <!DOCTYPE html>
           <html>
@@ -276,11 +330,11 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background: linear-gradient(135deg, #e8e0f0 0%, #f5f0e8 100%); border-radius: 16px; padding: 40px; text-align: center;">
               <h1 style="color: #6b5b7a; margin-bottom: 24px; font-size: 28px;">A Message Awaits</h1>
               <p style="font-size: 18px; color: #555; margin-bottom: 16px;">
-                Dear ${recipientName},
+                Dear ${safeRecipientName},
               </p>
               <p style="font-size: 16px; color: #666; margin-bottom: 24px;">
-                <strong>${senderName}</strong> left you a heartfelt message titled 
-                "<em>${messageTitle}</em>" that is now ready for you to receive.
+                <strong>${safeSenderName}</strong> left you a heartfelt message titled 
+                "<em>${safeMessageTitle}</em>" that is now ready for you to receive.
               </p>
               <p style="font-size: 16px; color: #666; margin-bottom: 32px;">
                 They wanted you to know that even when they couldn't be there in person, 
@@ -327,11 +381,12 @@ const handler = async (req: Request): Promise<Response> => {
       };
     }
 
+    // Log with masked sensitive data
     console.log(JSON.stringify({
       event: 'email_sending',
-      user_id: user.id,
+      user_id: maskUuid(user.id),
       email_type: "type" in payload ? payload.type : "generic",
-      recipient: emailConfig.to,
+      recipient_masked: maskEmail(emailConfig.to),
       rate_limit_remaining: rateLimitResult.remaining,
       timestamp: new Date().toISOString()
     }));
@@ -344,7 +399,7 @@ const handler = async (req: Request): Promise<Response> => {
       html: emailConfig.html,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Email sent successfully");
 
     return new Response(JSON.stringify({ success: true, data: emailResponse }), {
       status: 200,
@@ -355,9 +410,9 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
   } catch (error: any) {
-    console.error("Error in send-email function:", error);
+    console.error("Error in send-email function:", error.message);
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Failed to send email" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
