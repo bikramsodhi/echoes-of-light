@@ -10,6 +10,30 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// Simple in-memory rate limiter (resets on function cold start)
+// For production, consider using Redis or database-backed rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_MAX = 20; // Max emails per window
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+function checkRateLimit(userId: string): { allowed: boolean; remaining: number } {
+  const now = Date.now();
+  const record = rateLimitMap.get(userId);
+  
+  if (!record || now > record.resetTime) {
+    // New window
+    rateLimitMap.set(userId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: RATE_LIMIT_MAX - 1 };
+  }
+  
+  if (record.count >= RATE_LIMIT_MAX) {
+    return { allowed: false, remaining: 0 };
+  }
+  
+  record.count++;
+  return { allowed: true, remaining: RATE_LIMIT_MAX - record.count };
+}
+
 interface EmailRequest {
   to: string;
   subject: string;
@@ -35,6 +59,9 @@ interface MessageDeliveryRequest {
 }
 
 type EmailPayload = EmailRequest | TrustedContactInviteRequest | MessageDeliveryRequest;
+
+// Email validation
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
@@ -80,17 +107,50 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Authenticated user:", user.id);
 
+    // Check rate limit
+    const rateLimitResult = checkRateLimit(user.id);
+    if (!rateLimitResult.allowed) {
+      console.warn("Rate limit exceeded for user:", user.id);
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "Rate limit exceeded. Please try again later.",
+          retryAfter: "1 hour"
+        }),
+        {
+          status: 429,
+          headers: { 
+            "Content-Type": "application/json", 
+            "X-RateLimit-Remaining": "0",
+            ...corsHeaders 
+          },
+        }
+      );
+    }
+
     const payload: EmailPayload = await req.json();
     console.log("Processing email request:", JSON.stringify(payload, null, 2));
 
-    let emailConfig: { to: string; subject: string; html: string; from: string; reply_to: string };
+    let emailConfig: { to: string; subject: string; html: string; from: string; reply_to?: string };
 
     const siteUrl = "https://echolight.live";
     const fromEmail = "EchoLight <noreply@echolight.live>";
+    const supportEmail = "support@echolight.live";
 
     // Handle different email types
     if ("type" in payload && payload.type === "trusted_contact_invite") {
       const { contactName, contactEmail, userName, inviteToken } = payload;
+
+      // Validate email format
+      if (!emailRegex.test(contactEmail)) {
+        return new Response(
+          JSON.stringify({ success: false, error: "Invalid email format" }),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
 
       // Verify user owns this trusted contact by checking the invite token
       const { data: contact, error: contactError } = await supabaseClient
@@ -126,7 +186,7 @@ const handler = async (req: Request): Promise<Response> => {
       
       emailConfig = {
         from: fromEmail,
-        reply_to: "bsodhi424@gmail.com",
+        reply_to: supportEmail,
         to: contactEmail,
         subject: `${userName} has chosen you as a trusted contact on EchoLight`,
         html: `
@@ -155,7 +215,7 @@ const handler = async (req: Request): Promise<Response> => {
                 Accept or Decline Invitation
               </a>
               <p style="font-size: 14px; color: #888; margin-top: 32px;">
-                If you have questions, please reach out to ${userName} directly.
+                If you have questions, please reach out to ${userName} directly or contact us at <a href="mailto:${supportEmail}" style="color: #6b5b7a;">${supportEmail}</a>.
               </p>
             </div>
             <p style="text-align: center; font-size: 12px; color: #999; margin-top: 24px;">
@@ -167,6 +227,17 @@ const handler = async (req: Request): Promise<Response> => {
       };
     } else if ("type" in payload && payload.type === "message_delivery") {
       const { recipientName, recipientEmail, senderName, messageTitle, accessLink } = payload;
+
+      // Validate email format
+      if (!emailRegex.test(recipientEmail)) {
+        return new Response(
+          JSON.stringify({ success: false, error: "Invalid email format" }),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
       
       // For message delivery, verify user has a message with this title
       // This is a basic check - in production you might want stricter validation
@@ -191,7 +262,7 @@ const handler = async (req: Request): Promise<Response> => {
 
       emailConfig = {
         from: fromEmail,
-        reply_to: "bsodhi424@gmail.com",
+        reply_to: supportEmail,
         to: recipientEmail,
         subject: `A message from ${senderName} awaits you`,
         html: `
@@ -221,6 +292,9 @@ const handler = async (req: Request): Promise<Response> => {
               <p style="font-size: 14px; color: #888; margin-top: 32px;">
                 Take your time. This message will wait for you.
               </p>
+              <p style="font-size: 14px; color: #888; margin-top: 16px;">
+                Questions? Contact us at <a href="mailto:${supportEmail}" style="color: #6b5b7a;">${supportEmail}</a>
+              </p>
             </div>
             <p style="text-align: center; font-size: 12px; color: #999; margin-top: 24px;">
               Delivered with care by EchoLight.
@@ -232,16 +306,35 @@ const handler = async (req: Request): Promise<Response> => {
     } else {
       // Generic email - only allow authenticated users
       const { to, subject, html, from } = payload as EmailRequest;
+
+      // Validate email format
+      if (!emailRegex.test(to)) {
+        return new Response(
+          JSON.stringify({ success: false, error: "Invalid email format" }),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
+      }
+
       emailConfig = {
         from: from || fromEmail,
-        reply_to: "bsodhi424@gmail.com",
+        reply_to: supportEmail,
         to,
         subject,
         html,
       };
     }
 
-    console.log("Sending email to:", emailConfig.to);
+    console.log(JSON.stringify({
+      event: 'email_sending',
+      user_id: user.id,
+      email_type: "type" in payload ? payload.type : "generic",
+      recipient: emailConfig.to,
+      rate_limit_remaining: rateLimitResult.remaining,
+      timestamp: new Date().toISOString()
+    }));
     
     const emailResponse = await resend.emails.send({
       from: emailConfig.from,
@@ -257,6 +350,7 @@ const handler = async (req: Request): Promise<Response> => {
       status: 200,
       headers: {
         "Content-Type": "application/json",
+        "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
         ...corsHeaders,
       },
     });
