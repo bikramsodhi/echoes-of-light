@@ -138,14 +138,14 @@
 - `src/components/delivery/DeliveryConfirmation.tsx`
 - `src/components/delivery/MessageViewer.tsx`
 
-### 2.5 Settings & Privacy
-- [ ] Create settings page with sections
-- [ ] Add encryption toggle per vault or message
-- [ ] Build "Last Wishes" document editor
-- [ ] Implement account deletion with confirmation
-- [ ] Add inactivity check-in configuration
+### 2.5 Settings & Privacy ✅
+- [x] Create settings page with sections
+- [x] Add encryption toggle per vault or message
+- [x] Build "Last Wishes" document editor
+- [x] Implement account deletion with confirmation
+- [x] Add inactivity check-in configuration
 
-**Files to create:**
+**Files created:**
 - `src/pages/Settings.tsx`
 - `src/components/settings/PrivacySettings.tsx`
 - `src/components/settings/LastWishesEditor.tsx`
