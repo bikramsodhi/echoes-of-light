@@ -2,3 +2,6 @@ project_id = "ljjdrfyvhnicdeypneke"
 
 [functions.send-email]
 verify_jwt = true
+
+[functions.ai-writing-assistant]
+verify_jwt = true

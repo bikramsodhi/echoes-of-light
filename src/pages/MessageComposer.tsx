@@ -9,6 +9,8 @@ import MediaUploader from '@/components/media/MediaUploader';
 import MediaPreview from '@/components/media/MediaPreview';
 import DeliveryScheduler from '@/components/delivery/DeliveryScheduler';
 import TestDeliveryDialog from '@/components/delivery/TestDeliveryDialog';
+import AIAssistButton from '@/components/composer/AIAssistButton';
+import WritingPrompts from '@/components/composer/WritingPrompts';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -60,6 +62,7 @@ export default function MessageComposer() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showTestDelivery, setShowTestDelivery] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   const { deleteFile } = useMediaUpload();
@@ -348,8 +351,19 @@ export default function MessageComposer() {
           </div>
 
           {/* Content */}
-          <div className="space-y-2">
-            <Label htmlFor="content">Your Message</Label>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="content">Your Message</Label>
+              <AIAssistButton 
+                content={content} 
+                recipientContext={
+                  selectedRecipients.length === 1 
+                    ? recipients.find(r => r.id === selectedRecipients[0])?.relationship || undefined
+                    : undefined
+                }
+                onSuggestion={setAiSuggestion}
+              />
+            </div>
             <Textarea
               id="content"
               placeholder="What would you like to say? Take your time..."
@@ -357,6 +371,25 @@ export default function MessageComposer() {
               onChange={(e) => setContent(e.target.value)}
               className="min-h-[300px] resize-none text-base leading-relaxed"
             />
+            
+            {/* AI Suggestion Display */}
+            {aiSuggestion && (
+              <div className="bg-accent/30 border border-primary/20 rounded-lg p-4 animate-fade-in">
+                <p className="text-sm text-muted-foreground mb-2">A gentle thought from your writing companion:</p>
+                <p className="text-sm leading-relaxed italic">{aiSuggestion}</p>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="mt-2 text-xs"
+                  onClick={() => setAiSuggestion(null)}
+                >
+                  Dismiss
+                </Button>
+              </div>
+            )}
+            
+            {/* Writing Prompts */}
+            <WritingPrompts onSelectPrompt={(prompt) => setAiSuggestion(prompt)} />
           </div>
 
           {/* Recipients */}

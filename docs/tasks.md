@@ -151,24 +151,24 @@
 - `src/components/settings/LastWishesEditor.tsx`
 - `src/components/settings/AccountSettings.tsx`
 
-### 2.6 "Polish My Thoughts" AI (Optional)
+### 2.6 "Polish My Thoughts" AI ✅
 > AI tone assistant that appears **only inside message composer**
 
-- [ ] Create inline AI button in message composer
-- [ ] Implement gentle prompt suggestions
-- [ ] Build tone refinement suggestions
-- [ ] Ensure AI never overwrites without explicit approval
-- [ ] Add writing prompts library
+- [x] Create inline AI button in message composer
+- [x] Implement gentle prompt suggestions
+- [x] Build tone refinement suggestions
+- [x] Ensure AI never overwrites without explicit approval
+- [x] Add writing prompts library
 
 **Implementation notes:**
 - Uses Lovable AI Gateway (no user API key needed)
 - System prompt emphasizes gentle, poetic scaffolding
 - Never finishes thoughts, only offers prompts
-- Button labeled "Polish My Thoughts" or "Help me say this"
+- Button labeled "Help me say this"
 
-**Files to create:**
+**Files created:**
 - `src/components/composer/AIAssistButton.tsx`
-- `src/components/composer/AIPromptSuggestions.tsx`
+- `src/components/composer/WritingPrompts.tsx`
 - `supabase/functions/ai-writing-assistant/index.ts`
 
 ---
