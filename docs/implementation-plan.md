@@ -2,122 +2,107 @@
 
 ---
 
-### 🧱 Step-by-Step Build Sequence
+### 🧱 Step-by-Step Build Sequence (MVP-Only)
 
-#### Phase 1 — MVP: Core Foundation
-1. **Set up repo & environments**
-   - Initialize Vite + React + Tailwind CSS
-   - Configure shadcn/ui + TypeScript setup
-   - Connect to Lovable Cloud backend & storage
+#### Phase 1 — Quiet Core Loop: Write → Assign → Hold
 
-2. **Build onboarding experience**
-   - Flow: intro → emotional context → examples → create account
-   - Add microcopy + light animation for emotional tone
+1. **Project Setup**
+   - Initialize Vite + React + Tailwind + TypeScript
+   - Configure shadcn/ui components
+   - Connect Lovable Cloud backend + storage
 
-3. **Implement auth system**
-   - Email/password login with password reset
-   - Optional: Google OAuth integration
+2. **Onboarding Flow (Skippable)**
+   - Emotional welcome (1–2 lines max)
+   - 1–2 poetic examples of use
+   - Account creation (email/password)
+   - Full flow < 90 seconds
 
-4. **Design Message Vault UI**
-   - Create message creation UI (text only)
-   - Attach messages to recipient(s)
-   - Status: draft, scheduled, sent
+3. **Auth System**
+   - Email/password login, password reset
+   - Google OAuth (optional)
 
-5. **Create recipient management**
-   - Add/manage recipient profiles
-   - Store name, relationship, contact methods
-   - Basic validation + duplicate checks
+4. **Message Vault (Dashboard)**
+   - Single-page list of all messages
+     - Status filters: draft / held / scheduled / sent
+   - Primary CTA: “Create Message”
+   - Light emotional nudge above list (optional)
 
-6. **Enable manual delivery**
-   - Admin panel or backend tool to simulate posthumous delivery
-   - UI cue: “This message will be delivered when verified”
+5. **Create/Edit Message Flow**
+   - Text-first composer
+   - Add/edit recipients
+   - Choose delivery type: manual / scheduled / held
+   - Save confirmation: “We’re holding this message safely”
 
----
+6. **Recipient Management**
+   - Add/edit recipient profile:
+     - Name, relationship, contact method (email/phone)
+   - All data is private to the user
 
-#### Phase 2 — V1: Trust & Media Delivery
+7. **Trusted Contact Setup**
+   - Single trusted contact for MVP
+   - Invite flow via secure link
+   - Confirm-only role (no message access)
 
-7. **Enable media uploads**
-   - Allow photo, audio, and video messages
-   - Use Lovable Cloud secure object storage
+8. **Delivery Settings**
+   - Simulate delivery triggers (for demo/MVP)
+   - Emphasize: “Held safely until the right time”
 
-8. **Schedule-based delivery**
-   - Users pick delivery events: birthdays, anniversaries
-   - Add calendar UI with friendly phrasing (“On their 21st birthday”)
-
-9. **Legacy verification system**
-   - Trusted contacts stored with permissions
-   - Flow: contact receives “Is everything okay?” email with secure link
-   - Manual confirmation triggers message release
-
-10. **Design message delivery UI**
-    - Add sent-state UI + animation (e.g., ripple or glow)
-    - Notify user gently: “This message will be held until the right time.”
-
-11. **Settings & encryption controls**
-    - Add toggle for E2EE per message or vault-wide
-    - Optional: “Last wishes” toggle or document upload
+9. **Recipient Portal (Post-Delivery Only)**
+   - Minimal page showing emotional message intro + content
+   - No reply, no nav, no editing
 
 ---
 
-#### Phase 3 — V2: Emotional Tools & Theming
+#### Optional Phase — Light AI Support
 
-12. **Add Reflective AI writing assistant**
-    - Suggest prompts based on emotional tone
-    - Respectful UX: never autocompletes, only nudges gently
-
-13. **Implement themes by season/memory**
-    - UI themes: Spring (hope), Autumn (legacy), Winter (goodbye)
-    - Optional user setting per message or account-wide
-
-14. **Automated milestone triggers**
-    - Logic: “Deliver this on their wedding day” → confirmed via recipient interaction
-    - Requires opt-in for recipient account creation
+10. **Add “Polish My Thoughts” AI Button**
+   - Appears only inside message composer
+   - Suggests tone edits or soft prompts
+   - Never overwrites without explicit user approval
 
 ---
 
 ### ⏱️ Timeline with Checkpoints
 
-| Week | Milestone                                 |
-|------|--------------------------------------------|
-| 1    | Project scaffolding, design system setup   |
-| 2    | Onboarding, Auth, Recipient Management     |
-| 3    | Message Vault (text), Manual delivery      |
-| 4    | Media upload, Scheduling logic             |
-| 5    | Trusted contact flow, Encryption settings  |
-| 6    | Delivery UI polish, MVP launch candidate   |
-| 7    | AI writing assistant prototype             |
-| 8    | Theming system, automated milestone logic  |
+| Week | Milestone                               |
+|------|------------------------------------------|
+| 1    | Project setup, onboarding, auth          |
+| 2    | Message vault UI + message composer      |
+| 3    | Recipient and trusted contact flows      |
+| 4    | Delivery simulation + post-delivery view |
+| 5    | Soft launch candidate (internal demo)    |
+| 6    | (Optional) AI assistant polish button    |
 
 ---
 
 ### 👥 Team Roles & Rituals
 
-- **Product Owner (You?)**
-  - Own vision, emotional quality control, roadmap calls
+- **Founder / Emotional Owner**  
+  Oversees tone, language, and product integrity
 
-- **Frontend Dev (1–2)**
-  - Build onboarding, message vault, responsive UI
+- **Frontend Developer**  
+  Focused on onboarding, composer, vault UI
 
-- **Backend Dev (1)**
-  - Set up user auth, delivery logic, encryption handling
+- **Backend Developer (Optional)**  
+  Handles delivery logic, recipient auth, data privacy
 
-- **AI Engineer (Optional for V2)**
-  - Fine-tune emotional prompt assistant
-
-- **Design Partner**
-  - Lead emotional flow audits, usability tests, component library
-
-- **Rituals**
-  - Weekly design–dev sync
-  - Bi-weekly usability tests (3 users, 30 minutes each)
-  - Monthly “Emotion Audit” session (review tone, copy, flow)
+- **Design Partner**  
+  Reviews every flow for emotional clarity, whitespace, tone
 
 ---
 
-### 🎯 Optional Integrations & Stretch Goals
+### 🔁 Recommended Rituals
 
-- Notion API → Import life journals into message vault  
-- Calendly-style birthday selector UI  
-- Legacy print service integration (PDF book of memories)  
-- Backup delivery channel: physical mail confirmation with delivery key  
-- AI-powered voice enhancer for poor-quality recordings  
+- Weekly 20-min design review  
+- Biweekly usability test (3 users, quiet tasks)  
+- Monthly emotional audit (copy, animation, tone)
+
+---
+
+### 🎯 Stretch Goals (Strictly Post-MVP)
+
+- Media attachments (audio, photos, video)
+- Multiple trusted contacts
+- Advanced delivery types (e.g., recurring, milestones)
+- Print legacy bundle
+- Recipient reply mechanism
