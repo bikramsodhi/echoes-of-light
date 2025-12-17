@@ -101,15 +101,14 @@
 - `src/hooks/useMediaUpload.ts`
 - `src/hooks/useSignedUrl.ts`
 
-### 2.2 Scheduled Delivery
-- [ ] Add calendar picker for delivery dates
-- [ ] Create delivery event selector ("On their birthday", "Anniversary")
-- [ ] Build delivery schedule management UI
-- [ ] Implement delivery date validation
+### 2.2 Scheduled Delivery ✅
+- [x] Add calendar picker for delivery dates
+- [x] Create delivery event selector ("On their birthday", "Anniversary")
+- [x] Build delivery schedule management UI
+- [x] Implement delivery date validation (prevents past dates)
 
-**Files to create:**
+**Files created:**
 - `src/components/delivery/DeliveryScheduler.tsx`
-- `src/components/delivery/EventPicker.tsx`
 
 ### 2.3 Legacy Verification System
 - [x] Create trusted contacts management page
