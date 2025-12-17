@@ -22,7 +22,7 @@ const steps = [
   {
     number: "04",
     title: "Rest Easy",
-    description: "Your words are encrypted and safe. When the time comes, your messages will find their way — gently.",
+    description: "Your words are protected and safe. When the time comes, your messages will find their way — gently.",
     icon: Heart,
   },
 ];

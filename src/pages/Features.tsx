@@ -87,7 +87,7 @@ const features = [
     description: "Optional space for your final thoughts, practical guidance, or words of comfort. A private document that helps those you love navigate what comes next.",
     details: [
       { icon: FileText, text: "Personal farewell messages" },
-      { icon: Lock, text: "Encrypted and private" },
+      { icon: Lock, text: "Protected and private" },
       { icon: Users, text: "Delivered to chosen recipients" },
       { icon: Heart, text: "Peace of mind for everyone" },
     ],
@@ -171,17 +171,17 @@ const Features = () => {
             Built on Trust & Privacy
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-            Your messages are encrypted and private. We never read your content, sell your data, 
+            Your messages are protected and private. We never read your content, sell your data, 
             or compromise your trust. EchoLight exists to serve your legacy — nothing else.
           </p>
           <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-primary" />
-              <span>End-to-end encryption</span>
+              <span>Secure storage</span>
             </div>
             <div className="flex items-center gap-2">
               <Eye className="w-4 h-4 text-primary" />
-              <span>Zero-knowledge privacy</span>
+              <span>Private by design</span>
             </div>
             <div className="flex items-center gap-2">
               <Lock className="w-4 h-4 text-primary" />
