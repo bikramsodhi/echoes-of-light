@@ -2,86 +2,98 @@
 
 ---
 
-### 🗺️ Site Map (Top-Level Pages)
+### 🗺️ Site Map (MVP Pages Only)
 
-1. **Welcome / Onboarding**
-2. **Dashboard (Home)**
-3. **Message Vault**
-4. **Create/Edit Message**
-5. **Recipients**
-6. **Trusted Contacts**
-7. **Delivery Settings**
-8. **AI Guide (Reflective Scribe)**
-9. **Settings & Privacy**
-10. **Help / About**
-11. **Posthumous View (Recipient Portal)**
+1. **Onboarding (Skippable)**
+2. **Message Vault (Dashboard)**
+3. **Create/Edit Message**
+4. **Recipients**
+5. **Trusted Contact**
+6. **Delivery Settings**
+7. **Settings & Privacy**
+8. **Recipient Portal (Post-Delivery Only)**
+
+(Optional)
+9. **Polish My Thoughts** (inline AI button only — not a full page)
 
 ---
 
 ### 📃 Purpose of Each Page
 
-- **Welcome / Onboarding:**  
-  Introduces emotional framing, shares examples, and creates account
+- **Onboarding (Skippable)**  
+  Soft welcome with emotional intent, 1–2 examples, and quick account setup (≤90 seconds)
 
-- **Dashboard (Home):**  
-  Overview of messages, delivery status, emotional nudge (“One memory you want to leave today?”)
+- **Message Vault (Dashboard)**  
+  Unified list of all messages — draft, held, scheduled, sent  
+  Primary CTA: “Create Message”  
+  Optional quiet nudge: “Is there something you want to say today?”
 
-- **Message Vault:**  
-  Organized view of all drafts, scheduled, and sent messages
+- **Create/Edit Message**  
+  Text-first composer  
+  Add recipient(s)  
+  Choose delivery type (manual, scheduled, or held)  
+  Optional: “Polish My Thoughts” AI button
 
-- **Create/Edit Message:**  
-  Compose text, add media, assign recipients, set delivery rules
+- **Recipients**  
+  Create/edit recipient profiles (name, relationship, contact method)  
+  Private and viewable only by the user
 
-- **Recipients:**  
-  Add/edit recipient profiles (email, phone, social handle, relationship)
+- **Trusted Contact**  
+  Invite 1 person via secure link to verify passing  
+  No access to content — confirm-only role
 
-- **Trusted Contacts:**  
-  Assign contact(s) who verify user’s passing
+- **Delivery Settings**  
+  User selects trigger method  
+  Copy reinforces: “Your message will be held safely until the right time”
 
-- **Delivery Settings:**  
-  Choose trigger type (scheduled, posthumous), and add notes or final wishes
+- **Settings & Privacy**  
+  Account management and soft encryption trust cues  
+  Visual emphasis on privacy and user control
 
-- **AI Guide (Reflective Scribe):**  
-  Gently suggests writing prompts and helps overcome emotional writer’s block
-
-- **Settings & Privacy:**  
-  Manage auth, encryption settings, legal info, and contact preferences
-
-- **Help / About:**  
-  Light support, purpose reminder, and company mission
-
-- **Posthumous View (Recipient Portal):**  
-  Minimal interface where recipient views messages when released
+- **Recipient Portal (Post-Delivery)**  
+  Single-purpose view  
+  Emotional intro before message  
+  No nav, editing, or replies
 
 ---
 
 ### 👥 User Roles & Access Levels
 
-| Role              | Access Notes                                                                 |
-|-------------------|------------------------------------------------------------------------------|
-| **User (Creator)** | Full control over all pages: create/edit messages, manage recipients/settings |
-| **Trusted Contact** | Limited access: verify passing via secure flow, no access to messages         |
-| **Recipient**       | Access only to messages *after delivery is triggered*                        |
-| **Admin (internal)**| Monitor delivery success, audit logs, no message content access              |
+| Role             | Access Notes                                                  |
+|------------------|---------------------------------------------------------------|
+| **User (Creator)**      | Full control over writing, assigning, editing messages         |
+| **Trusted Contact**     | Can verify user’s passing (one-time action via secure link)    |
+| **Recipient**           | Can view messages only after delivery is triggered             |
 
 ---
 
 ### 🧭 Primary User Journeys (Max 3 Steps Each)
 
-#### 🌱 Leave a message
-1. Tap “Create Message”
-2. Add text/media → choose recipient
-3. Set delivery type → save
+#### ✍️ Write and Save a Message
+1. Tap “Create Message”  
+2. Type message → assign recipient  
+3. Choose delivery → save
 
-#### 🛡️ Set up legacy trigger
-1. Navigate to “Trusted Contacts”
-2. Add contact → send invite
-3. Contact confirms role
+#### 🧾 Add a Trusted Contact
+1. Navigate to “Trusted Contact”  
+2. Add contact info  
+3. Send invite
 
-#### 💌 Message delivered (recipient journey)
-1. Recipient receives secure link with emotional framing
-2. Opens Posthumous Portal
-3. Views/read/listens to the message
+#### 💌 Message Delivery (Recipient Experience)
+1. Recipient gets secure link  
+2. Opens minimal view with emotional intro  
+3. Reads message in quiet space
+
+---
+
+### 🔒 What’s Not in MVP
+
+- No public profiles or social feeds  
+- No AI-led flows  
+- No seasonal themes or visuals  
+- No reply features  
+- No automated delivery milestones  
+- No push notifications or gamification
 
 ---
 
