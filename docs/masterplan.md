@@ -4,134 +4,141 @@
 
 ### 🚀 30-Second Elevator Pitch
 
-EchoLight is a digital legacy platform where users craft heartfelt letters, voice messages, and memories to be delivered to loved ones after they pass away. It’s not about death—it’s about *connection*, *closure*, and *continuing presence*. EchoLight makes it emotionally easy and technically secure to leave a meaningful impact.
+EchoLight is a calm, private place to write messages for the people you love—and quietly hold them until it’s time.  
+Not about death. Not about tech. Just presence.
 
 ---
 
 ### ❓ Problem & Mission
 
-- **Problem:** Most people have no gentle, trusted space to prepare emotional goodbyes or preserve personal reflections for those they’ll leave behind.
-- **Mission:** Create a kind, private, and intuitive platform where anyone can preserve their voice, stories, and messages—so love lives on, even after they’re gone.
+- **Problem:** There’s no emotionally safe space to quietly leave words for loved ones to receive after we’re gone.
+- **Mission:** Create a reflection-first app that helps people write, assign, and securely hold personal messages—privately, without pressure.
 
 ---
 
 ### 🎯 Target Audience
 
-- Aging individuals preparing their legacy
-- Thoughtful planners of any age
-- People facing serious or sudden life changes
-- Parents, partners, or friends who want to leave memories for future moments
+- Anyone preparing a personal legacy  
+- People navigating illness, life transitions, or quiet planning  
+- Parents, partners, siblings—those with love they want to preserve  
+- Especially optimized for solo, non-technical users
 
 ---
 
-### 🧩 Core Features
+### 🧩 Core Features (MVP)
 
-- **Onboarding:** Gentle walkthrough with emotional framing and ideas (e.g., “A letter to your child on their graduation”)
-- **Recipient Management:** Create private recipient profiles (email, phone, social links)
-- **Message Vault:** Upload text, video, audio, images, documents; assign to recipients
-- **Future Delivery:** Schedule by date (e.g., birthday), event, or upon death verification
-- **Legacy Verification Flow:** Trusted contact confirms passing, triggering message delivery
-- **Reflective AI Guide:** Optional writing companion that suggests prompts without overstepping
-- **Settings & Privacy:** End-to-end encryption, visual safety cues, goodbye document option
+- **Onboarding (Skippable)**  
+  Gentle intro, emotional framing, 1–2 inspirational examples  
+  Must be completable in under 90 seconds
+
+- **Message Vault (aka Dashboard)**  
+  Unified view: drafts, held, scheduled, sent  
+  Primary CTA: “Create Message”  
+  Optional emotional nudge (non-directive)
+
+- **Create / Edit Message**  
+  Text-first, media optional  
+  Assign recipients  
+  Choose delivery type (manual / scheduled / held)  
+  Calm confirmation on save
+
+- **Recipients**  
+  Add name, relationship, contact method  
+  Fully private to the user
+
+- **Trusted Contact**  
+  One contact for MVP  
+  Role: verify passing only (no message access)  
+  Invited via secure link
+
+- **Delivery Settings**  
+  Manual or simulated trigger is acceptable  
+  Copy emphasizes: “Held safely until the right time”
+
+- **Settings & Privacy**  
+  Account settings, encryption language (non-technical)  
+  Visual trust cues (lock icons, color, wording)
+
+- **Recipient Portal (Post-Delivery Only)**  
+  Minimal message view with soft framing  
+  No navigation, no edit options
+
+- **Optional AI (if included)**  
+  Feature name: “Polish My Thoughts”  
+  Appears only inside message composer  
+  Light, optional suggestions—never writes on its own
 
 ---
 
 ### 🛠️ High-Level Tech Stack
 
 - **Frontend:** Vite + TypeScript + React + shadcn/ui + Tailwind CSS  
-  → Fast dev, beautiful defaults, and emotion-capable components
-- **Backend:** Lovable Cloud  
-  → Handles privacy, encryption, and legacy triggers with built-in trust
-- **Storage:** Secure media object storage via Lovable Cloud
-- **Auth:** Email/password by default; Google OAuth optional  
-  → Simple and respectful of varied user confidence levels
+- **Backend & Storage:** Lovable Cloud — private, encrypted by design  
+- **Auth:** Email/password (Google optional)  
+- **AI (Optional):** Lovable AI wrapper, scoped only to one composer component
 
 ---
 
-### 🧱 Conceptual Data Model (ERD in words)
+### 🧱 Conceptual Data Model (Simplified)
 
-- **User**
-  - id, name, email, password
-  - hasMany → recipients, messages, trustedContacts
-- **Recipient**
-  - id, name, contactMethods[], relationship
-  - belongsTo → user
-- **Message**
-  - id, content (text/audio/video/photo), type, status (draft/scheduled/sent)
-  - belongsTo → user
-  - hasMany → recipients
-  - optional → deliveryDate, deliveryEvent
-- **TrustedContact**
-  - id, name, email, phone
-  - verifies → user status (alive/deceased)
+- **User** → has many Messages, Recipients, 1 TrustedContact
+- **Recipient** → name, contact, relationship
+- **Message** → content, deliveryType, assignedRecipients[]
+- **TrustedContact** → email, inviteStatus, confirmsDelivery
 
 ---
 
-### 🎨 UI Design Principles (Krug-aligned)
+### 🎨 UI Principles (Krug-aligned)
 
-- **Don’t Make Me Think:**  
-  Every flow (onboarding, message writing, delivery setup) is calm, linear, and emotionally clear.
-- **Emotional Framing Before Functionality:**  
-  Onboarding leads with inspiration, not forms.
-- **Whitespace is Tempo:**  
-  Layouts prioritize calm pacing over density.
-- **Kindness in Interaction:**  
-  Feedback is gentle (e.g., “We’ll hold this message safely” vs “Saved”).
+- Don’t make me think: flows are linear and emotional
+- Calm first: whitespace > density, silence > notifications
+- Never transactional: no read receipts, no “sent” logs
+- Affirmative tone: “We’re holding this with care.”
 
 ---
 
-### 🔐 Security & Compliance Notes
+### 🔐 Security & Compliance
 
-- End-to-end encryption for all messages and media
-- Clear consent flow for trusted contact and delivery logic
-- Optional two-factor authentication
-- Secure file storage (Lovable Cloud’s vault)
-- Compliant with major global privacy standards (GDPR, CCPA baseline)
+- End-to-end encryption (softly explained)
+- No social sharing, no third-party integrations
+- No data ever public
+- Visual confirmation of safety (“Message is encrypted and private”)
 
 ---
 
 ### 🗺️ Phased Roadmap
 
 **MVP**
-- Onboarding → Recipient Management → Message Vault (text only) → Manual delivery triggers
+- Onboarding, Account, Message Vault  
+- Create/Edit Message  
+- Recipient and Trusted Contact flows  
+- Manual or simulated delivery
 
-**V1**
-- Media upload (photos, videos, audio)
-- Delivery scheduling (birthdays, anniversaries)
-- Trusted contact verification
-- Privacy-first settings
+**Post-MVP**
+- Optional AI polish button  
+- Media attachments  
+- Verified delivery triggers
 
-**V2**
-- Reflective AI writing companion
-- Automatic event-based delivery (e.g., “when child turns 18”)
-- “Season of Memory” themes (visual theming by life chapters)
+**Later Considerations**
+- Delivery analytics (private)  
+- Advanced triggers (e.g. age-based, recurring)  
+- Thematic modes or memory timelines
 
 ---
 
 ### ⚠️ Risks & Mitigations
 
-- **Emotional Weight of Use:**  
-  → Mitigation: Soothing UX, poetic copy, never rushed
-- **Verification Abuse / False Triggering:**  
-  → Mitigation: Redundant trusted contact model, optional legal doc check
-- **User Drop-off Due to Sadness:**  
-  → Mitigation: Prompt reflection as a gift, not a loss. Use AI gently.
-- **Privacy Concerns:**  
-  → Mitigation: Transparent encryption, no third-party data sales, visual safety indicators
+- **Emotional heaviness** → Soften with tone, reduce friction
+- **Verification abuse** → Single trusted contact w/ secure verification
+- **Privacy skepticism** → Visual trust cues, not technical language
 
 ---
 
-### 🌱 Future Expansion Ideas
+### ✅ Success = Simplicity
 
-- **Memory Capsule Mode:**  
-  Interactive timelines or audio diaries for specific recipients
-- **Family Tree Integration:**  
-  Link memories to a visual, branching map
-- **Time-locked Archive Access:**  
-  Grant legacy access to vault after 10+ years
-- **Seasonal UI Themes:**  
-  “Spring of beginnings,” “Autumn of reflection,” etc.
-- **Legacy Print Option:**  
-  Physical keepsake of letters or messages (via third-party)
+If a user can:
+- Write a message  
+- Assign it to a recipient  
+- Trust it’s being quietly held  
 
----
+→ The product has succeeded.
