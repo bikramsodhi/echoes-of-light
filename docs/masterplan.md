@@ -1,144 +1,163 @@
 ## EchoLight Masterplan
 
+> **"A quiet place to leave words, memories, and light for the people you love."**
+
 ---
 
 ### 🚀 30-Second Elevator Pitch
 
-EchoLight is a calm, private place to write messages for the people you love—and quietly hold them until it’s time.  
-Not about death. Not about tech. Just presence.
+EchoLight is a digital legacy platform where users craft heartfelt letters, voice messages, and memories to be delivered to loved ones after they pass away. It's not about death—it's about *connection*, *closure*, and *continuing presence*. EchoLight makes it emotionally easy and technically secure to leave a meaningful impact.
 
 ---
 
 ### ❓ Problem & Mission
 
-- **Problem:** There’s no emotionally safe space to quietly leave words for loved ones to receive after we’re gone.
-- **Mission:** Create a reflection-first app that helps people write, assign, and securely hold personal messages—privately, without pressure.
+- **Problem:** Most people have no gentle, trusted space to prepare emotional goodbyes or preserve personal reflections for those they'll leave behind.
+- **Mission:** Create a kind, private, and intuitive platform where anyone can preserve their voice, stories, and messages—so love lives on, even after they're gone.
 
 ---
 
 ### 🎯 Target Audience
 
-- Anyone preparing a personal legacy  
-- People navigating illness, life transitions, or quiet planning  
-- Parents, partners, siblings—those with love they want to preserve  
-- Especially optimized for solo, non-technical users
+- Aging individuals preparing their legacy
+- Thoughtful planners of any age
+- People facing serious or sudden life changes
+- Parents, partners, or friends who want to leave memories for future moments
 
 ---
 
 ### 🧩 Core Features (MVP)
 
-- **Onboarding (Skippable)**  
-  Gentle intro, emotional framing, 1–2 inspirational examples  
-  Must be completable in under 90 seconds
+- **Onboarding:** Gentle walkthrough with emotional framing and ideas (skippable, under 90 seconds)
+- **Recipient Management:** Create private recipient profiles (name, relationship, contact methods)
+- **Message Vault:** Write and organize text messages assigned to recipients
+- **Manual Delivery:** Held safely until triggered by admin or trusted contact confirmation
+- **Trusted Contact Setup:** Invite contacts who can verify your passing (confirm-only role, no message access)
+- **Settings & Privacy:** Visual trust cues, encryption toggles, account management
 
-- **Message Vault (aka Dashboard)**  
-  Unified view: drafts, held, scheduled, sent  
-  Primary CTA: “Create Message”  
-  Optional emotional nudge (non-directive)
+**Optional (MVP):**
+- **"Polish My Thoughts":** AI tone assistant inside message composer (never overwrites without approval)
 
-- **Create / Edit Message**  
-  Text-first, media optional  
-  Assign recipients  
-  Choose delivery type (manual / scheduled / held)  
-  Calm confirmation on save
+---
 
-- **Recipients**  
-  Add name, relationship, contact method  
-  Fully private to the user
+### ✅ Core Loop
 
-- **Trusted Contact**  
-  One contact for MVP  
-  Role: verify passing only (no message access)  
-  Invited via secure link
+**Write → Assign → Hold**
 
-- **Delivery Settings**  
-  Manual or simulated trigger is acceptable  
-  Copy emphasizes: “Held safely until the right time”
+A user can:
+1. Write a message
+2. Assign it to a recipient
+3. Trust that it is quietly held
 
-- **Settings & Privacy**  
-  Account settings, encryption language (non-technical)  
-  Visual trust cues (lock icons, color, wording)
-
-- **Recipient Portal (Post-Delivery Only)**  
-  Minimal message view with soft framing  
-  No navigation, no edit options
-
-- **Optional AI (if included)**  
-  Feature name: “Polish My Thoughts”  
-  Appears only inside message composer  
-  Light, optional suggestions—never writes on its own
+If this works, the product works.
 
 ---
 
 ### 🛠️ High-Level Tech Stack
 
 - **Frontend:** Vite + TypeScript + React + shadcn/ui + Tailwind CSS  
-- **Backend & Storage:** Lovable Cloud — private, encrypted by design  
-- **Auth:** Email/password (Google optional)  
-- **AI (Optional):** Lovable AI wrapper, scoped only to one composer component
+  → Fast dev, beautiful defaults, and emotion-capable components
+- **Backend:** Lovable Cloud  
+  → Handles privacy, encryption, and legacy triggers with built-in trust
+- **Storage:** Secure media object storage via Lovable Cloud (private bucket with signed URLs)
+- **Auth:** Email/password + Google OAuth  
+  → Simple and respectful of varied user confidence levels
 
 ---
 
-### 🧱 Conceptual Data Model (Simplified)
+### 🧱 Conceptual Data Model
 
-- **User** → has many Messages, Recipients, 1 TrustedContact
-- **Recipient** → name, contact, relationship
-- **Message** → content, deliveryType, assignedRecipients[]
-- **TrustedContact** → email, inviteStatus, confirmsDelivery
+- **User**
+  - id, name, email, password
+  - hasMany → recipients, messages, trustedContacts
+- **Recipient**
+  - id, name, contactMethods[], relationship
+  - belongsTo → user
+- **Message**
+  - id, content (text/media), type, status (draft/scheduled/sent)
+  - belongsTo → user
+  - hasMany → recipients
+  - optional → deliveryDate, deliveryEvent
+- **TrustedContact**
+  - id, name, email, phone, status
+  - verifies → user status (confirm-only role)
 
 ---
 
-### 🎨 UI Principles (Krug-aligned)
+### 🎨 Design Principles
 
-- Don’t make me think: flows are linear and emotional
-- Calm first: whitespace > density, silence > notifications
-- Never transactional: no read receipts, no “sent” logs
-- Affirmative tone: “We’re holding this with care.”
+- **Don't Make Me Think:**  
+  Every flow (onboarding, message writing, delivery setup) is calm, linear, and emotionally clear.
+- **Emotional Framing Before Functionality:**  
+  Onboarding leads with inspiration, not forms.
+- **Whitespace is Tempo:**  
+  Layouts prioritize calm pacing over density.
+- **Kindness in Interaction:**  
+  Feedback is gentle (e.g., "We'll hold this message safely" vs "Saved").
 
 ---
 
-### 🔐 Security & Compliance
+### 🔐 Security & Compliance Notes
 
-- End-to-end encryption (softly explained)
-- No social sharing, no third-party integrations
-- No data ever public
-- Visual confirmation of safety (“Message is encrypted and private”)
+- End-to-end encryption for all messages and media
+- Clear consent flow for trusted contact and delivery logic
+- Secure file storage (private bucket with signed URLs)
+- RLS policies on all user data
+- Compliant with major global privacy standards (GDPR, CCPA baseline)
 
 ---
 
 ### 🗺️ Phased Roadmap
 
-**MVP**
-- Onboarding, Account, Message Vault  
-- Create/Edit Message  
-- Recipient and Trusted Contact flows  
-- Manual or simulated delivery
+**MVP (Current)**
+- Onboarding → Recipient Management → Message Vault (text) → Manual delivery triggers
+- Trusted contact verification flow
+- Settings & Privacy page
 
-**Post-MVP**
-- Optional AI polish button  
-- Media attachments  
-- Verified delivery triggers
+**V1 (Post-MVP)**
+- Media upload (photos, videos, audio)
+- Delivery scheduling (birthdays, anniversaries)
+- Read receipts
+- "Polish My Thoughts" AI enhancement
 
-**Later Considerations**
-- Delivery analytics (private)  
-- Advanced triggers (e.g. age-based, recurring)  
-- Thematic modes or memory timelines
+**V2 (Future)**
+- Reflective AI writing companion (expanded prompts)
+- Automated event-based delivery (e.g., "when child turns 18")
+- Seasonal memory themes
 
 ---
 
 ### ⚠️ Risks & Mitigations
 
-- **Emotional heaviness** → Soften with tone, reduce friction
-- **Verification abuse** → Single trusted contact w/ secure verification
-- **Privacy skepticism** → Visual trust cues, not technical language
+- **Emotional Weight of Use:**  
+  → Mitigation: Soothing UX, poetic copy, never rushed
+- **Verification Abuse / False Triggering:**  
+  → Mitigation: Redundant trusted contact model (minimum 2 confirmations)
+- **User Drop-off Due to Sadness:**  
+  → Mitigation: Prompt reflection as a gift, not a loss. Frame positively.
+- **Privacy Concerns:**  
+  → Mitigation: Transparent encryption, no third-party data sales, visual safety indicators
 
 ---
 
-### ✅ Success = Simplicity
+### 🚫 Excluded from MVP
 
-If a user can:
-- Write a message  
-- Assign it to a recipient  
-- Trust it’s being quietly held  
+- Public profiles or social feeds
+- Social sharing
+- Replying to messages
+- Milestone-based automated triggers
+- Seasonal theming
+- Complex AI flows
+- Push notifications
+- Gamification mechanics
 
-→ The product has succeeded.
+---
+
+### 🌱 Future Expansion Ideas (Post-V2)
+
+- **Memory Capsule Mode:** Interactive timelines or audio diaries for specific recipients
+- **Family Tree Integration:** Link memories to a visual, branching map
+- **Time-locked Archive Access:** Grant legacy access to vault after 10+ years
+- **Legacy Print Option:** Physical keepsake of letters or messages (via third-party)
+
+---

@@ -1,10 +1,12 @@
 ## EchoLight Implementation Plan
 
+> **"A quiet place to leave words, memories, and light for the people you love."**
+
 ---
 
-### 🧱 Step-by-Step Build Sequence (MVP-Only)
+### 🧱 Step-by-Step Build Sequence (MVP)
 
-#### Phase 1 — Quiet Core Loop: Write → Assign → Hold
+#### Phase 1 — Core Loop: Write → Assign → Hold
 
 1. **Project Setup**
    - Initialize Vite + React + Tailwind + TypeScript
@@ -24,14 +26,14 @@
 4. **Message Vault (Dashboard)**
    - Single-page list of all messages
      - Status filters: draft / held / scheduled / sent
-   - Primary CTA: “Create Message”
+   - Primary CTA: "Create Message"
    - Light emotional nudge above list (optional)
 
 5. **Create/Edit Message Flow**
    - Text-first composer
    - Add/edit recipients
    - Choose delivery type: manual / scheduled / held
-   - Save confirmation: “We’re holding this message safely”
+   - Save confirmation: "We're holding this message safely"
 
 6. **Recipient Management**
    - Add/edit recipient profile:
@@ -44,8 +46,8 @@
    - Confirm-only role (no message access)
 
 8. **Delivery Settings**
-   - Simulate delivery triggers (for demo/MVP)
-   - Emphasize: “Held safely until the right time”
+   - Manual delivery triggers (admin panel or self-test)
+   - Emphasize: "Held safely until the right time"
 
 9. **Recipient Portal (Post-Delivery Only)**
    - Minimal page showing emotional message intro + content
@@ -53,12 +55,24 @@
 
 ---
 
-#### Optional Phase — Light AI Support
+#### Phase 2 — Enhancement: Media, Settings & Optional AI
 
-10. **Add “Polish My Thoughts” AI Button**
-   - Appears only inside message composer
-   - Suggests tone edits or soft prompts
-   - Never overwrites without explicit user approval
+10. **Media Uploads**
+    - Photo, video, audio attachments
+    - Private storage bucket with signed URLs
+    - File size/type validation
+
+11. **Settings & Privacy**
+    - Encryption toggles
+    - Account management
+    - Last wishes document (optional)
+    - Inactivity check-in configuration
+
+12. **"Polish My Thoughts" AI Button (Optional)**
+    - Appears only inside message composer
+    - Suggests tone edits or soft prompts
+    - Never overwrites without explicit user approval
+    - Never appears in navigation
 
 ---
 
@@ -69,40 +83,42 @@
 | 1    | Project setup, onboarding, auth          |
 | 2    | Message vault UI + message composer      |
 | 3    | Recipient and trusted contact flows      |
-| 4    | Delivery simulation + post-delivery view |
-| 5    | Soft launch candidate (internal demo)    |
+| 4    | Delivery simulation + recipient portal   |
+| 5    | Settings & privacy page                  |
 | 6    | (Optional) AI assistant polish button    |
 
 ---
 
-### 👥 Team Roles & Rituals
+### 👥 Roles
 
-- **Founder / Emotional Owner**  
-  Oversees tone, language, and product integrity
-
-- **Frontend Developer**  
-  Focused on onboarding, composer, vault UI
-
-- **Backend Developer (Optional)**  
-  Handles delivery logic, recipient auth, data privacy
-
-- **Design Partner**  
-  Reviews every flow for emotional clarity, whitespace, tone
+| Role             | Access Notes                                                  |
+|------------------|---------------------------------------------------------------|
+| **User (Creator)**      | Full control over writing, assigning, editing messages         |
+| **Trusted Contact**     | Can verify user's passing (one-time action via secure link)    |
+| **Recipient**           | Can view messages only after delivery is triggered             |
 
 ---
 
-### 🔁 Recommended Rituals
+### 🎯 Success Criteria
 
-- Weekly 20-min design review  
-- Biweekly usability test (3 users, quiet tasks)  
-- Monthly emotional audit (copy, animation, tone)
+A user can:
+1. Write a message
+2. Assign it to a recipient
+3. Trust that it is quietly held
+
+If this works, the product works.
 
 ---
 
-### 🎯 Stretch Goals (Strictly Post-MVP)
+### 🚫 Excluded from MVP
 
-- Media attachments (audio, photos, video)
-- Multiple trusted contacts
-- Advanced delivery types (e.g., recurring, milestones)
-- Print legacy bundle
-- Recipient reply mechanism
+- Public profiles
+- Social sharing
+- Replying to messages
+- Milestone-based triggers
+- Seasonal theming
+- Complex AI flows
+- Push notifications
+- Gamification mechanics
+
+---
