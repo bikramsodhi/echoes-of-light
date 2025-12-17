@@ -40,7 +40,7 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up animation-delay-400">
             <Button variant="warm" size="xl" asChild>
-              <Link to="/get-started">Begin Your Legacy</Link>
+              <Link to="/vault/compose">Begin Your Legacy</Link>
             </Button>
             <Button variant="outline" size="xl" asChild>
               <Link to="/how-it-works">Learn How It Works</Link>
