@@ -8,6 +8,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import HowItWorksPage from "./pages/HowItWorks";
 import Features from "./pages/Features";
+import About from "./pages/About";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import Onboarding from "./pages/Onboarding";
@@ -16,6 +17,7 @@ import Recipients from "./pages/Recipients";
 import Vault from "./pages/Vault";
 import MessageComposer from "./pages/MessageComposer";
 import TrustedContacts from "./pages/TrustedContacts";
+import Admin from "./pages/Admin";
 import VerifyContact from "./pages/VerifyContact";
 import RecipientPortal from "./pages/RecipientPortal";
 import NotFound from "./pages/NotFound";
@@ -33,6 +35,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/how-it-works" element={<HowItWorksPage />} />
             <Route path="/features" element={<Features />} />
+            <Route path="/about" element={<About />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route
@@ -80,6 +83,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <TrustedContacts />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
                 </ProtectedRoute>
               }
             />
