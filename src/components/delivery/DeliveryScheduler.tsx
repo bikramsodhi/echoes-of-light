@@ -120,6 +120,7 @@ export default function DeliveryScheduler({
             onSelect={handleDateSelect}
             disabled={(date) => date < new Date()}
             initialFocus
+            className="pointer-events-auto"
           />
         </PopoverContent>
       </Popover>
