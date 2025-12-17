@@ -51,7 +51,7 @@ const Hero = () => {
           <div className="flex flex-wrap justify-center gap-8 animate-fade-in-up animation-delay-600">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Shield className="w-5 h-5 text-primary" />
-              <span className="text-sm">End-to-End Encrypted</span>
+              <span className="text-sm">Protected & Private</span>
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Heart className="w-5 h-5 text-primary" />
