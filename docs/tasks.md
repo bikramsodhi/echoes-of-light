@@ -72,15 +72,16 @@
 - [x] Add recipient assignment to messages
 - [x] Build message preview mode
 
-### 1.8 Manual Delivery System
-- [ ] Create admin panel for triggering delivery
-- [ ] Build user self-test preview ("See what they'll receive")
+### 1.8 Manual Delivery System ✅
+- [x] Create admin panel for triggering delivery
+- [x] Build user self-test preview ("See what they'll receive")
 - [x] Add basic trusted contact verification flow
-- [ ] Implement delivery confirmation UI
+- [x] Implement delivery confirmation UI
 
-**Files to create:**
+**Files created:**
 - `src/pages/Admin.tsx` — Admin delivery panel (protected by admin role)
 - `src/components/delivery/TestDeliveryDialog.tsx`
+- `src/components/delivery/DeliveryConfirmation.tsx`
 
 ---
 

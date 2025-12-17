@@ -1,5 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +25,8 @@ import {
   Settings, 
   LogOut,
   Plus,
-  Heart
+  Heart,
+  ShieldCheck
 } from 'lucide-react';
 
 const mainNavItems = [
@@ -41,6 +44,23 @@ export default function AppSidebar() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Check if user is admin
+  const { data: isAdmin } = useQuery({
+    queryKey: ['is_admin', user?.id],
+    queryFn: async () => {
+      if (!user) return false;
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle();
+      
+      return !!data && !error;
+    },
+    enabled: !!user,
+  });
 
   const handleSignOut = async () => {
     await signOut();
@@ -115,6 +135,17 @@ export default function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton 
+                    onClick={() => navigate('/admin')}
+                    isActive={location.pathname === '/admin'}
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                    <span>Admin Panel</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
