@@ -31,31 +31,44 @@ export default function RecipientPortal() {
       return;
     }
 
-    // For now, show a demo message since we don't have real delivery tokens yet
-    // In production, this would validate the token and fetch the actual message
     const fetchMessage = async () => {
       try {
-        // Simulate loading
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Demo message for testing the UI
+        // Validate token format (UUID)
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(token)) {
+          setError('Invalid message link');
+          setLoading(false);
+          return;
+        }
+
+        // Fetch message using secure RPC function
+        const { data, error: fetchError } = await supabase
+          .rpc('get_message_by_delivery_token', { _token: token });
+
+        if (fetchError) {
+          console.error('Error fetching message:', fetchError);
+          setError('Unable to load this message. Please try again later.');
+          setLoading(false);
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          setError('This message could not be found. The link may have expired or been used already.');
+          setLoading(false);
+          return;
+        }
+
+        const messageData = data[0];
         setMessage({
-          id: 'demo',
-          title: 'A Letter of Love',
-          content: `My dearest,
-
-If you're reading this, it means the time has come for these words to find you. I want you to know that writing this brought me such peace, knowing that even across time and distance, my love would reach you.
-
-Remember the little moments we shared — the laughter, the quiet evenings, the way you always knew how to make me smile. Those memories are treasures that nothing can take away.
-
-I hope this message finds you well, surrounded by people who love you as much as I do. Please know that you made my life infinitely richer just by being in it.
-
-With all my heart, always.`,
-          media_urls: [],
-          sent_at: new Date().toISOString(),
-          sender_name: 'Someone who loved you deeply',
+          id: messageData.id,
+          title: messageData.title,
+          content: messageData.content,
+          media_urls: messageData.media_urls,
+          sent_at: messageData.sent_at,
+          sender_name: messageData.sender_name,
         });
       } catch (err) {
+        console.error('Unexpected error:', err);
         setError('Unable to load this message. The link may have expired.');
       } finally {
         setLoading(false);
@@ -65,9 +78,17 @@ With all my heart, always.`,
     fetchMessage();
   }, [token]);
 
-  const handleViewMessage = () => {
+  const handleViewMessage = async () => {
     setViewed(true);
-    // In production, mark the message as viewed in the database
+    
+    // Mark message as viewed in database
+    if (token) {
+      try {
+        await supabase.rpc('mark_message_viewed', { _token: token });
+      } catch (err) {
+        console.error('Error marking message as viewed:', err);
+      }
+    }
   };
 
   if (loading) {

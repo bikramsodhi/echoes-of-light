@@ -16,21 +16,27 @@ export type Database = {
     Tables: {
       message_recipients: {
         Row: {
+          delivery_token: string | null
           id: string
           message_id: string
           recipient_id: string
+          token_expires_at: string | null
           viewed_at: string | null
         }
         Insert: {
+          delivery_token?: string | null
           id?: string
           message_id: string
           recipient_id: string
+          token_expires_at?: string | null
           viewed_at?: string | null
         }
         Update: {
+          delivery_token?: string | null
           id?: string
           message_id?: string
           recipient_id?: string
+          token_expires_at?: string | null
           viewed_at?: string | null
         }
         Relationships: [
@@ -293,6 +299,18 @@ export type Database = {
           user_name: string
         }[]
       }
+      get_message_by_delivery_token: {
+        Args: { _token: string }
+        Returns: {
+          content: string
+          id: string
+          media_urls: string[]
+          message_recipient_id: string
+          sender_name: string
+          sent_at: string
+          title: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -300,6 +318,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      mark_message_viewed: { Args: { _token: string }; Returns: boolean }
       respond_to_invite: {
         Args: { _accept: boolean; _token: string }
         Returns: boolean
