@@ -10,7 +10,7 @@ export default function QuickActions() {
       title: 'Create Message',
       description: 'Begin a new letter, voice memo, or video for someone you love',
       icon: Plus,
-      path: '/vault/new',
+      path: '/vault/compose',
       iconBg: 'bg-primary/10',
       iconColor: 'text-primary',
     },
