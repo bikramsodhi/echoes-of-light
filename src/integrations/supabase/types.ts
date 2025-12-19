@@ -318,6 +318,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_file_in_sent_message: { Args: { file_path: string }; Returns: boolean }
       mark_message_viewed: { Args: { _token: string }; Returns: boolean }
       respond_to_invite: {
         Args: { _accept: boolean; _token: string }
