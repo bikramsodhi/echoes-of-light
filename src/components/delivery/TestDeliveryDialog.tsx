@@ -12,6 +12,9 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Eye, Send, Heart, Calendar, User } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Message = Tables<'messages'>;
@@ -33,14 +36,74 @@ export default function TestDeliveryDialog({
   onSendTest,
 }: TestDeliveryDialogProps) {
   const [isSending, setIsSending] = useState(false);
+  const { user } = useAuth();
 
   const handleSendTest = async () => {
+    if (!user?.email) {
+      toast.error('No email address found for your account');
+      return;
+    }
+
     setIsSending(true);
-    // Simulate sending
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSending(false);
-    onSendTest?.();
-    onOpenChange(false);
+    
+    try {
+      // Get the user's profile for their name
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user.id)
+        .single();
+
+      const senderName = profile?.full_name || 'EchoLight User';
+
+      // Get or create a message_recipient entry for the test
+      let { data: messageRecipient } = await supabase
+        .from('message_recipients')
+        .select('delivery_token')
+        .eq('message_id', message.id)
+        .limit(1)
+        .single();
+
+      // If no message_recipient exists, we need at least one recipient assigned
+      if (!messageRecipient && recipients.length > 0) {
+        const { data: newMr } = await supabase
+          .from('message_recipients')
+          .insert({
+            message_id: message.id,
+            recipient_id: recipients[0].id,
+          })
+          .select('delivery_token')
+          .single();
+        messageRecipient = newMr;
+      }
+
+      const accessLink = messageRecipient?.delivery_token 
+        ? `${window.location.origin}/portal?token=${messageRecipient.delivery_token}`
+        : `${window.location.origin}/portal`;
+
+      // Call the send-email edge function
+      const { error } = await supabase.functions.invoke('send-email', {
+        body: {
+          type: 'message_delivery',
+          recipientName: senderName, // Send to self
+          recipientEmail: user.email,
+          senderName: senderName,
+          messageTitle: message.title || 'A message for you',
+          accessLink: accessLink,
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success('Test email sent! Check your inbox.');
+      onSendTest?.();
+      onOpenChange(false);
+    } catch (error: any) {
+      console.error('Failed to send test email:', error);
+      toast.error(error.message || 'Failed to send test email');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
