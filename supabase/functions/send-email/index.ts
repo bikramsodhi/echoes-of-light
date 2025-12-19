@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -100,7 +100,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     // Authentication check - require valid user session
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = req.headers.get("Authorization") || req.headers.get("authorization");
     if (!authHeader) {
       console.error("No authorization header provided");
       return new Response(
@@ -112,19 +112,46 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error("Missing backend env vars", {
+        hasUrl: Boolean(supabaseUrl),
+        hasAnonKey: Boolean(supabaseAnonKey),
+      });
+      return new Response(
+        JSON.stringify({ success: false, error: "Server misconfigured" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     // Create Supabase client with user's auth token
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      {
-        global: { headers: { Authorization: authHeader } },
-      }
-    );
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+      global: { headers: { Authorization: authHeader } },
+    });
 
     // Verify user is authenticated
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    const jwt = authHeader.replace(/^Bearer\s+/i, "");
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseClient.auth.getUser(jwt);
+
     if (authError || !user) {
-      console.error("Authentication failed");
+      console.error("Authentication failed", {
+        message: authError?.message,
+        name: authError?.name,
+        status: (authError as any)?.status,
+      });
       return new Response(
         JSON.stringify({ success: false, error: "Unauthorized - invalid session" }),
         {
