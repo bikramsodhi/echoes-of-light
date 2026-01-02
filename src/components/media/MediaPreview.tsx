@@ -69,26 +69,47 @@ function MediaThumbnail({
       ) : mediaType === 'non-previewable-image' ? (
         <div className="w-full h-full flex flex-col items-center justify-center bg-muted p-2 text-center">
           <CheckCircle2 className="h-6 w-6 text-primary mb-1" />
+          <ImageIcon className="h-4 w-4 text-muted-foreground mb-1" />
           <span className="text-xs font-medium text-foreground">Uploaded</span>
           <span className="text-[10px] text-muted-foreground truncate max-w-full px-1">
             {getFileName(filePath).split('.').pop()?.toUpperCase()}
           </span>
         </div>
       ) : mediaType === 'video' ? (
-        <div className="w-full h-full flex items-center justify-center bg-muted">
-          <Film className="h-8 w-8 text-muted-foreground" />
+        <div className="w-full h-full flex flex-col items-center justify-center bg-muted p-2 text-center">
+          <CheckCircle2 className="h-6 w-6 text-primary mb-1" />
+          <Film className="h-4 w-4 text-muted-foreground mb-1" />
+          <span className="text-xs font-medium text-foreground">Uploaded</span>
+          <span className="text-[10px] text-muted-foreground truncate max-w-full px-1">
+            {getFileName(filePath).split('.').pop()?.toUpperCase()}
+          </span>
         </div>
       ) : mediaType === 'audio' ? (
-        <div className="w-full h-full flex items-center justify-center bg-muted">
-          <Music className="h-8 w-8 text-muted-foreground" />
+        <div className="w-full h-full flex flex-col items-center justify-center bg-muted p-2 text-center">
+          <CheckCircle2 className="h-6 w-6 text-primary mb-1" />
+          <Music className="h-4 w-4 text-muted-foreground mb-1" />
+          <span className="text-xs font-medium text-foreground">Uploaded</span>
+          <span className="text-[10px] text-muted-foreground truncate max-w-full px-1">
+            {getFileName(filePath).split('.').pop()?.toUpperCase()}
+          </span>
         </div>
       ) : error || (!isLoadingUrl && !signedUrl) ? (
-        <div className="w-full h-full flex items-center justify-center bg-muted">
-          <ImageIcon className="h-8 w-8 text-muted-foreground" />
+        <div className="w-full h-full flex flex-col items-center justify-center bg-muted p-2 text-center">
+          <CheckCircle2 className="h-6 w-6 text-primary mb-1" />
+          <ImageIcon className="h-4 w-4 text-muted-foreground mb-1" />
+          <span className="text-xs font-medium text-foreground">Uploaded</span>
+          <span className="text-[10px] text-muted-foreground truncate max-w-full px-1">
+            {getFileName(filePath).split('.').pop()?.toUpperCase()}
+          </span>
         </div>
       ) : mediaType === 'document' ? (
-        <div className="w-full h-full flex items-center justify-center bg-muted">
-          <FileText className="h-8 w-8 text-muted-foreground" />
+        <div className="w-full h-full flex flex-col items-center justify-center bg-muted p-2 text-center">
+          <CheckCircle2 className="h-6 w-6 text-primary mb-1" />
+          <FileText className="h-4 w-4 text-muted-foreground mb-1" />
+          <span className="text-xs font-medium text-foreground">Uploaded</span>
+          <span className="text-[10px] text-muted-foreground truncate max-w-full px-1">
+            {getFileName(filePath).split('.').pop()?.toUpperCase()}
+          </span>
         </div>
       ) : null}
       
