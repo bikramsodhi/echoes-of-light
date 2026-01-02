@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Vault, Mic, CalendarClock, Heart, Shield, Users, Clock, Sparkles } from "lucide-react";
+import { Vault, Mic, CalendarClock, Heart, Shield, Users, Clock, Sparkles, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -53,6 +53,11 @@ const steps = [
 
 const features = [
   {
+    icon: Mail,
+    title: "Message Vault",
+    description: "A private space for letters, voice memos, videos, and photos — preserved with intention.",
+  },
+  {
     icon: Shield,
     title: "Privacy First",
     description: "End-to-end encryption ensures only intended recipients can read your messages.",
@@ -71,6 +76,11 @@ const features = [
     icon: Sparkles,
     title: "Gentle Guidance",
     description: "Optional prompts help you reflect and craft meaningful messages.",
+  },
+  {
+    icon: Heart,
+    title: "Last Wishes",
+    description: "Optional documents for your final thoughts — because some words are meant to comfort.",
   },
 ];
 
@@ -146,7 +156,7 @@ const HowItWorksPage = () => {
                 Every feature is designed with your privacy and peace of mind at heart.
               </p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {features.map((feature) => {
                 const Icon = feature.icon;
                 return (

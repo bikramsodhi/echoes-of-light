@@ -24,7 +24,7 @@ const CTA = () => {
                 <Link to="/auth">Create Your Legacy</Link>
               </Button>
               <Button variant="gentle" size="xl" asChild>
-                <Link to="/auth">Learn More</Link>
+                <Link to="/how-it-works">Learn More</Link>
               </Button>
             </div>
             
