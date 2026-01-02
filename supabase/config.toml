@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.ai-writing-assistant]
 verify_jwt = true
+
+[functions.process-scheduled-messages]
+verify_jwt = false
