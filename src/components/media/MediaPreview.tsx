@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { X, Image as ImageIcon, Film, Music, FileText, ExternalLink, Loader2 } from 'lucide-react';
+import { X, Image as ImageIcon, Film, Music, FileText, ExternalLink, Loader2, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSignedUrl } from '@/hooks/useSignedUrl';
 
@@ -11,13 +11,21 @@ interface MediaPreviewProps {
   className?: string;
 }
 
-function getMediaType(path: string): 'image' | 'video' | 'audio' | 'document' {
+// Extensions that browsers can't display as images
+const NON_PREVIEWABLE_IMAGE_EXTENSIONS = ['heic', 'heif'];
+
+function getMediaType(path: string): 'image' | 'video' | 'audio' | 'document' | 'non-previewable-image' {
   const ext = path.split('.').pop()?.toLowerCase() || '';
   
+  if (NON_PREVIEWABLE_IMAGE_EXTENSIONS.includes(ext)) return 'non-previewable-image';
   if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'image';
   if (['mp4', 'webm', 'mov', 'quicktime'].includes(ext)) return 'video';
   if (['mp3', 'wav', 'webm', 'ogg', 'mpeg'].includes(ext)) return 'audio';
   return 'document';
+}
+
+function getFileName(path: string): string {
+  return path.split('/').pop() || path;
 }
 
 function MediaThumbnail({ 
@@ -58,6 +66,14 @@ function MediaThumbnail({
             setError(true);
           }}
         />
+      ) : mediaType === 'non-previewable-image' ? (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-muted p-2 text-center">
+          <CheckCircle2 className="h-6 w-6 text-primary mb-1" />
+          <span className="text-xs font-medium text-foreground">Uploaded</span>
+          <span className="text-[10px] text-muted-foreground truncate max-w-full px-1">
+            {getFileName(filePath).split('.').pop()?.toUpperCase()}
+          </span>
+        </div>
       ) : mediaType === 'video' ? (
         <div className="w-full h-full flex items-center justify-center bg-muted">
           <Film className="h-8 w-8 text-muted-foreground" />
