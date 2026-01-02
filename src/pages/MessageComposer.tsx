@@ -461,7 +461,7 @@ export default function MessageComposer() {
                 <SelectContent>
                   <SelectItem value="posthumous">After I pass</SelectItem>
                   <SelectItem value="scheduled">On a specific date</SelectItem>
-                  <SelectItem value="manual">When I choose</SelectItem>
+                  <SelectItem value="manual">Drafts Only</SelectItem>
                 </SelectContent>
               </Select>
             </div>
