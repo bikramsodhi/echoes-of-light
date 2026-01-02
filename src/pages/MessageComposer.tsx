@@ -140,6 +140,11 @@ export default function MessageComposer() {
     mutationFn: async () => {
       if (!user) throw new Error('Not authenticated');
 
+      // Determine status: if scheduled with a date, set to 'scheduled'; otherwise 'draft'
+      const status = (deliveryTrigger === 'scheduled' && deliveryDate) 
+        ? 'scheduled' as const 
+        : 'draft' as const;
+
       const payload = {
         title: title || null,
         content: content || null,
@@ -147,7 +152,7 @@ export default function MessageComposer() {
         delivery_date: deliveryDate?.toISOString() || null,
         delivery_event: deliveryEvent || null,
         media_urls: mediaUrls.length > 0 ? mediaUrls : null,
-        status: 'draft' as const,
+        status,
         user_id: user.id,
       };
 

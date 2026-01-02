@@ -107,9 +107,12 @@
 - [x] Create delivery event selector ("On their birthday", "Anniversary")
 - [x] Build delivery schedule management UI
 - [x] Implement delivery date validation (prevents past dates)
+- [x] Create cron job to process scheduled messages automatically
+- [x] Messages set to 'scheduled' status when delivery date is set
 
 **Files created:**
 - `src/components/delivery/DeliveryScheduler.tsx`
+- `supabase/functions/process-scheduled-messages/index.ts`
 
 ### 2.3 Legacy Verification System
 - [x] Create trusted contacts management page
