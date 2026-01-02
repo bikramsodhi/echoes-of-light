@@ -20,6 +20,8 @@ const DEFAULT_ALLOWED_TYPES = [
   'image/png',
   'image/gif',
   'image/webp',
+  'image/heic',
+  'image/heif',
   'video/mp4',
   'video/webm',
   'video/quicktime',
