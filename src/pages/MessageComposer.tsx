@@ -155,7 +155,9 @@ export default function MessageComposer() {
       // Build result
       const result: { recipientId: string; count: number }[] = [];
       countMap.forEach((count, recipientId) => {
-        if (count > 1) {
+        // Show cadence UI when a recipient already has at least 1 posthumous message,
+        // since creating a new one will make this a multi-message grouping.
+        if (count >= 1) {
           result.push({ recipientId, count });
         }
       });
@@ -168,12 +170,12 @@ export default function MessageComposer() {
   // Determine which recipients need cadence UI (posthumous + multiple messages)
   const recipientsNeedingCadence = useMemo(() => {
     if (deliveryTrigger !== 'posthumous') return [];
-    
+
     return selectedRecipients
       .map((recipientId) => {
         const countData = posthumousMessageCounts.find((c) => c.recipientId === recipientId);
         const recipient = recipients.find((r) => r.id === recipientId);
-        if (countData && countData.count > 1 && recipient) {
+        if (countData && countData.count >= 1 && recipient) {
           return {
             recipientId,
             recipientName: recipient.name,

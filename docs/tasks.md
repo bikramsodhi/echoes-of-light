@@ -119,10 +119,10 @@
 ### 2.3 Delivery Cadence (Posthumous Multi-Message)
 > Appears only for "Send after I pass" with multiple messages to same recipient
 
-- [ ] Detect when user has multiple posthumous messages to same recipient
-- [ ] Show cadence selection UI only when conditions are met
-- [ ] Implement cadence options: All at once (default), One per week, One per month
-- [ ] Store cadence preference per recipient grouping
+- [x] Detect when user has multiple posthumous messages to same recipient
+- [x] Show cadence selection UI only when conditions are met
+- [x] Implement cadence options: All at once (default), One per week, One per month
+- [x] Store cadence preference per recipient grouping
 - [ ] Update delivery logic to respect cadence spacing
 - [ ] Add gentle confirmation copy per design-guidelines.md
 
