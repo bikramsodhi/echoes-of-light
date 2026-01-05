@@ -113,33 +113,33 @@ function MediaThumbnail({
         </div>
       ) : null}
       
-      {/* Overlay */}
-      <div className={cn(
-        "absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2",
-        readonly ? "pointer-events-none" : ""
-      )}>
-        {signedUrl && (
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 text-white hover:bg-white/20"
-            onClick={() => window.open(signedUrl, '_blank')}
-          >
-            <ExternalLink className="h-4 w-4" />
-          </Button>
-        )}
-        
-        {!readonly && onRemove && (
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8 text-white hover:bg-destructive/80"
-            onClick={onRemove}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+      {/* Clickable overlay for opening files */}
+      {signedUrl && (
+        <button
+          className="absolute inset-0 bg-black/0 hover:bg-black/50 transition-colors flex items-center justify-center gap-2 cursor-pointer group/overlay"
+          onClick={() => window.open(signedUrl, '_blank')}
+          aria-label="Open file in new tab"
+        >
+          <div className="opacity-0 group-hover/overlay:opacity-100 transition-opacity flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white">
+              <ExternalLink className="h-4 w-4" />
+            </div>
+            {!readonly && onRemove && (
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 text-white hover:bg-destructive/80"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove();
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </button>
+      )}
     </div>
   );
 }
