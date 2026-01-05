@@ -199,6 +199,8 @@
 | `/verify-contact` | Verify Contact | No | Trusted contact verification |
 | `/receive/:token` | Recipient Portal | No | Message viewing for recipients |
 
+> IA note: the landing page navigation no longer links to `/features` to avoid redundancy; unique feature content is consolidated into `/how-it-works`.
+
 ---
 
 ## 🔧 Shared Components

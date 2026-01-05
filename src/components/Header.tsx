@@ -13,13 +13,16 @@ const Header = () => {
         </Link>
         
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/features" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-            Features
-          </Link>
-          <Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
+          <Link
+            to="/how-it-works"
+            className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
             How It Works
           </Link>
-          <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
+          <Link
+            to="/about"
+            className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+          >
             About
           </Link>
         </nav>
