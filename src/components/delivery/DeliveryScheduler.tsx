@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { format } from 'date-fns';
+import { format, setHours, setMinutes } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { CalendarIcon, Lightbulb } from 'lucide-react';
+import { CalendarIcon, Clock, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface DeliverySchedulerProps {
@@ -36,11 +37,30 @@ export default function DeliveryScheduler({
   className,
 }: DeliverySchedulerProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  
+  // Extract time from deliveryDate or default to 9:00 AM
+  const currentHours = deliveryDate ? deliveryDate.getHours() : 9;
+  const currentMinutes = deliveryDate ? deliveryDate.getMinutes() : 0;
+  const timeValue = `${String(currentHours).padStart(2, '0')}:${String(currentMinutes).padStart(2, '0')}`;
 
   const handleDateSelect = (date: Date | undefined) => {
-    onDateChange(date || null);
-    onEventChange(null); // Clear any event when a date is selected
+    if (date) {
+      // Preserve the existing time when selecting a new date
+      const newDate = setMinutes(setHours(date, currentHours), currentMinutes);
+      onDateChange(newDate);
+    } else {
+      onDateChange(null);
+    }
+    onEventChange(null);
     setIsCalendarOpen(false);
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [hours, minutes] = e.target.value.split(':').map(Number);
+    if (deliveryDate && !isNaN(hours) && !isNaN(minutes)) {
+      const newDate = setMinutes(setHours(deliveryDate, hours), minutes);
+      onDateChange(newDate);
+    }
   };
 
   return (
@@ -92,13 +112,29 @@ export default function DeliveryScheduler({
         </Popover>
       </div>
 
+      {/* Time Picker - only show when date is selected */}
+      {deliveryDate && (
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <Clock className="h-4 w-4" />
+            Select delivery time
+          </Label>
+          <Input
+            type="time"
+            value={timeValue}
+            onChange={handleTimeChange}
+            className="w-full"
+          />
+        </div>
+      )}
+
       {/* Summary */}
       {deliveryDate && (
         <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
           <p className="text-sm text-muted-foreground">
             This message will be delivered on{' '}
             <span className="font-medium text-foreground">
-              {format(deliveryDate, 'MMMM d, yyyy')}
+              {format(deliveryDate, 'MMMM d, yyyy')} at {format(deliveryDate, 'h:mm a')}
             </span>
           </p>
         </div>
