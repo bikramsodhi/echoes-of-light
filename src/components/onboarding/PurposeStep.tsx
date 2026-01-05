@@ -30,8 +30,11 @@ export default function PurposeStep({ onNext, onBack }: PurposeStepProps) {
     <div className="animate-fade-in">
       <div className="text-center mb-8">
         <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
-          What is EchoLight?
+          That's what EchoLight is for.
         </h2>
+        <p className="text-lg text-foreground/70 font-medium max-w-md mx-auto mb-3">
+          Messages that wait. Words that stay. Love that arrives, even when you can't.
+        </p>
         <p className="text-muted-foreground max-w-md mx-auto">
           Think of it as a gentle vault for the words you want to leave behind — 
           delivered with care, when the moment is right.

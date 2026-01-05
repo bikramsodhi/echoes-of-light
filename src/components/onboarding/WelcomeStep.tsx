@@ -19,9 +19,13 @@ export default function WelcomeStep({ onNext }: WelcomeStepProps) {
           behind
         </h1>
         
-        <p className="text-lg text-muted-foreground max-w-md mx-auto leading-relaxed">
-          A place where your words, your voice, and your heart can reach the people 
-          you love — even when you can't be there.
+        <p className="text-lg text-muted-foreground max-w-md mx-auto leading-relaxed mb-6">
+          Create heartfelt messages, memories, and media for your loved ones — 
+          to be delivered gently, when the time is right.
+        </p>
+        
+        <p className="text-base text-foreground/60 italic max-w-md mx-auto">
+          What if you could say what mattered—when you're not around to say it?
         </p>
       </div>
       

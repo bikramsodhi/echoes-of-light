@@ -64,6 +64,17 @@ const Hero = () => {
             </div>
           </div>
         </div>
+        
+        {/* Deeper Purpose Section - Mid-scroll framing */}
+        <div className="mt-16 max-w-2xl mx-auto text-center animate-fade-in-up animation-delay-600">
+          <p className="text-lg md:text-xl text-foreground/60 italic mb-4">
+            What if you could say what mattered—when you're not around to say it?
+          </p>
+          <p className="text-base text-muted-foreground mb-2">That's what EchoLight is for.</p>
+          <p className="text-base md:text-lg text-foreground/70 font-medium">
+            Messages that wait. Words that stay. Love that arrives, even when you can't.
+          </p>
+        </div>
       </div>
       
       {/* Grounding Element - Message Preview Card */}

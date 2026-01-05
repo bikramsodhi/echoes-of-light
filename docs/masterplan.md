@@ -15,6 +15,11 @@ EchoLight is a digital legacy platform where users craft heartfelt letters, voic
 - **Problem:** Most people have no gentle, trusted space to prepare emotional goodbyes or preserve personal reflections for those they'll leave behind.
 - **Mission:** Create a kind, private, and intuitive platform where anyone can preserve their voice, stories, and messages—so love lives on, even after they're gone.
 
+**Messaging Framing:**
+- **Primary:** "Create heartfelt messages, memories, and media for your loved ones — to be delivered gently, when the time is right."
+- **Deeper purpose:** "What if you could say what mattered—when you're not around to say it? That's what EchoLight is for."
+- **Essence:** "Messages that wait. Words that stay. Love that arrives, even when you can't."
+
 ---
 
 ### 🎯 Target Audience
