@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,6 +8,7 @@ import MessagePreview from '@/components/vault/MessagePreview';
 import MediaUploader from '@/components/media/MediaUploader';
 import MediaPreview from '@/components/media/MediaPreview';
 import DeliveryScheduler from '@/components/delivery/DeliveryScheduler';
+import DeliveryCadence from '@/components/delivery/DeliveryCadence';
 import TestDeliveryDialog from '@/components/delivery/TestDeliveryDialog';
 import AIAssistButton from '@/components/composer/AIAssistButton';
 import WritingPrompts from '@/components/composer/WritingPrompts';
@@ -116,6 +117,73 @@ export default function MessageComposer() {
     },
     enabled: !!id,
   });
+
+  // Fetch posthumous message counts per recipient (for cadence UI)
+  const { data: posthumousMessageCounts = [] } = useQuery({
+    queryKey: ['posthumous-message-counts', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+
+      // Fetch all posthumous messages with their recipients
+      const { data: messages, error: messagesError } = await supabase
+        .from('messages')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('delivery_trigger', 'posthumous')
+        .neq('status', 'sent');
+
+      if (messagesError) throw messagesError;
+      if (!messages || messages.length === 0) return [];
+
+      const messageIds = messages.map((m) => m.id);
+
+      // Fetch message_recipients for these messages
+      const { data: messageRecipients, error: mrError } = await supabase
+        .from('message_recipients')
+        .select('message_id, recipient_id')
+        .in('message_id', messageIds);
+
+      if (mrError) throw mrError;
+      if (!messageRecipients) return [];
+
+      // Count messages per recipient
+      const countMap = new Map<string, number>();
+      messageRecipients.forEach((mr) => {
+        countMap.set(mr.recipient_id, (countMap.get(mr.recipient_id) || 0) + 1);
+      });
+
+      // Build result
+      const result: { recipientId: string; count: number }[] = [];
+      countMap.forEach((count, recipientId) => {
+        if (count > 1) {
+          result.push({ recipientId, count });
+        }
+      });
+
+      return result;
+    },
+    enabled: !!user,
+  });
+
+  // Determine which recipients need cadence UI (posthumous + multiple messages)
+  const recipientsNeedingCadence = useMemo(() => {
+    if (deliveryTrigger !== 'posthumous') return [];
+    
+    return selectedRecipients
+      .map((recipientId) => {
+        const countData = posthumousMessageCounts.find((c) => c.recipientId === recipientId);
+        const recipient = recipients.find((r) => r.id === recipientId);
+        if (countData && countData.count > 1 && recipient) {
+          return {
+            recipientId,
+            recipientName: recipient.name,
+            count: countData.count,
+          };
+        }
+        return null;
+      })
+      .filter(Boolean) as { recipientId: string; recipientName: string; count: number }[];
+  }, [deliveryTrigger, selectedRecipients, posthumousMessageCounts, recipients]);
 
   // Initialize form when message loads
   useEffect(() => {
@@ -474,6 +542,20 @@ export default function MessageComposer() {
                 onDateChange={setDeliveryDate}
                 onEventChange={setDeliveryEvent}
               />
+            )}
+
+            {/* Show cadence options for posthumous with multiple messages to same recipient */}
+            {recipientsNeedingCadence.length > 0 && (
+              <div className="space-y-4 mt-4">
+                {recipientsNeedingCadence.map((r) => (
+                  <DeliveryCadence
+                    key={r.recipientId}
+                    recipientId={r.recipientId}
+                    recipientName={r.recipientName}
+                    messageCount={r.count}
+                  />
+                ))}
+              </div>
             )}
           </div>
         </div>

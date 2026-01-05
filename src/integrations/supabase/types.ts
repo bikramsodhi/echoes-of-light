@@ -137,6 +137,41 @@ export type Database = {
         }
         Relationships: []
       }
+      recipient_delivery_cadence: {
+        Row: {
+          cadence: string
+          created_at: string
+          id: string
+          recipient_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cadence?: string
+          created_at?: string
+          id?: string
+          recipient_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cadence?: string
+          created_at?: string
+          id?: string
+          recipient_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipient_delivery_cadence_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "recipients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       recipients: {
         Row: {
           avatar_url: string | null
