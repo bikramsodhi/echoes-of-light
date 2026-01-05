@@ -89,22 +89,38 @@ export default function Admin() {
     enabled: isAdmin === true,
   });
 
-  // Deliver mutation
+  // Deliver mutation - for scheduled/manual messages, just mark as sent
   const deliverMutation = useMutation({
-    mutationFn: async (messageId: string) => {
-      const { error } = await supabase
-        .from('messages')
-        .update({ 
-          status: 'sent',
-          sent_at: new Date().toISOString(),
-        })
-        .eq('id', messageId);
-      
-      if (error) throw error;
+    mutationFn: async (message: Message) => {
+      if (message.delivery_trigger === 'posthumous') {
+        // Use the cadence-aware release function
+        const { data, error } = await supabase.functions.invoke('release-posthumous-messages', {
+          body: { userId: message.user_id }
+        });
+        
+        if (error) throw error;
+        return data;
+      } else {
+        // For non-posthumous, just mark as sent directly
+        const { error } = await supabase
+          .from('messages')
+          .update({ 
+            status: 'sent',
+            sent_at: new Date().toISOString(),
+          })
+          .eq('id', message.id);
+        
+        if (error) throw error;
+        return { immediate: 1, scheduled: 0 };
+      }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['admin_messages'] });
-      toast.success('Message delivered with care');
+      if (data?.scheduled > 0) {
+        toast.success(`Released: ${data.immediate} sent now, ${data.scheduled} scheduled per cadence`);
+      } else {
+        toast.success('Message delivered with care');
+      }
       setShowDeliverDialog(false);
       setSelectedMessage(null);
     },
@@ -279,7 +295,7 @@ export default function Admin() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => selectedMessage && deliverMutation.mutate(selectedMessage.id)}
+              onClick={() => selectedMessage && deliverMutation.mutate(selectedMessage)}
               disabled={deliverMutation.isPending}
             >
               {deliverMutation.isPending ? 'Delivering...' : 'Deliver Now'}

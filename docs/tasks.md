@@ -123,7 +123,7 @@
 - [x] Show cadence selection UI only when conditions are met
 - [x] Implement cadence options: All at once (default), One per week, One per month
 - [x] Store cadence preference per recipient grouping
-- [ ] Update delivery logic to respect cadence spacing
+- [x] Update delivery logic to respect cadence spacing
 - [ ] Add gentle confirmation copy per design-guidelines.md
 
 **Microcopy reference:**
