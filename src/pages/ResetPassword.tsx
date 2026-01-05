@@ -10,7 +10,11 @@ import { Loader2, Mail, Lock, Sparkles, ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
-const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
+const passwordSchema = z.string()
+  .min(8, 'Password must be at least 8 characters')
+  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+  .regex(/[0-9]/, 'Password must contain at least one number');
 
 export default function ResetPassword() {
   const [mode, setMode] = useState<'request' | 'update'>('request');
@@ -192,7 +196,7 @@ export default function ResetPassword() {
                     <Input
                       id="password"
                       type="password"
-                      placeholder="At least 6 characters"
+                      placeholder="8+ chars, upper, lower, number"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="pl-10"
