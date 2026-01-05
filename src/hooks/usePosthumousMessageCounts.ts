@@ -61,7 +61,7 @@ export function usePosthumousMessageCounts() {
       const result: RecipientMessageCount[] = [];
       countMap.forEach((count, recipientId) => {
         const recipient = recipients?.find((r) => r.id === recipientId);
-        if (recipient && count > 1) {
+        if (recipient && count >= 1) {
           result.push({
             recipientId,
             recipientName: recipient.name,
