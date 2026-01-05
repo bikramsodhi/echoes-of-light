@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Clock, Users } from 'lucide-react';
-
-type CadenceType = 'all_at_once' | 'weekly' | 'monthly';
 
 interface DeliveryCadenceProps {
   recipientId: string;
@@ -22,7 +27,43 @@ export default function DeliveryCadence({
 }: DeliveryCadenceProps) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [cadence, setCadence] = useState<CadenceType>('all_at_once');
+  
+  const [spaceOut, setSpaceOut] = useState(false);
+  const [quantity, setQuantity] = useState('1');
+  const [period, setPeriod] = useState<'week' | 'month'>('week');
+
+  // Parse existing cadence into components
+  const parseCadence = (cadence: string): { spaceOut: boolean; quantity: string; period: 'week' | 'month' } => {
+    if (cadence === 'all_at_once') {
+      return { spaceOut: false, quantity: '1', period: 'week' };
+    }
+    
+    // Parse formats like "1_per_week", "2_per_month"
+    const match = cadence.match(/^(\d+)_per_(week|month)$/);
+    if (match) {
+      return { 
+        spaceOut: true, 
+        quantity: match[1], 
+        period: match[2] as 'week' | 'month' 
+      };
+    }
+    
+    // Legacy format fallback
+    if (cadence === 'weekly') {
+      return { spaceOut: true, quantity: '1', period: 'week' };
+    }
+    if (cadence === 'monthly') {
+      return { spaceOut: true, quantity: '1', period: 'month' };
+    }
+    
+    return { spaceOut: false, quantity: '1', period: 'week' };
+  };
+
+  // Build cadence string from components
+  const buildCadence = (spaceOut: boolean, quantity: string, period: 'week' | 'month'): string => {
+    if (!spaceOut) return 'all_at_once';
+    return `${quantity}_per_${period}`;
+  };
 
   // Fetch existing cadence setting
   const { data: existingCadence } = useQuery({
@@ -36,20 +77,23 @@ export default function DeliveryCadence({
         .maybeSingle();
 
       if (error) throw error;
-      return data?.cadence as CadenceType | null;
+      return data?.cadence as string | null;
     },
     enabled: !!user && !!recipientId,
   });
 
   useEffect(() => {
     if (existingCadence) {
-      setCadence(existingCadence);
+      const parsed = parseCadence(existingCadence);
+      setSpaceOut(parsed.spaceOut);
+      setQuantity(parsed.quantity);
+      setPeriod(parsed.period);
     }
   }, [existingCadence]);
 
   // Save cadence mutation
   const saveMutation = useMutation({
-    mutationFn: async (newCadence: CadenceType) => {
+    mutationFn: async (newCadence: string) => {
       if (!user) throw new Error('Not authenticated');
 
       const { error } = await supabase
@@ -70,10 +114,27 @@ export default function DeliveryCadence({
     },
   });
 
-  const handleCadenceChange = (value: CadenceType) => {
-    setCadence(value);
-    saveMutation.mutate(value);
+  const handleSpaceOutChange = (checked: boolean) => {
+    setSpaceOut(checked);
+    const newCadence = buildCadence(checked, quantity, period);
+    saveMutation.mutate(newCadence);
   };
+
+  const handleQuantityChange = (value: string) => {
+    setQuantity(value);
+    const newCadence = buildCadence(spaceOut, value, period);
+    saveMutation.mutate(newCadence);
+  };
+
+  const handlePeriodChange = (value: 'week' | 'month') => {
+    setPeriod(value);
+    const newCadence = buildCadence(spaceOut, quantity, value);
+    saveMutation.mutate(newCadence);
+  };
+
+  // Generate quantity options (1 up to messageCount, max 4)
+  const maxQuantity = Math.min(messageCount, 4);
+  const quantityOptions = Array.from({ length: maxQuantity }, (_, i) => (i + 1).toString());
 
   return (
     <Card className="border-primary/20 bg-accent/10">
@@ -89,50 +150,58 @@ export default function DeliveryCadence({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Choose how they're spaced. We'll send them gently, just as you intended.
-        </p>
-
-        <RadioGroup
-          value={cadence}
-          onValueChange={(v) => handleCadenceChange(v as CadenceType)}
-          className="space-y-3"
-        >
-          <div className="flex items-center space-x-3 rounded-lg border border-border/50 p-3 hover:bg-accent/50 transition-colors">
-            <RadioGroupItem value="all_at_once" id="all_at_once" />
-            <Label htmlFor="all_at_once" className="flex-1 cursor-pointer">
-              <span className="font-medium">All at once</span>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Deliver all messages together when the time comes
-              </p>
+        {/* Toggle for spacing */}
+        <div className="flex items-center justify-between rounded-lg border border-border/50 p-3">
+          <div className="space-y-0.5">
+            <Label htmlFor="space-out" className="font-medium cursor-pointer">
+              Space out delivery
             </Label>
+            <p className="text-xs text-muted-foreground">
+              {spaceOut 
+                ? "Messages will arrive gradually over time" 
+                : "All messages will arrive together"}
+            </p>
           </div>
+          <Switch
+            id="space-out"
+            checked={spaceOut}
+            onCheckedChange={handleSpaceOutChange}
+          />
+        </div>
 
-          <div className="flex items-center space-x-3 rounded-lg border border-border/50 p-3 hover:bg-accent/50 transition-colors">
-            <RadioGroupItem value="weekly" id="weekly" />
-            <Label htmlFor="weekly" className="flex-1 cursor-pointer">
-              <span className="font-medium">One each week</span>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Space messages out, one arriving each week
-              </p>
-            </Label>
+        {/* Quantity and period selectors */}
+        {spaceOut && (
+          <div className="flex items-center gap-3 animate-fade-in">
+            <span className="text-sm text-muted-foreground">Send</span>
+            <Select value={quantity} onValueChange={handleQuantityChange}>
+              <SelectTrigger className="w-20">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {quantityOptions.map((num) => (
+                  <SelectItem key={num} value={num}>
+                    {num}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <span className="text-sm text-muted-foreground">per</span>
+            <Select value={period} onValueChange={handlePeriodChange}>
+              <SelectTrigger className="w-28">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="week">week</SelectItem>
+                <SelectItem value="month">month</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+        )}
 
-          <div className="flex items-center space-x-3 rounded-lg border border-border/50 p-3 hover:bg-accent/50 transition-colors">
-            <RadioGroupItem value="monthly" id="monthly" />
-            <Label htmlFor="monthly" className="flex-1 cursor-pointer">
-              <span className="font-medium">One each month</span>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                A gentle pacing, one message arriving each month
-              </p>
-            </Label>
-          </div>
-        </RadioGroup>
-
-        {cadence !== 'all_at_once' && (
-          <p className="text-xs text-primary/80 flex items-center gap-1 pt-2">
+        {spaceOut && (
+          <p className="text-xs text-primary/80 flex items-center gap-1 pt-1">
             <Clock className="h-3 w-3" />
-            We'll deliver them gently, one by one.
+            We'll deliver them gently, {quantity} at a time.
           </p>
         )}
       </CardContent>
