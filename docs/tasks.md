@@ -1,7 +1,8 @@
 # EchoLight — Implementation Tasks
 
 > **Source of Truth** for development.  
-> **Anchor:** "A quiet place to leave words, memories, and light for the people you love."
+> **Anchor:** "Create heartfelt messages, memories, and media for your loved ones — to be delivered gently, when the time is right."  
+> **Essence:** "Messages that wait. Words that stay. Love that arrives, even when you can't."
 
 ---
 

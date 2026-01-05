@@ -71,10 +71,16 @@ Tone reference: *Kindness in Design*
 ### 🗣 Voice & Tone
 
 **Keywords:** Gentle, affirming, poetic, private  
-**Style:** Speak to one person, quietly. Avoid directives. Use soft metaphors.
+**Style:** Speak to one person, quietly. Avoid directives. Use soft metaphors. Be gently brave — not euphemistic.
+
+**Core Messaging:**
+- **Primary tagline:** "Create heartfelt messages, memories, and media for your loved ones — to be delivered gently, when the time is right."
+- **Deeper framing:** "What if you could say what mattered—when you're not around to say it?"
+- **Essence statement:** "Messages that wait. Words that stay. Love that arrives, even when you can't."
 
 Examples:
 - **Onboarding welcome:** "This is your space to leave light behind."
+- **Onboarding framing:** "What if you could say what mattered—when you're not around to say it? That's what EchoLight is for."
 - **Success state:** "Message safely held. We'll keep it close until it's time."
 - **Error state:** "Something interrupted the moment. Let's gently try again."
 - **Delete confirmation:** "Are you sure? This memory will be gently released."
@@ -82,6 +88,7 @@ Examples:
 **Avoid:**
 - Technical or death-forward language
 - Harsh warnings or alarms
+- Clinical or dramatic phrasing
 - Transactional copy ("Successfully submitted!")
 
 ---
