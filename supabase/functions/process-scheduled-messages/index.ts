@@ -38,9 +38,6 @@ interface ScheduledMessage {
   content: string;
   user_id: string;
   delivery_date: string;
-  profiles: {
-    full_name: string;
-  } | null;
   message_recipients: MessageRecipient[];
 }
 
@@ -76,7 +73,6 @@ const handler = async (req: Request): Promise<Response> => {
         content,
         user_id,
         delivery_date,
-        profiles!messages_user_id_fkey(full_name),
         message_recipients(
           id,
           delivery_token,
@@ -114,9 +110,18 @@ const handler = async (req: Request): Promise<Response> => {
     let errorCount = 0;
 
     for (const message of dueMessages) {
-      // Handle profiles - could be array or single object from join
-      const profileData = Array.isArray(message.profiles) ? message.profiles[0] : message.profiles;
-      const senderName = profileData?.full_name || "Someone special";
+      // Fetch sender profile separately since there's no FK relationship
+      let senderName = "Someone special";
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", message.user_id)
+        .single();
+      
+      if (profile?.full_name) {
+        senderName = profile.full_name;
+      }
+
       const safeMessageTitle = escapeHtml(message.title || "A message for you");
       const safeSenderName = escapeHtml(senderName);
 
