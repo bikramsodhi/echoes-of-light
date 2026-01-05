@@ -110,12 +110,27 @@
 - [x] Implement delivery date validation (prevents past dates)
 - [x] Create cron job to process scheduled messages automatically
 - [x] Messages set to 'scheduled' status when delivery date is set
+- [x] Add time picker for specific delivery time
 
 **Files created:**
 - `src/components/delivery/DeliveryScheduler.tsx`
 - `supabase/functions/process-scheduled-messages/index.ts`
 
-### 2.3 Legacy Verification System
+### 2.3 Delivery Cadence (Posthumous Multi-Message)
+> Appears only for "Send after I pass" with multiple messages to same recipient
+
+- [ ] Detect when user has multiple posthumous messages to same recipient
+- [ ] Show cadence selection UI only when conditions are met
+- [ ] Implement cadence options: All at once (default), One per week, One per month
+- [ ] Store cadence preference per recipient grouping
+- [ ] Update delivery logic to respect cadence spacing
+- [ ] Add gentle confirmation copy per design-guidelines.md
+
+**Microcopy reference:**
+- Intro: "You've written multiple messages to [Recipient]. How should we deliver them?"
+- Guidance: "Choose how they're spaced. We'll send them gently, just as you intended."
+
+### 2.4 Legacy Verification System
 - [x] Create trusted contacts management page
 - [x] Build invite flow with email notification
 - [x] Implement verification link/portal for trusted contacts
@@ -131,7 +146,7 @@
 - `src/pages/VerifyContact.tsx`
 - `supabase/functions/send-email/index.ts`
 
-### 2.4 Message Delivery UI ✅
+### 2.5 Message Delivery UI ✅
 - [x] Create recipient portal for viewing messages
 - [x] Add "sent" state animations (ripple/glow effect)
 - [x] Build delivery confirmation notifications
@@ -143,7 +158,7 @@
 - `src/components/delivery/DeliveryConfirmation.tsx`
 - `src/components/delivery/MessageViewer.tsx`
 
-### 2.5 Settings & Privacy ✅
+### 2.6 Settings & Privacy ✅
 - [x] Create settings page with sections
 - [x] Add encryption toggle per vault or message
 - [x] Build "Last Wishes" document editor
@@ -156,7 +171,7 @@
 - `src/components/settings/LastWishesEditor.tsx`
 - `src/components/settings/AccountSettings.tsx`
 
-### 2.6 "Polish My Thoughts" AI ✅
+### 2.7 "Polish My Thoughts" AI ✅
 > AI tone assistant that appears **only inside message composer**
 
 - [x] Create inline AI button in message composer

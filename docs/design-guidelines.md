@@ -85,6 +85,13 @@ Examples:
 - **Error state:** "Something interrupted the moment. Let's gently try again."
 - **Delete confirmation:** "Are you sure? This memory will be gently released."
 
+**Delivery Cadence (Multi-Message Spacing):**
+- **Intro:** "You've written multiple messages to [Recipient]. How should we deliver them?"
+- **Guidance:** "Choose how they're spaced. We'll send them gently, just as you intended."
+- **Tone:** Calm, never mechanical. Frame as "spacing" or "pacing", not "scheduling."
+- **Options should feel human:** "All at once", "One each week", "One each month"
+- **Confirmation:** "We'll deliver them gently, one by one."
+
 **Avoid:**
 - Technical or death-forward language
 - Harsh warnings or alarms

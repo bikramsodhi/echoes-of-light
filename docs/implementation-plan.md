@@ -49,9 +49,14 @@
    - Manual delivery triggers (admin panel or self-test)
    - Emphasize: "Held safely until the right time"
 
-9. **Recipient Portal (Post-Delivery Only)**
-   - Minimal page showing emotional message intro + content
-   - No reply, no nav, no editing
+9. **Delivery Cadence (Posthumous Multi-Message)**
+   - Appears only when: "Send after I pass" + multiple messages to same recipient
+   - Options: All at once (default), One per week, One per month
+   - Gently confirms spacing preference before finalizing
+
+10. **Recipient Portal (Post-Delivery Only)**
+    - Minimal page showing emotional message intro + content
+    - No reply, no nav, no editing
 
 ---
 
