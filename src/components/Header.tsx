@@ -23,7 +23,7 @@ const Header = () => {
             to="/about"
             className="text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
-            About
+            Why EchoLight
           </Link>
         </nav>
         

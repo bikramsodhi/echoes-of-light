@@ -45,7 +45,7 @@ const Footer = () => {
           <div>
             <h4 className="font-medium text-foreground mb-4">Company</h4>
             <ul className="space-y-3">
-              <li><Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors text-sm">About Us</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Why EchoLight</Link></li>
               <li><Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Blog</Link></li>
               <li><Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors text-sm">Contact</Link></li>
             </ul>
