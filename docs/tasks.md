@@ -201,6 +201,7 @@
 | `/features` | Features | No | Feature details page |
 | `/how-it-works` | How It Works | No | Process explanation |
 | `/about` | About | No | About EchoLight |
+| `/contact` | Contact | No | Feedback and reflections |
 | `/auth` | Auth | No | Login/signup |
 | `/reset-password` | Reset Password | No | Password reset flow |
 | `/onboarding` | Onboarding | Yes | New user walkthrough |
