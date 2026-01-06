@@ -92,6 +92,30 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // UUID validation
 const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+// SECURITY: Hard caps on user-provided input to prevent resource exhaustion.
+const MAX_REQUEST_BYTES = 150_000; // ~150KB
+const MAX_EMAIL_LENGTH = 255;
+const MAX_NAME_LENGTH = 200;
+const MAX_TITLE_LENGTH = 500;
+const MAX_SUBJECT_LENGTH = 300;
+const MAX_URL_LENGTH = 2000;
+const MAX_HTML_LENGTH = 100_000;
+
+function isStringWithinMax(value: unknown, max: number): value is string {
+  return typeof value === "string" && value.length <= max;
+}
+
+function requireStringWithinMax(
+  field: string,
+  value: unknown,
+  max: number,
+): { ok: true; value: string } | { ok: false; error: string } {
+  if (typeof value !== "string") return { ok: false, error: `${field} must be a string` };
+  if (value.length === 0) return { ok: false, error: `${field} is required` };
+  if (value.length > max) return { ok: false, error: `${field} too long` };
+  return { ok: true, value };
+}
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -184,8 +208,25 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // Reject oversized requests early (best-effort; Content-Length may be absent)
+    const contentLengthHeader = req.headers.get("content-length");
+    const contentLength = contentLengthHeader ? Number(contentLengthHeader) : NaN;
+    if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
+      console.warn("Rejected oversized request", {
+        user_id: maskUuid(user.id),
+        content_length: contentLength,
+      });
+      return new Response(
+        JSON.stringify({ success: false, error: "Request too large" }),
+        {
+          status: 413,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     const payload: EmailPayload = await req.json();
-    
+
     // Log only minimal non-sensitive info
     console.log("Processing email request:", {
       type: "type" in payload ? payload.type : "generic",
@@ -202,8 +243,44 @@ const handler = async (req: Request): Promise<Response> => {
     if ("type" in payload && payload.type === "trusted_contact_invite") {
       const { contactName, contactEmail, userName, inviteToken } = payload;
 
+      const contactNameCheck = requireStringWithinMax("contactName", contactName, MAX_NAME_LENGTH);
+      if (!contactNameCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: contactNameCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      const userNameCheck = requireStringWithinMax("userName", userName, MAX_NAME_LENGTH);
+      if (!userNameCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: userNameCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      const contactEmailCheck = requireStringWithinMax(
+        "contactEmail",
+        contactEmail,
+        MAX_EMAIL_LENGTH,
+      );
+      if (!contactEmailCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: contactEmailCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      const inviteTokenCheck = requireStringWithinMax("inviteToken", inviteToken, 64);
+      if (!inviteTokenCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: inviteTokenCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
       // Validate email format
-      if (!emailRegex.test(contactEmail)) {
+      if (!emailRegex.test(contactEmailCheck.value)) {
         return new Response(
           JSON.stringify({ success: false, error: "Invalid email format" }),
           {
@@ -214,7 +291,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       // Validate invite token is UUID format
-      if (!uuidRegex.test(inviteToken)) {
+      if (!uuidRegex.test(inviteTokenCheck.value)) {
         return new Response(
           JSON.stringify({ success: false, error: "Invalid invite token format" }),
           {
@@ -225,10 +302,11 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       // Verify user owns this trusted contact by checking the invite token
+      // Verify user owns this trusted contact by checking the invite token
       const { data: contact, error: contactError } = await supabaseClient
         .from("trusted_contacts")
         .select("user_id")
-        .eq("invite_token", inviteToken)
+        .eq("invite_token", inviteTokenCheck.value)
         .single();
 
       if (contactError || !contact) {
@@ -254,16 +332,16 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       // Escape user-controlled content to prevent XSS
-      const safeContactName = escapeHtml(contactName);
-      const safeUserName = escapeHtml(userName);
+      const safeContactName = escapeHtml(contactNameCheck.value);
+      const safeUserName = escapeHtml(userNameCheck.value);
 
       // Use /verify as the canonical path
-      const verifyUrl = `${siteUrl}/verify?token=${inviteToken}`;
+      const verifyUrl = `${siteUrl}/verify?token=${inviteTokenCheck.value}`;
       
       emailConfig = {
         from: fromEmail,
         reply_to: supportEmail,
-        to: contactEmail,
+        to: contactEmailCheck.value,
         subject: `${safeUserName} has chosen you as a trusted contact on EchoLight`,
         html: `
           <!DOCTYPE html>
@@ -304,8 +382,52 @@ const handler = async (req: Request): Promise<Response> => {
     } else if ("type" in payload && payload.type === "message_delivery") {
       const { recipientName, recipientEmail, senderName, messageTitle, accessLink } = payload;
 
+      const recipientNameCheck = requireStringWithinMax("recipientName", recipientName, MAX_NAME_LENGTH);
+      if (!recipientNameCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: recipientNameCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      const senderNameCheck = requireStringWithinMax("senderName", senderName, MAX_NAME_LENGTH);
+      if (!senderNameCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: senderNameCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      const messageTitleCheck = requireStringWithinMax("messageTitle", messageTitle, MAX_TITLE_LENGTH);
+      if (!messageTitleCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: messageTitleCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      const accessLinkCheck = requireStringWithinMax("accessLink", accessLink, MAX_URL_LENGTH);
+      if (!accessLinkCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: accessLinkCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      const recipientEmailCheck = requireStringWithinMax(
+        "recipientEmail",
+        recipientEmail,
+        MAX_EMAIL_LENGTH,
+      );
+      if (!recipientEmailCheck.ok) {
+        return new Response(JSON.stringify({ success: false, error: recipientEmailCheck.error }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
       // Validate email format
-      if (!emailRegex.test(recipientEmail)) {
+      if (!emailRegex.test(recipientEmailCheck.value)) {
         return new Response(
           JSON.stringify({ success: false, error: "Invalid email format" }),
           {
@@ -316,12 +438,13 @@ const handler = async (req: Request): Promise<Response> => {
       }
       
       // For message delivery, verify user has a message with this title
+      // For message delivery, verify user has a message with this title
       // This is a basic check - in production you might want stricter validation
       const { data: message, error: messageError } = await supabaseClient
         .from("messages")
         .select("user_id")
         .eq("user_id", user.id)
-        .eq("title", messageTitle)
+        .eq("title", messageTitleCheck.value)
         .limit(1)
         .single();
 
@@ -337,14 +460,14 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       // Escape user-controlled content to prevent XSS
-      const safeRecipientName = escapeHtml(recipientName);
-      const safeSenderName = escapeHtml(senderName);
-      const safeMessageTitle = escapeHtml(messageTitle);
+      const safeRecipientName = escapeHtml(recipientNameCheck.value);
+      const safeSenderName = escapeHtml(senderNameCheck.value);
+      const safeMessageTitle = escapeHtml(messageTitleCheck.value);
 
       emailConfig = {
         from: fromEmail,
         reply_to: supportEmail,
-        to: recipientEmail,
+        to: recipientEmailCheck.value,
         subject: `A message from ${safeSenderName} awaits you`,
         html: `
           <!DOCTYPE html>
@@ -387,6 +510,34 @@ const handler = async (req: Request): Promise<Response> => {
     } else {
       // Generic email - only allow authenticated users
       const { to, subject, html, from } = payload as EmailRequest;
+
+      if (!isStringWithinMax(to, MAX_EMAIL_LENGTH)) {
+        return new Response(JSON.stringify({ success: false, error: "to too long" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      if (!isStringWithinMax(subject, MAX_SUBJECT_LENGTH)) {
+        return new Response(JSON.stringify({ success: false, error: "subject too long" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      if (!isStringWithinMax(html, MAX_HTML_LENGTH)) {
+        return new Response(JSON.stringify({ success: false, error: "html too long" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      if (from && !isStringWithinMax(from, MAX_SUBJECT_LENGTH)) {
+        return new Response(JSON.stringify({ success: false, error: "from too long" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
 
       // Validate email format
       if (!emailRegex.test(to)) {
