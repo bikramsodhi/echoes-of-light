@@ -142,6 +142,7 @@ export type Database = {
           cadence: string
           created_at: string
           id: string
+          message_order: string[] | null
           recipient_id: string
           updated_at: string
           user_id: string
@@ -150,6 +151,7 @@ export type Database = {
           cadence?: string
           created_at?: string
           id?: string
+          message_order?: string[] | null
           recipient_id: string
           updated_at?: string
           user_id: string
@@ -158,6 +160,7 @@ export type Database = {
           cadence?: string
           created_at?: string
           id?: string
+          message_order?: string[] | null
           recipient_id?: string
           updated_at?: string
           user_id?: string

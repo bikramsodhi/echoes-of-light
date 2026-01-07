@@ -24,6 +24,7 @@ function escapeHtml(str: string): string {
 interface CadenceSetting {
   recipient_id: string;
   cadence: string;
+  message_order: string[] | null;
 }
 
 interface MessageToDeliver {
@@ -42,29 +43,25 @@ interface MessageToDeliver {
   }[];
 }
 
-// Parse cadence string like "2_per_week:created_asc" into components
+// Parse cadence string like "2_per_week" into components (simplified - order now stored separately)
 function parseCadence(cadence: string): { 
   quantity: number; 
   period: "week" | "month";
-  orderBy: "created_asc" | "created_desc" | "title_asc";
 } | null {
   if (cadence === "all_at_once") return null;
   
   // Legacy format support
-  if (cadence === "weekly") return { quantity: 1, period: "week", orderBy: "created_asc" };
-  if (cadence === "monthly") return { quantity: 1, period: "month", orderBy: "created_asc" };
+  if (cadence === "weekly") return { quantity: 1, period: "week" };
+  if (cadence === "monthly") return { quantity: 1, period: "month" };
   
-  // Parse new format with optional order: "2_per_week:created_asc"
-  const [cadencePart, orderPart] = cadence.split(":");
+  // Parse new format (strip any legacy order suffix)
+  const cadencePart = cadence.split(":")[0];
   const match = cadencePart.match(/^(\d+)_per_(week|month)$/);
   
   if (match) {
-    const validOrders = ["created_asc", "created_desc", "title_asc"];
-    const order = validOrders.includes(orderPart) ? orderPart : "created_asc";
     return { 
       quantity: parseInt(match[1], 10), 
-      period: match[2] as "week" | "month",
-      orderBy: order as "created_asc" | "created_desc" | "title_asc"
+      period: match[2] as "week" | "month"
     };
   }
   
@@ -74,7 +71,7 @@ function parseCadence(cadence: string): {
 // Calculate delivery date for a message based on its position in the cadence
 function calculateDeliveryDate(
   index: number, 
-  cadence: { quantity: number; period: "week" | "month"; orderBy: string },
+  cadence: { quantity: number; period: "week" | "month" },
   baseDate: Date
 ): Date {
   const batchNumber = Math.floor(index / cadence.quantity);
@@ -91,6 +88,22 @@ function calculateDeliveryDate(
 
 interface MessageWithMeta extends MessageToDeliver {
   created_at: string;
+}
+
+// Sort messages based on custom order or default to created_at
+function sortMessagesByOrder(messages: MessageWithMeta[], customOrder: string[] | null): MessageWithMeta[] {
+  if (customOrder?.length) {
+    const orderMap = new Map(customOrder.map((id, index) => [id, index]));
+    return [...messages].sort((a, b) => {
+      const aIndex = orderMap.get(a.id) ?? Number.MAX_VALUE;
+      const bIndex = orderMap.get(b.id) ?? Number.MAX_VALUE;
+      return aIndex - bIndex;
+    });
+  }
+  // Default: sort by created_at ascending
+  return [...messages].sort((a, b) => 
+    new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+  );
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -174,16 +187,19 @@ const handler = async (req: Request): Promise<Response> => {
     // Fetch cadence settings for all recipients
     const { data: cadenceSettings, error: cadenceError } = await supabase
       .from("recipient_delivery_cadence")
-      .select("recipient_id, cadence")
+      .select("recipient_id, cadence, message_order")
       .eq("user_id", userId);
 
     if (cadenceError) {
       console.error("Error fetching cadence settings:", cadenceError.message);
     }
 
-    const cadenceMap = new Map<string, string>();
-    (cadenceSettings || []).forEach((cs: CadenceSetting) => {
-      cadenceMap.set(cs.recipient_id, cs.cadence);
+    const cadenceMap = new Map<string, { cadence: string; messageOrder: string[] | null }>();
+    (cadenceSettings || []).forEach((cs: any) => {
+      cadenceMap.set(cs.recipient_id, { 
+        cadence: cs.cadence, 
+        messageOrder: cs.message_order 
+      });
     });
 
     // Group messages by recipient
@@ -211,27 +227,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Process each recipient's messages according to their cadence
     for (const [recipientId, recipientMessages] of messagesByRecipient) {
-      const cadence = cadenceMap.get(recipientId) || "all_at_once";
-      const parsedCadence = parseCadence(cadence);
+      const cadenceData = cadenceMap.get(recipientId) || { cadence: "all_at_once", messageOrder: null };
+      const parsedCadence = parseCadence(cadenceData.cadence);
       
-      console.log(`Processing ${recipientMessages.length} messages for recipient ${recipientId.substring(0, 8)}*** with cadence: ${cadence}`);
+      console.log(`Processing ${recipientMessages.length} messages for recipient ${recipientId.substring(0, 8)}*** with cadence: ${cadenceData.cadence}`);
 
-      // Sort messages based on cadence orderBy preference
-      const orderBy = parsedCadence?.orderBy || "created_asc";
-      recipientMessages.sort((a, b) => {
-        switch (orderBy) {
-          case "created_desc":
-            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-          case "title_asc":
-            return (a.title || "").localeCompare(b.title || "");
-          case "created_asc":
-          default:
-            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        }
-      });
+      // Sort messages based on custom order or default to created_at
+      const sortedMessages = sortMessagesByOrder(recipientMessages, cadenceData.messageOrder);
 
-      for (let i = 0; i < recipientMessages.length; i++) {
-        const message = recipientMessages[i];
+      for (let i = 0; i < sortedMessages.length; i++) {
+        const message = sortedMessages[i];
         const mr = message.message_recipients.find(m => m.recipient_id === recipientId);
         
         if (!mr) continue;
