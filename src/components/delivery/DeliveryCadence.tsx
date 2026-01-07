@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Clock, Users } from 'lucide-react';
+import { Clock, Users, ArrowUpDown } from 'lucide-react';
 
 interface DeliveryCadenceProps {
   recipientId: string;
@@ -31,38 +31,55 @@ export default function DeliveryCadence({
   const [spaceOut, setSpaceOut] = useState(false);
   const [quantity, setQuantity] = useState('1');
   const [period, setPeriod] = useState<'week' | 'month'>('week');
+  const [orderBy, setOrderBy] = useState<'created_asc' | 'created_desc' | 'title_asc'>('created_asc');
 
   // Parse existing cadence into components
-  const parseCadence = (cadence: string): { spaceOut: boolean; quantity: string; period: 'week' | 'month' } => {
-    if (cadence === 'all_at_once') {
-      return { spaceOut: false, quantity: '1', period: 'week' };
+  const parseCadence = (cadence: string): { 
+    spaceOut: boolean; 
+    quantity: string; 
+    period: 'week' | 'month';
+    orderBy: 'created_asc' | 'created_desc' | 'title_asc';
+  } => {
+    if (cadence === 'all_at_once' || !cadence.includes('_per_')) {
+      return { spaceOut: false, quantity: '1', period: 'week', orderBy: 'created_asc' };
     }
     
-    // Parse formats like "1_per_week", "2_per_month"
-    const match = cadence.match(/^(\d+)_per_(week|month)$/);
+    // Parse formats like "1_per_week:created_asc", "2_per_month:title_asc"
+    const [cadencePart, orderPart] = cadence.split(':');
+    const match = cadencePart.match(/^(\d+)_per_(week|month)$/);
+    
     if (match) {
+      const parsedOrder = orderPart as 'created_asc' | 'created_desc' | 'title_asc';
       return { 
         spaceOut: true, 
         quantity: match[1], 
-        period: match[2] as 'week' | 'month' 
+        period: match[2] as 'week' | 'month',
+        orderBy: ['created_asc', 'created_desc', 'title_asc'].includes(parsedOrder) 
+          ? parsedOrder 
+          : 'created_asc'
       };
     }
     
     // Legacy format fallback
     if (cadence === 'weekly') {
-      return { spaceOut: true, quantity: '1', period: 'week' };
+      return { spaceOut: true, quantity: '1', period: 'week', orderBy: 'created_asc' };
     }
     if (cadence === 'monthly') {
-      return { spaceOut: true, quantity: '1', period: 'month' };
+      return { spaceOut: true, quantity: '1', period: 'month', orderBy: 'created_asc' };
     }
     
-    return { spaceOut: false, quantity: '1', period: 'week' };
+    return { spaceOut: false, quantity: '1', period: 'week', orderBy: 'created_asc' };
   };
 
   // Build cadence string from components
-  const buildCadence = (spaceOut: boolean, quantity: string, period: 'week' | 'month'): string => {
+  const buildCadence = (
+    spaceOut: boolean, 
+    quantity: string, 
+    period: 'week' | 'month',
+    order: 'created_asc' | 'created_desc' | 'title_asc'
+  ): string => {
     if (!spaceOut) return 'all_at_once';
-    return `${quantity}_per_${period}`;
+    return `${quantity}_per_${period}:${order}`;
   };
 
   // Fetch existing cadence setting
@@ -88,6 +105,7 @@ export default function DeliveryCadence({
       setSpaceOut(parsed.spaceOut);
       setQuantity(parsed.quantity);
       setPeriod(parsed.period);
+      setOrderBy(parsed.orderBy);
     }
   }, [existingCadence]);
 
@@ -116,19 +134,25 @@ export default function DeliveryCadence({
 
   const handleSpaceOutChange = (checked: boolean) => {
     setSpaceOut(checked);
-    const newCadence = buildCadence(checked, quantity, period);
+    const newCadence = buildCadence(checked, quantity, period, orderBy);
     saveMutation.mutate(newCadence);
   };
 
   const handleQuantityChange = (value: string) => {
     setQuantity(value);
-    const newCadence = buildCadence(spaceOut, value, period);
+    const newCadence = buildCadence(spaceOut, value, period, orderBy);
     saveMutation.mutate(newCadence);
   };
 
   const handlePeriodChange = (value: 'week' | 'month') => {
     setPeriod(value);
-    const newCadence = buildCadence(spaceOut, quantity, value);
+    const newCadence = buildCadence(spaceOut, quantity, value, orderBy);
+    saveMutation.mutate(newCadence);
+  };
+
+  const handleOrderChange = (value: 'created_asc' | 'created_desc' | 'title_asc') => {
+    setOrderBy(value);
+    const newCadence = buildCadence(spaceOut, quantity, period, value);
     saveMutation.mutate(newCadence);
   };
 
@@ -171,7 +195,7 @@ export default function DeliveryCadence({
 
         {/* Quantity and period selectors */}
         {spaceOut && (
-          <div className="flex items-center gap-3 animate-fade-in">
+          <div className="flex flex-wrap items-center gap-3 animate-fade-in">
             <span className="text-sm text-muted-foreground">Send</span>
             <Select value={quantity} onValueChange={handleQuantityChange}>
               <SelectTrigger className="w-20">
@@ -193,6 +217,24 @@ export default function DeliveryCadence({
               <SelectContent>
                 <SelectItem value="week">week</SelectItem>
                 <SelectItem value="month">month</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        {/* Order selector (optional) */}
+        {spaceOut && (
+          <div className="flex items-center gap-3 animate-fade-in">
+            <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">Order by</span>
+            <Select value={orderBy} onValueChange={handleOrderChange}>
+              <SelectTrigger className="w-44">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="created_asc">Oldest first</SelectItem>
+                <SelectItem value="created_desc">Newest first</SelectItem>
+                <SelectItem value="title_asc">Title (A–Z)</SelectItem>
               </SelectContent>
             </Select>
           </div>

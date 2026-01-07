@@ -42,19 +42,29 @@ interface MessageToDeliver {
   }[];
 }
 
-// Parse cadence string like "2_per_week" into { quantity: 2, period: "week" }
-function parseCadence(cadence: string): { quantity: number; period: "week" | "month" } | null {
+// Parse cadence string like "2_per_week:created_asc" into components
+function parseCadence(cadence: string): { 
+  quantity: number; 
+  period: "week" | "month";
+  orderBy: "created_asc" | "created_desc" | "title_asc";
+} | null {
   if (cadence === "all_at_once") return null;
   
   // Legacy format support
-  if (cadence === "weekly") return { quantity: 1, period: "week" };
-  if (cadence === "monthly") return { quantity: 1, period: "month" };
+  if (cadence === "weekly") return { quantity: 1, period: "week", orderBy: "created_asc" };
+  if (cadence === "monthly") return { quantity: 1, period: "month", orderBy: "created_asc" };
   
-  const match = cadence.match(/^(\d+)_per_(week|month)$/);
+  // Parse new format with optional order: "2_per_week:created_asc"
+  const [cadencePart, orderPart] = cadence.split(":");
+  const match = cadencePart.match(/^(\d+)_per_(week|month)$/);
+  
   if (match) {
+    const validOrders = ["created_asc", "created_desc", "title_asc"];
+    const order = validOrders.includes(orderPart) ? orderPart : "created_asc";
     return { 
       quantity: parseInt(match[1], 10), 
-      period: match[2] as "week" | "month" 
+      period: match[2] as "week" | "month",
+      orderBy: order as "created_asc" | "created_desc" | "title_asc"
     };
   }
   
@@ -64,7 +74,7 @@ function parseCadence(cadence: string): { quantity: number; period: "week" | "mo
 // Calculate delivery date for a message based on its position in the cadence
 function calculateDeliveryDate(
   index: number, 
-  cadence: { quantity: number; period: "week" | "month" },
+  cadence: { quantity: number; period: "week" | "month"; orderBy: string },
   baseDate: Date
 ): Date {
   const batchNumber = Math.floor(index / cadence.quantity);
@@ -77,6 +87,10 @@ function calculateDeliveryDate(
   }
   
   return deliveryDate;
+}
+
+interface MessageWithMeta extends MessageToDeliver {
+  created_at: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -127,6 +141,7 @@ const handler = async (req: Request): Promise<Response> => {
         title,
         content,
         user_id,
+        created_at,
         message_recipients(
           id,
           delivery_token,
@@ -172,7 +187,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // Group messages by recipient
-    const messagesByRecipient = new Map<string, MessageToDeliver[]>();
+    const messagesByRecipient = new Map<string, MessageWithMeta[]>();
     
     for (const message of messages) {
       for (const mr of message.message_recipients) {
@@ -180,7 +195,7 @@ const handler = async (req: Request): Promise<Response> => {
         if (!messagesByRecipient.has(recipientId)) {
           messagesByRecipient.set(recipientId, []);
         }
-        messagesByRecipient.get(recipientId)!.push(message as MessageToDeliver);
+        messagesByRecipient.get(recipientId)!.push(message as MessageWithMeta);
       }
     }
 
@@ -201,8 +216,19 @@ const handler = async (req: Request): Promise<Response> => {
       
       console.log(`Processing ${recipientMessages.length} messages for recipient ${recipientId.substring(0, 8)}*** with cadence: ${cadence}`);
 
-      // Sort messages by creation date for consistent ordering
-      recipientMessages.sort((a, b) => a.id.localeCompare(b.id));
+      // Sort messages based on cadence orderBy preference
+      const orderBy = parsedCadence?.orderBy || "created_asc";
+      recipientMessages.sort((a, b) => {
+        switch (orderBy) {
+          case "created_desc":
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          case "title_asc":
+            return (a.title || "").localeCompare(b.title || "");
+          case "created_asc":
+          default:
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        }
+      });
 
       for (let i = 0; i < recipientMessages.length; i++) {
         const message = recipientMessages[i];
