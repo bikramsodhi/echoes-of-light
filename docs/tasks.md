@@ -124,6 +124,7 @@
 - [x] Implement cadence options: All at once (default), One per week, One per month
 - [x] Store cadence preference per recipient grouping
 - [x] Update delivery logic to respect cadence spacing
+- [x] Add message order selector (oldest first, newest first, title A-Z)
 - [ ] Add gentle confirmation copy per design-guidelines.md
 
 **Microcopy reference:**
