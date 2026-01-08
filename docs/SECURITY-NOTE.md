@@ -18,3 +18,18 @@ When React version 19.2.4 or higher is released, we should:
 2. Re-test SVG/icon behavior
 3. Delete this note if no longer needed
 
+## Supabase Linter Warning: Extension in Public Schema (pg_net)
+
+Supabase flagged a warning about the `pg_net` extension being installed in the `public` schema.
+
+We are currently NOT moving this extension because:
+
+- It is considered an infrastructure-level decision
+- Moving the extension could break critical database functions
+- The risk of migration outweighs the current benefit
+- The issue is tracked and will be revisited if Supabase tooling improves
+
+Reference: https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public
+
+✅ Status: Acknowledged and deferred by team due to potential breakage.
+
