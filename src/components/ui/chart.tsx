@@ -37,7 +37,8 @@ const ChartContainer = React.forwardRef<
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId();
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
+  const safeIdPart = `${id ?? uniqueId}`.replace(/[^a-zA-Z0-9_-]/g, "");
+  const chartId = `chart-${safeIdPart || "default"}`;
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -58,12 +59,11 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
-// SECURITY: This component uses dangerouslySetInnerHTML for CSS injection.
-// This is safe because:
-// 1. THEMES is a hardcoded constant (lines 6-7)
-// 2. Color values come from typed ChartConfig, not user input
-// 3. CSS custom properties are scoped to data-chart attribute
-// DO NOT accept user-provided color values without validation.
+// SECURITY: Avoid dangerouslySetInnerHTML for style injection.
+// We still generate a small scoped CSS string, but we render it as a text node
+// inside <style> to minimize XSS surface area.
+//
+// NOTE: ChartConfig values should remain developer-controlled (not end-user input).
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
 
@@ -71,26 +71,26 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
+  const css = Object.entries(THEMES)
+    .map(([theme, prefix]) => {
+      const vars = colorConfig
+        .map(([key, itemConfig]) => {
+          const safeKey = key.replace(/[^a-zA-Z0-9_-]/g, "");
+          const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+          return safeKey && color ? `  --color-${safeKey}: ${color};` : null;
+        })
+        .filter(Boolean)
+        .join("\n");
+
+      return `
+${prefix} [data-chart="${id}"] {
+${vars}
 }
-`,
-          )
-          .join("\n"),
-      }}
-    />
-  );
+`;
+    })
+    .join("\n");
+
+  return <style>{css}</style>;
 };
 
 const ChartTooltip = RechartsPrimitive.Tooltip;

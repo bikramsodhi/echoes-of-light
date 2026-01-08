@@ -49,7 +49,7 @@ export default function MediaUploader({ onUpload, maxFiles = 10, className }: Me
         ref={fileInputRef}
         type="file"
         multiple
-        accept="image/*,video/*,audio/*,application/pdf"
+        accept="image/jpeg,image/png,image/gif,image/webp,image/heic,image/heif,video/mp4,video/webm,video/quicktime,audio/mpeg,audio/wav,audio/webm,application/pdf"
         onChange={(e) => handleFiles(e.target.files)}
         className="hidden"
       />
