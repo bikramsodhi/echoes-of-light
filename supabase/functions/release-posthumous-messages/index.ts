@@ -113,13 +113,56 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
       console.error("Missing environment variables");
       return new Response(
         JSON.stringify({ success: false, error: "Server misconfigured" }),
         { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // SECURITY: Require authentication
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Verify the caller's session
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+      console.error("Authentication failed:", userError?.message);
+      return new Response(
+        JSON.stringify({ success: false, error: "Invalid session" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const callerUserId = user.id;
+
+    // SECURITY: Verify caller has admin role
+    const { data: roleData } = await supabaseClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", callerUserId)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    if (!roleData) {
+      console.warn(`Unauthorized access attempt by user: ${callerUserId.substring(0, 8)}***`);
+      return new Response(
+        JSON.stringify({ success: false, error: "Forbidden - admin required" }),
+        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
@@ -133,8 +176,17 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // SECURITY: Audit logging
+    console.log(JSON.stringify({
+      event: "posthumous_message_release",
+      admin_user_id: callerUserId.substring(0, 8) + "***",
+      target_user_id: userId.substring(0, 8) + "***",
+      timestamp: new Date().toISOString()
+    }));
+
     console.log(`Processing posthumous message release for user: ${userId.substring(0, 8)}***`);
 
+    // Use service role for the actual operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get sender profile
