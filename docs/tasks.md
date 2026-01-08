@@ -299,3 +299,10 @@ For each feature:
 - **Email service:** Resend configured with echolight.live domain
 
 ---
+
+## 🔐 Security Hardening
+
+- [x] Remove `dangerouslySetInnerHTML` usage in chart styles (reduce XSS surface)
+- [x] Block SVG uploads explicitly and tighten file picker accept list
+
+---

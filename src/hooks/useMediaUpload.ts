@@ -40,6 +40,12 @@ export function useMediaUpload(options: UseMediaUploadOptions = {}) {
   const allowedTypes = options.allowedTypes || DEFAULT_ALLOWED_TYPES;
 
   const validateFile = (file: File): string | null => {
+    // Defense-in-depth: block SVG explicitly (common XSS vector)
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    if (file.type === 'image/svg+xml' || ext === 'svg') {
+      return 'SVG files are not supported';
+    }
+
     if (file.size > maxFileSize) {
       return `File size exceeds ${Math.round(maxFileSize / 1024 / 1024)}MB limit`;
     }
