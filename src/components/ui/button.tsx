@@ -13,17 +13,22 @@ const buttonVariants = cva(
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline: "border border-primary/30 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary/50",
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent/50 hover:text-accent-foreground",
+        ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        hero: "bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:bg-primary/90",
-        gentle: "bg-accent/30 text-foreground border border-accent/50 hover:bg-accent/50 hover:border-accent",
-        warm: "bg-gradient-to-r from-primary to-[hsl(35,89%,81%)] text-primary-foreground shadow-lg hover:shadow-xl hover:opacity-90",
+        // Premium button - deep navy with subtle gold accent
+        premium: "bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:bg-primary/95 border border-primary/20",
+        // Warm button - gold accent, inviting
+        warm: "bg-accent text-accent-foreground shadow-md hover:shadow-lg hover:bg-accent/90 font-medium",
+        // Gentle/secondary action
+        gentle: "bg-secondary/80 text-secondary-foreground border border-border/60 hover:bg-secondary hover:border-border",
+        // Trust-focused - for security actions
+        trust: "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30",
       },
       size: {
         default: "h-10 px-5 py-2",
         sm: "h-9 rounded-md px-4 text-xs",
         lg: "h-12 rounded-lg px-8 text-base",
-        xl: "h-14 rounded-xl px-10 text-lg",
+        xl: "h-14 rounded-lg px-10 text-base font-medium",
         icon: "h-10 w-10",
       },
     },
