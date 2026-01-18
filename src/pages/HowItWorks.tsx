@@ -187,7 +187,7 @@ const HowItWorksPage = () => {
                 Start your journey of meaningful connection. Take all the time you need.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="hero" size="lg" asChild>
+                <Button variant="premium" size="lg" asChild>
                   <Link to="/auth">Get Started</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>

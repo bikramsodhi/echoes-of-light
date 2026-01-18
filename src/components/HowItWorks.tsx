@@ -1,72 +1,70 @@
-import { Vault, Mic, CalendarClock, Heart } from "lucide-react";
+import { Vault, Mic, CalendarClock, Shield } from "lucide-react";
 
 const steps = [
   {
     number: "01",
-    title: "Create Your Vault",
-    description: "Sign up and begin your private space. Add recipients, organize your thoughts, and take your time.",
+    title: "Create Your Private Vault",
+    description: "Sign up with bank-level encryption. Your messages are protected from the moment you begin.",
     icon: Vault,
   },
   {
     number: "02",
     title: "Record Your Memories",
-    description: "Write letters, record voice messages, upload photos and videos. Our gentle guide is here if you need inspiration.",
+    description: "Write letters, record voice messages, upload photos and videos. Take all the time you need.",
     icon: Mic,
   },
   {
     number: "03",
-    title: "Assign & Schedule",
-    description: "Choose who receives each message. Set delivery for specific dates or when your trusted contact confirms.",
+    title: "Set Delivery Conditions",
+    description: "Choose exactly when and how each message is delivered. Specific dates, milestones, or trusted contact verification.",
     icon: CalendarClock,
   },
   {
     number: "04",
-    title: "Rest Easy",
-    description: "Your words are protected and safe. When the time comes, your messages will find their way — gently.",
-    icon: Heart,
+    title: "Rest with Peace of Mind",
+    description: "Your words are encrypted and waiting. When the time comes, they'll arrive gently to those you love.",
+    icon: Shield,
   },
 ];
 
 const HowItWorks = () => {
   return (
-    <section className="py-24">
+    <section className="py-28 bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto px-6">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
-            How EchoLight Works
+        <div className="text-center mb-20">
+          <h2 className="font-serif text-4xl md:text-5xl text-foreground mb-5 tracking-tight">
+            How It Works
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            A gentle process designed for reflection, not urgency.
+          <p className="text-muted-foreground max-w-xl mx-auto text-lg leading-relaxed">
+            A thoughtful process designed for reflection, not urgency. 
+            Your legacy, protected at every step.
           </p>
         </div>
         
-        {/* Steps */}
-        <div className="max-w-4xl mx-auto">
-          {steps.map((step, index) => {
+        {/* Steps Grid - Card Layout */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {steps.map((step) => {
             const Icon = step.icon;
             return (
               <div 
                 key={step.number}
-                className="flex gap-6 md:gap-10 mb-12 last:mb-0 group"
+                className="group relative"
               >
-                {/* Step Number & Icon */}
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-primary/20 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-primary/10">
-                    <Icon className="w-7 h-7 text-primary transition-transform duration-300 group-hover:scale-110" />
+                <div className="card-elegant rounded-xl p-8 h-full transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+                  {/* Step Number */}
+                  <span className="text-xs font-semibold text-primary/50 tracking-widest mb-4 block">
+                    STEP {step.number}
+                  </span>
+                  
+                  {/* Icon */}
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-105">
+                    <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
                   </div>
-                  {index < steps.length - 1 && (
-                    <div className="w-px h-12 bg-gradient-to-b from-primary/30 to-transparent mx-auto mt-4" />
-                  )}
-                </div>
-                
-                {/* Step Content */}
-                <div className="pt-3">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-xs font-medium text-primary/60 tracking-wider">{step.number}</span>
-                    <h3 className="font-serif text-xl text-foreground">{step.title}</h3>
-                  </div>
-                  <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                  
+                  {/* Content */}
+                  <h3 className="font-serif text-xl text-foreground mb-3">{step.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
                 </div>
               </div>
             );

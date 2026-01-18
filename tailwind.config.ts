@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["DM Serif Display", "serif"],
-        sans: ["Inter", "sans-serif"],
+        serif: ["Cormorant Garamond", "Georgia", "serif"],
+        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -66,9 +66,11 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         // EchoLight custom colors
-        lavender: "hsl(var(--lavender))",
+        navy: "hsl(var(--navy))",
         gold: "hsl(var(--gold))",
-        ivory: "hsl(var(--ivory))",
+        sand: "hsl(var(--sand))",
+        charcoal: "hsl(var(--charcoal))",
+        plum: "hsl(var(--plum))",
       },
       borderRadius: {
         lg: "var(--radius)",
