@@ -14,7 +14,7 @@ const Header = () => {
           <img 
             src={echolightLogo} 
             alt="EchoLight" 
-            className="h-8 w-auto"
+            className="h-10 object-contain object-left"
           />
         </Link>
         
