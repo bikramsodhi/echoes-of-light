@@ -20,7 +20,7 @@ interface TestimonialsProps {
   title?: string;
 }
 
-const DRIFT_SPEED = 0.9; // px per frame (gentle continuous drift)
+const DRIFT_SPEED = 1.125; // px per frame (gentle continuous drift)
 
 function Testimonials({
   testimonials,
