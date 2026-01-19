@@ -310,4 +310,5 @@ For each feature:
 ## ✨ UI Polish
 
 - [x] About page: Reflections carousel hover drift uses stable auto-scroll (no stalling) and respects reduced-motion
+- [x] Header logo: Use transparent logo + solid header background so it blends perfectly in light/dark mode
 
