@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-sans text-base font-semibold tracking-wide transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -14,21 +14,21 @@ const buttonVariants = cva(
         outline: "border border-primary/30 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary/50",
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-muted hover:text-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        // Premium button - deep navy with subtle gold accent
-        premium: "bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:bg-primary/95 border border-primary/20",
+        link: "text-primary underline-offset-4 hover:underline font-medium",
+        // Premium button - deep navy with subtle gold accent, uppercase
+        premium: "bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:bg-primary/95 border border-primary/20 uppercase tracking-button",
         // Warm button - gold accent, inviting
-        warm: "bg-accent text-accent-foreground shadow-md hover:shadow-lg hover:bg-accent/90 font-medium",
+        warm: "bg-accent text-accent-foreground shadow-md hover:shadow-lg hover:bg-accent/90",
         // Gentle/secondary action
         gentle: "bg-secondary/80 text-secondary-foreground border border-border/60 hover:bg-secondary hover:border-border",
         // Trust-focused - for security actions
         trust: "bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30",
       },
       size: {
-        default: "h-10 px-5 py-2",
-        sm: "h-9 rounded-md px-4 text-xs",
+        default: "h-10 px-5 py-2 text-[15px]",
+        sm: "h-9 rounded-md px-4 text-sm",
         lg: "h-12 rounded-lg px-8 text-base",
-        xl: "h-14 rounded-lg px-10 text-base font-medium",
+        xl: "h-14 rounded-lg px-10 text-base",
         icon: "h-10 w-10",
       },
     },

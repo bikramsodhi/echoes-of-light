@@ -120,16 +120,72 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
   }
   
-  h1, h2, h3 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-  
+  /* Typography System - Premium, High-Trust */
   h1 {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.25rem, 4vw, 2.625rem); /* 36-42px */
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    @apply text-foreground;
+  }
+  
+  h2 {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.75rem, 3vw, 2rem); /* 28-32px */
     font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    @apply text-foreground;
+  }
+  
+  h3 {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.25rem, 2vw, 1.5rem); /* 20-24px */
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    @apply text-foreground;
+  }
+  
+  h4 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.125rem; /* 18px */
+    font-weight: 600;
+    line-height: 1.4;
+    @apply text-foreground;
+  }
+  
+  p {
+    font-size: 1rem; /* 16-17px base */
+    line-height: 1.6;
+    max-width: 44rem; /* ~700px */
+  }
+  
+  /* Pull quotes - Serif italic for emotional impact */
+  blockquote {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    @apply text-foreground/90 border-l-2 border-accent pl-6 my-6;
+  }
+  
+  /* Captions and legal text */
+  small, .text-caption {
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.5;
+    @apply text-muted-foreground;
+  }
+  
+  .text-legal {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.5;
+    @apply text-muted-foreground;
   }
 }
 
