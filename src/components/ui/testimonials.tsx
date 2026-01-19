@@ -63,7 +63,7 @@ function Testimonials({ testimonials, title = "What people say when they see it"
     }
     setCurrent(prev => prev + 1);
     
-    // Continue scrolling while hovering
+    // Continue scrolling while hovering (slower pace)
     hoverIntervalRef.current = setInterval(() => {
       if (direction === 'next') {
         api.scrollNext();
@@ -78,7 +78,7 @@ function Testimonials({ testimonials, title = "What people say when they see it"
         }
       }
       setCurrent(prev => prev + 1);
-    }, 800);
+    }, 1800);
   };
 
   const stopHoverScroll = () => {
