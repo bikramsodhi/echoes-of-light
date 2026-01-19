@@ -68,7 +68,7 @@ function Testimonials({ testimonials, title = "What people say when they see it"
 
   const startHoverScroll = (direction: 'next' | 'prev') => {
     // Set scroll speed (negative for next/right, positive for prev/left)
-    scrollSpeedRef.current = direction === 'next' ? -0.5 : 0.5;
+    scrollSpeedRef.current = direction === 'next' ? -0.625 : 0.625;
   };
 
   const stopHoverScroll = () => {
