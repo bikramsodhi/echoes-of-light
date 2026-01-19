@@ -2,13 +2,39 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { Testimonials, Testimonial } from "@/components/ui/testimonials";
 
-const reflections = [
-  "When my dad passed, I scrambled to find his old emails. I would've treasured something like this.",
-  "She used to leave me voicemails. I wish there was a place where she could've said everything she wanted to.",
-  "We always meant to write each other something. EchoLight would've helped me start.",
-  "There are things I still wish my mom had told me. A space like this might've made it easier for her.",
-  "It's the kind of thing you don't know you need—until you really do.",
+const reflections: Testimonial[] = [
+  {
+    quote: "I wish I'd had this",
+    description: "When my dad passed, I scrambled to find his old emails. I would've treasured something like this.",
+    author: "Anonymous",
+    initials: "A",
+  },
+  {
+    quote: "She left voicemails",
+    description: "She used to leave me voicemails. I wish there was a place where she could've said everything she wanted to.",
+    author: "Anonymous",
+    initials: "A",
+  },
+  {
+    quote: "We meant to write",
+    description: "We always meant to write each other something. EchoLight would've helped me start.",
+    author: "Anonymous",
+    initials: "A",
+  },
+  {
+    quote: "Things left unsaid",
+    description: "There are things I still wish my mom had told me. A space like this might've made it easier for her.",
+    author: "Anonymous",
+    initials: "A",
+  },
+  {
+    quote: "You don't know until you need it",
+    description: "It's the kind of thing you don't know you need—until you really do.",
+    author: "Anonymous",
+    initials: "A",
+  },
 ];
 
 export default function About() {
@@ -72,29 +98,19 @@ export default function About() {
         </section>
 
         {/* Emotional Reflections Section */}
-        <section className="py-20 bg-muted/30">
-          <div className="container px-4 md:px-6 max-w-3xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="font-serif text-3xl text-foreground mb-4">
-                What people say when they see it
-              </h2>
+        <section className="bg-muted/30">
+          <div className="container px-4 md:px-6 max-w-5xl mx-auto">
+            <div className="text-center pt-16">
               <p className="text-muted-foreground leading-relaxed max-w-xl mx-auto">
                 These aren't testimonials.
                 <br />
                 Just real words from people who've known loss—and recognize what EchoLight could have meant.
               </p>
             </div>
-            
-            <div className="space-y-8">
-              {reflections.map((quote, index) => (
-                <blockquote 
-                  key={index}
-                  className="font-serif text-xl md:text-2xl text-foreground/90 leading-relaxed text-center italic"
-                >
-                  "{quote}"
-                </blockquote>
-              ))}
-            </div>
+            <Testimonials 
+              testimonials={reflections}
+              title="What people say when they see it"
+            />
           </div>
         </section>
 
