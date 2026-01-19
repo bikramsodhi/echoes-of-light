@@ -14,32 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["Playfair Display", "Cormorant Garamond", "Georgia", "serif"],
+        serif: ["Cormorant Garamond", "Georgia", "serif"],
         sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-      },
-      fontSize: {
-        // Typography scale for high-trust design
-        'xs': ['0.8125rem', { lineHeight: '1.5' }],     // 13px - captions
-        'sm': ['0.875rem', { lineHeight: '1.5' }],      // 14px - legal/small
-        'base': ['1.0625rem', { lineHeight: '1.6' }],   // 17px - body
-        'lg': ['1.125rem', { lineHeight: '1.55' }],     // 18px - large body
-        'xl': ['1.25rem', { lineHeight: '1.5' }],       // 20px - intro text
-        '2xl': ['1.5rem', { lineHeight: '1.35' }],      // 24px - h4
-        '3xl': ['1.875rem', { lineHeight: '1.25' }],    // 30px - h3
-        '4xl': ['2rem', { lineHeight: '1.2' }],         // 32px - h2
-        '5xl': ['2.625rem', { lineHeight: '1.15' }],    // 42px - h1
-        '6xl': ['3rem', { lineHeight: '1.1' }],         // 48px - display
-      },
-      maxWidth: {
-        'prose': '44rem', // 700px for body text
-      },
-      letterSpacing: {
-        'tight': '-0.02em',
-        'snug': '-0.015em',
-        'normal': '0',
-        'wide': '0.025em',
-        'wider': '0.05em',
-        'button': '0.04em', // For uppercase buttons
       },
       colors: {
         border: "hsl(var(--border))",
