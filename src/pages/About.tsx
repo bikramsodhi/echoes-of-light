@@ -100,8 +100,8 @@ export default function About() {
         {/* Emotional Reflections Section */}
         <section className="bg-muted/30">
           <div className="container px-4 md:px-6 max-w-5xl mx-auto">
-            <div className="text-center pt-16">
-              <p className="text-muted-foreground leading-relaxed max-w-xl mx-auto">
+            <div className="text-center pt-8">
+              <p className="text-sm italic text-muted-foreground leading-relaxed max-w-xl mx-auto">
                 These aren't testimonials.
                 <br />
                 Just real words from people who've known loss—and recognize what EchoLight could have meant.
