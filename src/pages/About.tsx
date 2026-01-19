@@ -8,32 +8,22 @@ const reflections: Testimonial[] = [
   {
     quote: "I wish I'd had this",
     description: "When my dad passed, I scrambled to find his old emails. I would've treasured something like this.",
-    author: "Anonymous",
-    initials: "A",
   },
   {
     quote: "She left voicemails",
     description: "She used to leave me voicemails. I wish there was a place where she could've said everything she wanted to.",
-    author: "Anonymous",
-    initials: "A",
   },
   {
     quote: "We meant to write",
     description: "We always meant to write each other something. EchoLight would've helped me start.",
-    author: "Anonymous",
-    initials: "A",
   },
   {
     quote: "Things left unsaid",
     description: "There are things I still wish my mom had told me. A space like this might've made it easier for her.",
-    author: "Anonymous",
-    initials: "A",
   },
   {
     quote: "You don't know until you need it",
     description: "It's the kind of thing you don't know you need—until you really do.",
-    author: "Anonymous",
-    initials: "A",
   },
 ];
 
