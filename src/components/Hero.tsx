@@ -1,20 +1,31 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/hero-light.png";
+import heroSunrise from "@/assets/hero-sunrise.jpg";
 import { Shield, Lock, Clock, FileText, Calendar, CheckCircle } from "lucide-react";
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
-      {/* Background - Subtle gradient with reduced image */}
+      {/* Cinematic Background with Sunrise Image */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-secondary/30" />
+        {/* Sunrise image layer - subtle opacity */}
         <img 
-          src={heroImage} 
-          alt="Peaceful light symbolizing legacy" 
-          className="w-full h-full object-cover opacity-40 mix-blend-soft-light"
+          src={heroSunrise} 
+          alt="Sunrise breaking through clouds" 
+          className="w-full h-full object-cover opacity-25 blur-[2px] sm:blur-0"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+        
+        {/* Cream/off-white overlay for refined tone */}
+        <div 
+          className="absolute inset-0" 
+          style={{ backgroundColor: 'rgba(250, 249, 246, 0.75)' }}
+        />
+        
+        {/* Top-to-bottom gradient fade for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-transparent" />
+        
+        {/* Bottom fade to blend with content below */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
       
       {/* Content */}
@@ -26,15 +37,24 @@ const Hero = () => {
             <span className="text-sm text-muted-foreground font-medium">Private & Secure • End-to-End Encrypted</span>
           </div>
           
-          {/* Headline - Elegant serif with clear hierarchy */}
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 animate-fade-in-up leading-[1.1] tracking-tight">
-            <span className="text-foreground">Leave Behind Words</span>
-            <br />
-            <span className="text-primary/80 text-4xl md:text-5xl lg:text-6xl font-normal italic">that light the way</span>
+          {/* Headline - Deep navy serif with elegant hierarchy */}
+          <h1 className="font-serif mb-6 animate-fade-in-up leading-[1.1] tracking-tight">
+            <span 
+              className="block text-5xl md:text-6xl lg:text-7xl font-semibold"
+              style={{ color: '#2A3240' }}
+            >
+              Leave Behind Words
+            </span>
+            <span 
+              className="block text-3xl md:text-4xl lg:text-5xl font-normal italic mt-3"
+              style={{ color: '#8B8FA3' }}
+            >
+              that light the way
+            </span>
           </h1>
           
-          {/* Subheadline */}
-          <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
+          {/* Subheadline - Professional sans-serif */}
+          <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200 font-sans">
             Create heartfelt messages for your loved ones — secured, private, 
             and delivered gently when the time is right.
           </p>
@@ -80,7 +100,7 @@ const Hero = () => {
           <p className="text-lg md:text-xl text-foreground/70 italic font-serif mb-3">
             "What if you could say what mattered—when you're not around to say it?"
           </p>
-          <p className="text-base text-muted-foreground">
+          <p className="text-base text-muted-foreground font-sans">
             Messages that wait. Words that stay. Love that arrives, even when you can't.
           </p>
         </div>
