@@ -23,7 +23,8 @@ function Testimonials({ testimonials, title = "What people say when they see it"
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const hoverIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const animationRef = useRef<number | null>(null);
+  const scrollSpeedRef = useRef(0);
 
   // Auto-scroll every 4 seconds
   useEffect(() => {
@@ -40,51 +41,45 @@ function Testimonials({ testimonials, title = "What people say when they see it"
     return () => clearTimeout(interval);
   }, [api, current]);
 
-  const startHoverScroll = (direction: 'next' | 'prev') => {
+  // Smooth continuous scroll animation
+  useEffect(() => {
     if (!api) return;
-    
-    // Clear any existing interval
-    if (hoverIntervalRef.current) {
-      clearInterval(hoverIntervalRef.current);
-    }
-    
-    // Scroll immediately
-    if (direction === 'next') {
-      api.scrollNext();
-      if (api.selectedScrollSnap() + 1 >= api.scrollSnapList().length) {
-        api.scrollTo(0);
-      }
-    } else {
-      if (api.selectedScrollSnap() === 0) {
-        api.scrollTo(api.scrollSnapList().length - 1);
-      } else {
-        api.scrollPrev();
-      }
-    }
-    setCurrent(prev => prev + 1);
-    
-    // Continue scrolling while hovering (slower pace)
-    hoverIntervalRef.current = setInterval(() => {
-      if (direction === 'next') {
-        api.scrollNext();
-        if (api.selectedScrollSnap() + 1 >= api.scrollSnapList().length) {
-          api.scrollTo(0);
-        }
-      } else {
-        if (api.selectedScrollSnap() === 0) {
-          api.scrollTo(api.scrollSnapList().length - 1);
-        } else {
-          api.scrollPrev();
+
+    const animate = () => {
+      if (scrollSpeedRef.current !== 0) {
+        const engine = (api as any).internalEngine();
+        if (engine) {
+          const currentLocation = engine.location.get();
+          engine.location.set(currentLocation + scrollSpeedRef.current);
+          engine.translate.to(engine.location.get());
         }
       }
-      setCurrent(prev => prev + 1);
-    }, 1800);
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [api]);
+
+  const startHoverScroll = (direction: 'next' | 'prev') => {
+    // Set scroll speed (negative for next/right, positive for prev/left)
+    scrollSpeedRef.current = direction === 'next' ? -0.5 : 0.5;
   };
 
   const stopHoverScroll = () => {
-    if (hoverIntervalRef.current) {
-      clearInterval(hoverIntervalRef.current);
-      hoverIntervalRef.current = null;
+    scrollSpeedRef.current = 0;
+    // Settle to nearest snap point
+    if (api) {
+      const engine = (api as any).internalEngine();
+      if (engine) {
+        engine.scrollBody.useDuration(500);
+        api.scrollTo(api.selectedScrollSnap());
+      }
     }
   };
 
