@@ -46,10 +46,10 @@ function Testimonials({ testimonials, title = "What people say when they see it"
   }, [api, current]);
 
   return (
-    <div className="w-full py-20 lg:py-32">
+    <div className="w-full py-10 lg:py-16">
       <div className="container mx-auto">
-        <div className="flex flex-col gap-10">
-          <h2 className="text-3xl md:text-4xl tracking-tight lg:max-w-xl font-serif text-foreground text-center mx-auto">
+        <div className="flex flex-col gap-6">
+          <h2 className="text-2xl md:text-3xl tracking-tight lg:max-w-xl font-serif text-foreground text-center mx-auto">
             {title}
           </h2>
           <Carousel setApi={setApi} className="w-full">
