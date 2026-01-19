@@ -306,3 +306,8 @@ For each feature:
 - [x] Block SVG uploads explicitly and tighten file picker accept list
 
 ---
+
+## ✨ UI Polish
+
+- [x] About page: Reflections carousel hover drift uses stable auto-scroll (no stalling) and respects reduced-motion
+

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import AutoScroll from "embla-carousel-auto-scroll";
 import { User } from "lucide-react";
 
 interface Testimonial {
@@ -19,68 +20,91 @@ interface TestimonialsProps {
   title?: string;
 }
 
-function Testimonials({ testimonials, title = "What people say when they see it" }: TestimonialsProps) {
+const DRIFT_SPEED = 0.9; // px per frame (gentle continuous drift)
+
+function Testimonials({
+  testimonials,
+  title = "What people say when they see it",
+}: TestimonialsProps) {
   const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
-  const scrollSpeedRef = useRef(0);
+  const [tick, setTick] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
-  // Auto-scroll every 4 seconds
+  const hoverDirectionRef = useRef<"forward" | "backward" | null>(null);
+
   useEffect(() => {
-    if (!api) return;
+    if (typeof window === "undefined") return;
 
-    const interval = setTimeout(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(mq.matches);
+
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
+
+  // Auto-advance (disabled while hovering or if reduced motion)
+  useEffect(() => {
+    if (!api || reducedMotion || isHovering) return;
+
+    const t = window.setTimeout(() => {
       api.scrollNext();
-      if (api.selectedScrollSnap() + 1 >= api.scrollSnapList().length) {
-        api.scrollTo(0);
-      }
-      setCurrent(prev => prev + 1);
+      setTick((v) => v + 1);
     }, 4000);
 
-    return () => clearTimeout(interval);
-  }, [api, current]);
+    return () => window.clearTimeout(t);
+  }, [api, reducedMotion, isHovering, tick]);
 
-  // Smooth continuous scroll animation
-  useEffect(() => {
+  const ensureAutoScrollPlugin = (direction: "forward" | "backward") => {
     if (!api) return;
 
-    const animate = () => {
-      if (scrollSpeedRef.current !== 0) {
-        const engine = (api as any).internalEngine();
-        if (engine) {
-          const currentLocation = engine.location.get();
-          engine.location.set(currentLocation + scrollSpeedRef.current);
-          engine.translate.to(engine.location.get());
-        }
-      }
-      animationRef.current = requestAnimationFrame(animate);
-    };
+    // Only re-init when direction changes (re-init is expensive)
+    if (hoverDirectionRef.current === direction && (api as any).plugins?.()?.autoScroll) {
+      return;
+    }
 
-    animationRef.current = requestAnimationFrame(animate);
+    hoverDirectionRef.current = direction;
 
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [api]);
-
-  const startHoverScroll = (direction: 'next' | 'prev') => {
-    // Set scroll speed (negative for next/right, positive for prev/left)
-    scrollSpeedRef.current = direction === 'next' ? -0.625 : 0.625;
+    // Re-init with AutoScroll for stable continuous movement
+    api.reInit(
+      { loop: true },
+      [
+        AutoScroll({
+          playOnInit: false,
+          startDelay: 0,
+          speed: DRIFT_SPEED,
+          direction,
+          stopOnInteraction: false,
+          stopOnFocusIn: true,
+        }),
+      ],
+    );
   };
 
-  const stopHoverScroll = () => {
-    scrollSpeedRef.current = 0;
-    // Settle to nearest snap point
-    if (api) {
-      const engine = (api as any).internalEngine();
-      if (engine) {
-        engine.scrollBody.useDuration(500);
-        api.scrollTo(api.selectedScrollSnap());
-      }
-    }
+  const startHoverDrift = (direction: "forward" | "backward") => {
+    if (!api || reducedMotion) return;
+
+    setIsHovering(true);
+    ensureAutoScrollPlugin(direction);
+
+    // Start immediately (no delay)
+    window.setTimeout(() => {
+      const autoScroll = (api as any).plugins?.()?.autoScroll;
+      autoScroll?.play?.(0);
+    }, 0);
+  };
+
+  const stopHoverDrift = () => {
+    if (!api) return;
+
+    setIsHovering(false);
+
+    const autoScroll = (api as any).plugins?.()?.autoScroll;
+    autoScroll?.stop?.();
+
+    // Settle gently to the closest snap point for readability
+    api.scrollTo(api.selectedScrollSnap());
   };
 
   return (
@@ -90,19 +114,24 @@ function Testimonials({ testimonials, title = "What people say when they see it"
           <h2 className="text-3xl md:text-4xl tracking-tight lg:max-w-xl font-serif font-semibold text-foreground text-center mx-auto">
             {title}
           </h2>
-          <div ref={containerRef} className="relative">
+
+          <div className="relative">
             {/* Left hover zone */}
-            <div 
+            <div
               className="absolute left-0 top-0 bottom-0 w-[15%] z-10 cursor-w-resize"
-              onMouseEnter={() => startHoverScroll('prev')}
-              onMouseLeave={stopHoverScroll}
+              onMouseEnter={() => startHoverDrift("backward")}
+              onMouseLeave={stopHoverDrift}
+              aria-hidden="true"
             />
+
             {/* Right hover zone */}
-            <div 
+            <div
               className="absolute right-0 top-0 bottom-0 w-[15%] z-10 cursor-e-resize"
-              onMouseEnter={() => startHoverScroll('next')}
-              onMouseLeave={stopHoverScroll}
+              onMouseEnter={() => startHoverDrift("forward")}
+              onMouseLeave={stopHoverDrift}
+              aria-hidden="true"
             />
+
             <Carousel setApi={setApi} opts={{ loop: true }} className="w-full">
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
@@ -131,3 +160,4 @@ function Testimonials({ testimonials, title = "What people say when they see it"
 
 export { Testimonials };
 export type { Testimonial, TestimonialsProps };
+
