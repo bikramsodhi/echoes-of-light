@@ -14,7 +14,7 @@ const Header = () => {
           <img 
             src={echolightLogo} 
             alt="EchoLight" 
-            className="h-10 object-contain object-left"
+            className="h-10 object-contain object-left mix-blend-multiply dark:mix-blend-screen"
           />
         </Link>
         
