@@ -8,24 +8,24 @@ const Hero = () => {
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
       {/* Cinematic Background with Sunrise Image */}
       <div className="absolute inset-0 z-0">
-        {/* Sunrise image layer - subtle opacity */}
+        {/* Sunrise image layer - more visible at 40% */}
         <img 
           src={heroSunrise} 
           alt="Sunrise breaking through clouds" 
-          className="w-full h-full object-cover opacity-25 blur-[2px] sm:blur-0"
+          className="w-full h-full object-cover opacity-40"
         />
         
-        {/* Cream/off-white overlay for refined tone */}
+        {/* Lighter cream overlay to let image show through */}
         <div 
           className="absolute inset-0" 
-          style={{ backgroundColor: 'rgba(250, 249, 246, 0.75)' }}
+          style={{ backgroundColor: 'rgba(250, 249, 246, 0.55)' }}
         />
         
-        {/* Top-to-bottom gradient fade for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/60 to-transparent" />
+        {/* Subtle top gradient for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
         
         {/* Bottom fade to blend with content below */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       </div>
       
       {/* Content */}
