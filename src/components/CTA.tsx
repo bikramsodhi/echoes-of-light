@@ -4,58 +4,54 @@ import { Lock, Shield, Clock, Sparkles } from "lucide-react";
 
 const CTA = () => {
   return (
-    <section className="py-16 bg-background">
+    <section className="py-10 bg-secondary/30">
       <div className="container mx-auto px-6">
-        <div className="relative max-w-4xl mx-auto rounded-2xl bg-navy border border-primary/20 p-14 md:p-20 text-center overflow-hidden">
-          {/* Subtle decorative elements */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-primary-foreground/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
-          
+        <div className="relative max-w-2xl mx-auto rounded-xl bg-muted/50 border border-border/30 p-8 md:p-10 text-center overflow-hidden">
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-foreground/10 border border-primary-foreground/20 mb-8">
-              <Sparkles className="w-4 h-4 text-accent" />
-              <span className="text-sm text-primary-foreground/80">Free to start • No credit card required</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border/50 mb-4">
+              <Sparkles className="w-3 h-3 text-accent-foreground" />
+              <span className="text-xs text-muted-foreground">Free to start • No credit card required</span>
             </div>
             
-            <h2 className="font-serif text-4xl md:text-5xl text-primary-foreground mb-5 tracking-tight">
+            <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-3 tracking-tight">
               Your Words Matter
             </h2>
-            <p className="text-primary-foreground/70 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto leading-relaxed">
               Start preserving your memories today. Your loved ones will thank you — 
               even if they can't tell you themselves.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
               <Button 
-                variant="outline" 
-                size="xl" 
+                variant="premium" 
+                size="lg" 
                 asChild 
-                className="min-w-[200px] border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-navy"
+                className="min-w-[160px]"
               >
                 <Link to="/auth">Create Your Legacy</Link>
               </Button>
               <Button 
                 variant="ghost" 
-                size="xl" 
+                size="lg" 
                 asChild
-                className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <Link to="/how-it-works">Learn More</Link>
               </Button>
             </div>
             
             {/* Security features */}
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-primary-foreground/60">
-              <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4" />
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Lock className="w-3 h-3" />
                 <span>End-to-End Encrypted</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <Shield className="w-3 h-3" />
                 <span>Your Privacy Protected</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-3 h-3" />
                 <span>You Control the Timeline</span>
               </div>
             </div>
