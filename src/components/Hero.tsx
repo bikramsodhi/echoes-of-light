@@ -6,7 +6,7 @@ const Hero = () => {
   return (
     <section className="relative bg-background">
       {/* Main Hero - Left/Right Split */}
-      <div className="container mx-auto px-6 pt-12 pb-0">
+      <div className="container mx-auto px-6 pt-20 pb-0">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           
           {/* Left Side - Content */}

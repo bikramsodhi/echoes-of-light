@@ -136,8 +136,8 @@ function Testimonials({
             <Carousel setApi={setApi} opts={{ loop: true }} className="w-full">
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
-                  <CarouselItem className="lg:basis-1/2" key={index}>
-                    <div className="bg-primary-foreground/10 rounded-lg h-full p-4 flex flex-col gap-2 border border-primary-foreground/20">
+                <CarouselItem className="md:basis-1/2 lg:basis-1/3" key={index}>
+                    <div className="bg-primary-foreground/10 rounded-lg aspect-[4/3] p-5 flex flex-col gap-2 border border-primary-foreground/20">
                       <h3 className="text-base tracking-tight font-serif font-semibold text-primary-foreground">
                         {testimonial.quote}
                       </h3>
