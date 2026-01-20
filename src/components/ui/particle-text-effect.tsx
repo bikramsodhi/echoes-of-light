@@ -190,9 +190,13 @@ export function ParticleTextEffect({
 
     offscreenCtx.fillStyle = "white"
     offscreenCtx.font = `bold ${fontSize}px ${fontFamily}`
-    offscreenCtx.textAlign = "center"
+    offscreenCtx.textAlign = "left"
     offscreenCtx.textBaseline = "middle"
-    offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 2)
+    
+    // Calculate text position (left-aligned with vertical centering)
+    const textX = 10 // Small left padding
+    const textY = canvas.height / 2
+    offscreenCtx.fillText(word, textX, textY)
 
     const imageData = offscreenCtx.getImageData(0, 0, canvas.width, canvas.height)
     const pixels = imageData.data
@@ -230,14 +234,18 @@ export function ParticleTextEffect({
         } else {
           particle = new Particle()
 
-          const randomPos = generateRandomPos(canvas.width / 2, canvas.height / 2, (canvas.width + canvas.height) / 2)
-          particle.pos.x = randomPos.x
-          particle.pos.y = randomPos.y
+          // Start particles closer to their target position for faster initial display
+          particle.pos.x = x + (Math.random() - 0.5) * 50
+          particle.pos.y = y + (Math.random() - 0.5) * 50
 
           particle.maxSpeed = Math.random() * 6 + 4
           particle.maxForce = particle.maxSpeed * 0.05
           particle.particleSize = Math.random() * 6 + 6
           particle.colorBlendRate = Math.random() * 0.0275 + 0.0025
+          
+          // Start with the target color immediately visible
+          particle.startColor = { ...newColor }
+          particle.colorWeight = 1
 
           particles.push(particle)
         }
@@ -267,10 +275,10 @@ export function ParticleTextEffect({
     const ctx = canvas.getContext("2d")!
     const particles = particlesRef.current
 
-    // Clear with slight fade for motion blur effect
-    ctx.fillStyle = "rgba(250, 249, 247, 0.15)"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // Clear canvas completely each frame for clean rendering
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+    // Draw all particles
     for (let i = particles.length - 1; i >= 0; i--) {
       const particle = particles[i]
       particle.move()
@@ -304,24 +312,32 @@ export function ParticleTextEffect({
 
     const updateCanvasSize = () => {
       const rect = container.getBoundingClientRect()
-      canvas.width = rect.width
-      canvas.height = rect.height
+      // Ensure minimum dimensions
+      const width = Math.max(rect.width, 300)
+      const height = Math.max(rect.height, 80)
+      
+      canvas.width = width
+      canvas.height = height
       
       // Clear and reinitialize
       const ctx = canvas.getContext("2d")!
-      ctx.fillStyle = "rgba(250, 249, 247, 1)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
       
       particlesRef.current = []
-      nextWord(words[wordIndexRef.current], canvas)
+      wordIndexRef.current = 0
+      nextWord(words[0], canvas)
     }
 
-    updateCanvasSize()
-    animate()
+    // Small delay to ensure container has dimensions
+    const timer = setTimeout(() => {
+      updateCanvasSize()
+      animate()
+    }, 50)
 
     window.addEventListener('resize', updateCanvasSize)
 
     return () => {
+      clearTimeout(timer)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
