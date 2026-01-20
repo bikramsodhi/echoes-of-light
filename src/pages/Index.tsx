@@ -16,7 +16,7 @@ const Index = () => {
       <Header />
       
       {/* Main content - offset for sidebar on desktop */}
-      <main className="lg:ml-[260px]">
+      <main className="lg:ml-[220px]">
         <Hero />
         <HowItWorks />
         <Testimonial />
