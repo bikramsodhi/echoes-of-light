@@ -5,9 +5,9 @@ import { Shield, Lock, Clock, FileText, Calendar, CheckCircle } from "lucide-rea
 
 const Hero = () => {
   return (
-    <section className="relative flex flex-col items-center overflow-hidden pt-20">
-      {/* Hero Section with Background Image */}
-      <div className="relative w-full min-h-[85vh] flex flex-col items-center justify-center">
+    <section className="relative flex flex-col items-center overflow-hidden pt-16">
+      {/* Hero Section with Background Image - smaller height to fit with sidebar layout */}
+      <div className="relative w-full min-h-[70vh] flex flex-col items-center justify-center">
         {/* Cinematic Background - Full contrast image with strategic overlays */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {/* Sunrise image at FULL contrast - no opacity reduction */}
