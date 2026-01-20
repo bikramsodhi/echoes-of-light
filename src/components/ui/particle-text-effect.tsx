@@ -130,16 +130,25 @@ class Particle {
 interface ParticleTextEffectProps {
   words?: string[]
   className?: string
-  particleColor?: { r: number; g: number; b: number }
+  particleColors?: { r: number; g: number; b: number }[]
   fontSize?: number
   fontFamily?: string
 }
 
+// Earthy palette: golden yellow, forest green, warm olive
+const EARTHY_COLORS = [
+  { r: 184, g: 134, b: 46 },  // Golden yellow/amber
+  { r: 107, g: 142, b: 67 },  // Forest green
+  { r: 139, g: 119, b: 62 },  // Warm olive
+  { r: 166, g: 140, b: 75 },  // Muted gold
+  { r: 85, g: 107, b: 47 },   // Dark olive green
+]
+
 export function ParticleTextEffect({ 
   words = ["HELLO", "WORLD"], 
   className = "",
-  particleColor,
-  fontSize = 100,
+  particleColors = EARTHY_COLORS,
+  fontSize = 48,
   fontFamily = "serif"
 }: ParticleTextEffectProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -188,12 +197,8 @@ export function ParticleTextEffect({
     const imageData = offscreenCtx.getImageData(0, 0, canvas.width, canvas.height)
     const pixels = imageData.data
 
-    // Use provided color or generate random
-    const newColor = particleColor || {
-      r: 30 + Math.random() * 50,
-      g: 41 + Math.random() * 50,
-      b: 59 + Math.random() * 50,
-    }
+    // Pick a random color from the earthy palette
+    const newColor = particleColors[Math.floor(Math.random() * particleColors.length)]
 
     const particles = particlesRef.current
     let particleIndex = 0

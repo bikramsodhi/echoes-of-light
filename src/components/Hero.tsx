@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Shield, Lock, Clock } from "lucide-react";
 import { ParticleTextEffect } from "@/components/ui/particle-text-effect";
+import heroEnvelopes from "@/assets/hero-envelopes.png";
 
 const Hero = () => {
   return (
@@ -18,13 +19,12 @@ const Hero = () => {
               <span className="text-sm text-muted-foreground font-medium">Private & Secure • End-to-End Encrypted</span>
             </div>
             
-            {/* Headline - Particle Text Effect */}
-            <div className="mb-5 animate-fade-in-up h-[120px] md:h-[150px] lg:h-[180px]">
+            {/* Headline - Particle Text Effect - Expanded container */}
+            <div className="mb-5 animate-fade-in-up h-[100px] md:h-[120px] lg:h-[140px] w-full">
               <ParticleTextEffect 
                 words={["Leave Behind Words", "That light the way"]}
-                fontSize={60}
+                fontSize={42}
                 fontFamily="Georgia, serif"
-                particleColor={{ r: 30, g: 41, b: 59 }}
               />
             </div>
             
@@ -64,10 +64,14 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Right Side - Image Placeholder */}
+          {/* Right Side - Hero Image */}
           <div className="order-1 lg:order-2 relative animate-fade-in">
-            <div className="relative rounded-2xl overflow-hidden bg-secondary/30 border border-border/30 aspect-[4/3] lg:aspect-square flex items-center justify-center">
-              <span className="text-muted-foreground/50 text-sm">Hero image placeholder</span>
+            <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-square">
+              <img 
+                src={heroEnvelopes} 
+                alt="Elegant sealed envelopes representing your legacy messages" 
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
