@@ -2,7 +2,7 @@ import { FileText, Calendar, CheckCircle } from "lucide-react";
 
 const PurposeSection = () => {
   return (
-    <section className="py-20 bg-navy">
+    <section className="py-16 bg-navy">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto">
           {/* Deeper Purpose */}
