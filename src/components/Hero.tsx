@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Shield, Lock, Clock } from "lucide-react";
+import { ParticleTextEffect } from "@/components/ui/particle-text-effect";
 
 const Hero = () => {
   return (
@@ -17,15 +18,15 @@ const Hero = () => {
               <span className="text-sm text-muted-foreground font-medium">Private & Secure • End-to-End Encrypted</span>
             </div>
             
-            {/* Headline - Strong serif */}
-            <h1 className="mb-5 animate-fade-in-up leading-[1.1] tracking-tight">
-              <span className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground">
-                Leave Behind Words
-              </span>
-              <span className="block font-sans text-xl md:text-2xl lg:text-3xl font-light italic text-muted-foreground mt-3">
-                that light the way
-              </span>
-            </h1>
+            {/* Headline - Particle Text Effect */}
+            <div className="mb-5 animate-fade-in-up h-[120px] md:h-[150px] lg:h-[180px]">
+              <ParticleTextEffect 
+                words={["Leave Behind Words", "That light the way"]}
+                fontSize={60}
+                fontFamily="Georgia, serif"
+                particleColor={{ r: 30, g: 41, b: 59 }}
+              />
+            </div>
             
             {/* Supporting Paragraph - Professional, smaller */}
             <p className="text-base md:text-lg text-muted-foreground mb-8 leading-relaxed animate-fade-in-up animation-delay-200 max-w-md">
