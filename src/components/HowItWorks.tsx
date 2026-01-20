@@ -29,20 +29,29 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-28 bg-gradient-to-b from-background to-secondary/20">
-      <div className="container mx-auto px-6">
+    <section className="py-28 bg-navy relative overflow-hidden">
+      {/* Subtle texture overlay */}
+      <div 
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--primary-foreground)) 1px, transparent 0)',
+          backgroundSize: '40px 40px'
+        }}
+      />
+      
+      <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-20">
-          <h2 className="font-serif text-4xl md:text-5xl text-foreground mb-5 tracking-tight">
+          <h2 className="font-serif text-4xl md:text-5xl text-primary-foreground mb-5 tracking-tight">
             How It Works
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto text-lg leading-relaxed">
+          <p className="text-primary-foreground/70 max-w-xl mx-auto text-lg leading-relaxed">
             A thoughtful process designed for reflection, not urgency. 
             Your legacy, protected at every step.
           </p>
         </div>
         
-        {/* Steps Grid - Card Layout */}
+        {/* Steps Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {steps.map((step) => {
             const Icon = step.icon;
@@ -51,20 +60,20 @@ const HowItWorks = () => {
                 key={step.number}
                 className="group relative"
               >
-                <div className="card-elegant rounded-xl p-8 h-full transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+                <div className="bg-primary-foreground/5 border border-primary-foreground/10 backdrop-blur-sm rounded-xl p-8 h-full transition-all duration-300 hover:bg-primary-foreground/10 hover:-translate-y-1">
                   {/* Step Number */}
-                  <span className="text-xs font-semibold text-primary/50 tracking-widest mb-4 block">
-                    STEP {step.number}
+                  <span className="text-xs font-semibold text-primary-foreground/40 tracking-widest mb-4 block uppercase">
+                    Step {step.number}
                   </span>
                   
                   {/* Icon */}
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-105">
-                    <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
+                  <div className="w-14 h-14 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-105">
+                    <Icon className="w-6 h-6 text-primary-foreground/80" strokeWidth={1.5} />
                   </div>
                   
                   {/* Content */}
-                  <h3 className="font-serif text-xl text-foreground mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
+                  <h3 className="font-serif text-xl text-primary-foreground mb-3">{step.title}</h3>
+                  <p className="text-primary-foreground/60 text-sm leading-relaxed">{step.description}</p>
                 </div>
               </div>
             );
