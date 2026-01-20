@@ -7,7 +7,7 @@ const Hero = () => {
   return (
     <section className="relative flex flex-col items-center overflow-hidden">
       {/* Top panel with headline over background color */}
-      <div className="w-full bg-muted pt-20 pb-12">
+      <div className="w-full bg-muted pt-20 pb-8">
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-3xl mx-auto">
             {/* Trust Badge */}
@@ -27,33 +27,14 @@ const Hero = () => {
                 </span>
               </h1>
             </div>
-            
-            {/* Subheadline */}
-            <p className="text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200 font-sans text-muted-foreground">
-              Create heartfelt messages for your loved ones — secured, private, 
-              and delivered gently when the time is right.
-            </p>
-            
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up animation-delay-400">
-              <Button variant="premium" size="xl" asChild className="min-w-[200px] shadow-lg">
-                <Link to="/vault/compose">Begin Your Legacy</Link>
-              </Button>
-              <Button variant="trust" size="lg" asChild className="shadow-md">
-                <Link to="/security" className="flex items-center gap-2">
-                  <Shield className="w-4 h-4" />
-                  See How We Protect Your Words
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
       </div>
       
-      {/* Hero Image Section - starts below headline */}
-      <div className="relative w-full h-[50vh] min-h-[400px]">
+      {/* Hero Image Section - starts right after headline, with right margin matching left sidebar */}
+      <div className="relative w-full h-[50vh] min-h-[400px] pr-[220px]">
         {/* Cinematic Background - Full contrast image */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 right-[220px] z-0 overflow-hidden">
           <img 
             src={heroSunrise} 
             alt="Sunrise breaking through clouds over mountains" 
@@ -77,8 +58,37 @@ const Hero = () => {
           />
         </div>
         
-        {/* Trust Indicators Row - floating over image */}
-        <div className="relative z-10 h-full flex items-end justify-center pb-12">
+        {/* Right panel background */}
+        <div className="absolute top-0 right-0 w-[220px] h-full bg-muted hidden lg:block" />
+        
+        {/* Translucent text box overlay on image */}
+        <div className="absolute inset-0 right-[220px] z-10 flex items-start justify-center pt-8">
+          <div className="max-w-2xl mx-auto px-6">
+            {/* Subheadline in translucent box */}
+            <div className="bg-background/70 backdrop-blur-md rounded-xl px-8 py-6 shadow-lg border border-border/30">
+              <p className="text-lg md:text-xl leading-relaxed animate-fade-in-up animation-delay-200 font-sans text-foreground/90 text-center mb-6">
+                Create heartfelt messages for your loved ones — secured, private, 
+                and delivered gently when the time is right.
+              </p>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up animation-delay-400">
+                <Button variant="premium" size="xl" asChild className="min-w-[200px] shadow-lg">
+                  <Link to="/vault/compose">Begin Your Legacy</Link>
+                </Button>
+                <Button variant="trust" size="lg" asChild className="shadow-md">
+                  <Link to="/security" className="flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    See How We Protect Your Words
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Trust Indicators Row - floating over image at bottom */}
+        <div className="absolute bottom-0 left-0 right-[220px] z-10 flex items-end justify-center pb-12">
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 animate-fade-in-up animation-delay-600">
             <div className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-background/90 backdrop-blur-sm shadow-sm">
               <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center">
