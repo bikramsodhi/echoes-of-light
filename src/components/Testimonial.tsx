@@ -25,10 +25,13 @@ const reflections: TestimonialType[] = [
 
 const TestimonialSection = () => {
   return (
-    <section className="bg-gradient-to-b from-secondary/20 to-transparent">
+    <section className="py-28 bg-secondary/30">
       <div className="container mx-auto px-6">
-        <div className="max-w-3xl mx-auto text-center mb-4">
-          <p className="text-muted-foreground leading-relaxed">
+        <div className="max-w-3xl mx-auto text-center mb-8">
+          <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4 tracking-tight">
+            What people say when they see it
+          </h2>
+          <p className="text-muted-foreground leading-relaxed text-sm">
             These aren't testimonials. Just words of recognition.
             <br />
             EchoLight wasn't there when these moments happened—but it's here now.
@@ -36,7 +39,7 @@ const TestimonialSection = () => {
         </div>
         <Testimonials 
           testimonials={reflections}
-          title="What people say when they see it"
+          title=""
         />
       </div>
     </section>

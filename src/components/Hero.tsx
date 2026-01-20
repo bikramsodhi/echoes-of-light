@@ -1,146 +1,103 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import heroSunrise from "@/assets/hero-sunrise.jpg";
-import { Shield, Lock, Clock, FileText, Calendar, CheckCircle } from "lucide-react";
+import { Shield, Lock, Clock } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative flex flex-col items-center overflow-hidden pt-20">
-      {/* Hero Section with Background Image */}
-      <div className="relative w-full min-h-[85vh] flex flex-col items-center justify-center">
-        {/* Cinematic Background - Only spans this section */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* Sunrise image layer at 55% opacity */}
-          <img 
-            src={heroSunrise} 
-            alt="Sunrise breaking through clouds" 
-            className="w-full h-full object-cover opacity-55"
-          />
+    <section className="relative min-h-screen pt-16 bg-background">
+      {/* Main Hero - Left/Right Split */}
+      <div className="container mx-auto px-6 py-16 lg:py-24">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[70vh]">
           
-          {/* Cream overlay for refined tone */}
-          <div 
-            className="absolute inset-0" 
-            style={{ backgroundColor: 'rgba(250, 249, 246, 0.45)' }}
-          />
-          
-          {/* Subtle top gradient for text legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-transparent" />
-          
-          {/* Bottom fade to blend seamlessly with next section */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-        </div>
-        
-        {/* Content */}
-        <div className="relative z-10 container mx-auto px-6 text-center">
-          <div className="max-w-3xl mx-auto">
+          {/* Left Side - Content */}
+          <div className="order-2 lg:order-1 max-w-xl">
             {/* Trust Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border/50 mb-10 animate-fade-in backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border/50 mb-8 animate-fade-in">
               <Lock className="w-3.5 h-3.5 text-primary" strokeWidth={2} />
               <span className="text-sm text-muted-foreground font-medium">Private & Secure • End-to-End Encrypted</span>
             </div>
             
-            {/* Headline - Deep navy serif with elegant hierarchy */}
-            <h1 className="font-serif mb-6 animate-fade-in-up leading-[1.1] tracking-tight">
-              <span 
-                className="block text-5xl md:text-6xl lg:text-7xl font-semibold"
-                style={{ color: '#2A3240' }}
-              >
+            {/* Headline - Strong serif */}
+            <h1 className="mb-6 animate-fade-in-up leading-[1.05] tracking-tight">
+              <span className="block font-serif text-5xl md:text-6xl lg:text-7xl font-semibold text-foreground">
                 Leave Behind Words
               </span>
-              <span 
-                className="block text-3xl md:text-4xl lg:text-5xl font-normal italic mt-3"
-                style={{ color: '#8B8FA3' }}
-              >
+              <span className="block font-sans text-2xl md:text-3xl lg:text-4xl font-light italic text-muted-foreground mt-4">
                 that light the way
               </span>
             </h1>
             
-            {/* Subheadline - Professional sans-serif */}
-            <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200 font-sans">
+            {/* Supporting Paragraph - Professional, smaller */}
+            <p className="text-base md:text-lg text-muted-foreground mb-10 leading-relaxed animate-fade-in-up animation-delay-200 max-w-md">
               Create heartfelt messages for your loved ones — secured, private, 
               and delivered gently when the time is right.
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up animation-delay-400">
-              <Button variant="premium" size="xl" asChild className="min-w-[200px]">
+            <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in-up animation-delay-400">
+              <Button variant="premium" size="xl" asChild className="min-w-[180px]">
                 <Link to="/vault/compose">Begin Your Legacy</Link>
               </Button>
               <Button variant="trust" size="lg" asChild>
                 <Link to="/security" className="flex items-center gap-2">
                   <Shield className="w-4 h-4" />
-                  See How We Protect Your Words
+                  How We Protect You
                 </Link>
               </Button>
             </div>
             
-            {/* Trust Indicators Row */}
-            <div className="flex flex-wrap justify-center gap-6 md:gap-10 animate-fade-in-up animation-delay-600">
-              <div className="flex items-center gap-2.5 text-muted-foreground">
-                <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-success" strokeWidth={1.5} />
-                </div>
+            {/* Trust Indicators */}
+            <div className="flex flex-wrap gap-6 animate-fade-in-up animation-delay-600">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Shield className="w-4 h-4 text-success" strokeWidth={1.5} />
                 <span className="text-sm font-medium">Bank-Level Security</span>
               </div>
-              <div className="flex items-center gap-2.5 text-muted-foreground">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Lock className="w-4 h-4 text-primary" strokeWidth={1.5} />
-                </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Lock className="w-4 h-4 text-primary" strokeWidth={1.5} />
                 <span className="text-sm font-medium">You Control Access</span>
               </div>
-              <div className="flex items-center gap-2.5 text-muted-foreground">
-                <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-                  <Clock className="w-4 h-4 text-accent-foreground" strokeWidth={1.5} />
-                </div>
-                <span className="text-sm font-medium">Delivered On Your Terms</span>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Clock className="w-4 h-4 text-accent-foreground" strokeWidth={1.5} />
+                <span className="text-sm font-medium">Your Timeline</span>
               </div>
             </div>
+          </div>
+          
+          {/* Right Side - Hero Image */}
+          <div className="order-1 lg:order-2 relative animate-fade-in">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] lg:aspect-[3/4]">
+              {/* Main Image - Full contrast */}
+              <img 
+                src={heroSunrise} 
+                alt="Sunrise breaking through clouds" 
+                className="w-full h-full object-cover"
+              />
+              
+              {/* Subtle left-edge gradient for blending */}
+              <div 
+                className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"
+                style={{ opacity: 0.4 }}
+              />
+              
+              {/* Subtle vignette for depth */}
+              <div 
+                className="absolute inset-0"
+                style={{ 
+                  background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.15) 100%)'
+                }}
+              />
+            </div>
+            
+            {/* Decorative elements */}
+            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
+            <div className="absolute -top-4 -right-4 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
           </div>
         </div>
       </div>
       
-      {/* Below Hero - Clean background section */}
-      <div className="relative z-10 w-full bg-background py-16">
-        <div className="container mx-auto px-6">
-          {/* Deeper Purpose */}
-          <div className="max-w-2xl mx-auto text-center animate-fade-in-up animation-delay-800 mb-16">
-            <p className="text-lg md:text-xl text-foreground/70 italic font-serif mb-3">
-              "What if you could say what mattered—when you're not around to say it?"
-            </p>
-            <p className="text-base text-muted-foreground font-sans">
-              Messages that wait. Words that stay. Love that arrives, even when you can't.
-            </p>
-          </div>
-          
-          {/* Grounding Element - Message Preview Card */}
-          <div className="w-full max-w-md mx-auto animate-fade-in-up animation-delay-800">
-            <div className="card-elegant rounded-xl p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-primary" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-sm font-medium text-foreground">For Emma</span>
-                    <span className="text-xs text-muted-foreground/60">•</span>
-                    <span className="inline-flex items-center gap-1 text-xs text-success">
-                      <CheckCircle className="w-3 h-3" />
-                      Secured
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                    "I wanted you to know how proud I am of the person you've become..."
-                  </p>
-                  <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground/60">
-                    <Calendar className="w-3 h-3" strokeWidth={1.5} />
-                    <span>To be delivered on her 30th birthday</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Bottom fade to next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-navy pointer-events-none" />
     </section>
   );
 };
