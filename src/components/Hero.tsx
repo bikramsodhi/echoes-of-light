@@ -64,13 +64,13 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Right Side - Hero Image */}
-          <div className="order-1 lg:order-2 relative animate-fade-in">
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-square">
+          {/* Right Side - Hero Image - Smaller, aligned with content */}
+          <div className="order-1 lg:order-2 relative animate-fade-in flex items-start justify-center lg:justify-end">
+            <div className="relative w-[85%] sm:w-[75%] lg:w-[60%] rounded-xl overflow-hidden shadow-lg shadow-foreground/5">
               <img 
                 src={heroEnvelopes} 
                 alt="Elegant sealed envelopes representing your legacy messages" 
-                className="w-full h-full object-cover"
+                className="w-full h-auto object-cover"
               />
             </div>
           </div>
