@@ -4,7 +4,7 @@ import { Lock, Shield, Clock, Sparkles } from "lucide-react";
 
 const CTA = () => {
   return (
-    <section className="py-16 bg-secondary/30">
+    <section className="py-16 bg-background">
       <div className="container mx-auto px-6">
         <div className="relative max-w-4xl mx-auto rounded-2xl bg-navy border border-primary/20 p-14 md:p-20 text-center overflow-hidden">
           {/* Subtle decorative elements */}

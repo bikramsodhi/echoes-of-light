@@ -1,17 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import heroSunrise from "@/assets/hero-sunrise.jpg";
 import { Shield, Lock, Clock } from "lucide-react";
 
 const Hero = () => {
   return (
-<section className="relative bg-background">
+    <section className="relative bg-background">
       {/* Main Hero - Left/Right Split */}
-      <div className="container mx-auto px-6 pt-8 pb-0">
+      <div className="container mx-auto px-6 pt-12 pb-0">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           
           {/* Left Side - Content */}
-          <div className="order-2 lg:order-1 max-w-xl pt-4">
+          <div className="order-2 lg:order-1 max-w-xl">
             {/* Trust Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border/50 mb-6 animate-fade-in">
               <Lock className="w-3.5 h-3.5 text-primary" strokeWidth={2} />
@@ -48,7 +47,7 @@ const Hero = () => {
             </div>
             
             {/* Trust Indicators */}
-            <div className="flex flex-wrap gap-5 animate-fade-in-up animation-delay-600 pb-8 lg:pb-0">
+            <div className="flex flex-wrap gap-5 animate-fade-in-up animation-delay-600">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Shield className="w-4 h-4 text-success" strokeWidth={1.5} />
                 <span className="text-sm font-medium">Bank-Level Security</span>
@@ -64,34 +63,11 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Right Side - Hero Image */}
-          <div className="order-1 lg:order-2 relative animate-fade-in pt-4">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] lg:aspect-[4/5]">
-              {/* Main Image - Full contrast */}
-              <img 
-                src={heroSunrise} 
-                alt="Sunrise breaking through clouds" 
-                className="w-full h-full object-cover"
-              />
-              
-              {/* Subtle left-edge gradient for blending */}
-              <div 
-                className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"
-                style={{ opacity: 0.4 }}
-              />
-              
-              {/* Subtle vignette for depth */}
-              <div 
-                className="absolute inset-0"
-                style={{ 
-                  background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.15) 100%)'
-                }}
-              />
+          {/* Right Side - Image Placeholder */}
+          <div className="order-1 lg:order-2 relative animate-fade-in">
+            <div className="relative rounded-2xl overflow-hidden bg-secondary/30 border border-border/30 aspect-[4/3] lg:aspect-square flex items-center justify-center">
+              <span className="text-muted-foreground/50 text-sm">Hero image placeholder</span>
             </div>
-            
-            {/* Decorative elements */}
-            <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
-            <div className="absolute -top-4 -right-4 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
           </div>
         </div>
       </div>

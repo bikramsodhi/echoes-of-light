@@ -8,7 +8,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
-import { User } from "lucide-react";
 
 interface Testimonial {
   quote: string;
@@ -108,12 +107,14 @@ function Testimonials({
   };
 
   return (
-    <div className="w-full py-10 lg:py-16">
+    <div className="w-full">
       <div className="container mx-auto">
-        <div className="flex flex-col gap-6">
-          <h2 className="text-3xl md:text-4xl tracking-tight lg:max-w-xl font-serif font-semibold text-foreground text-center mx-auto">
-            {title}
-          </h2>
+        <div className="flex flex-col gap-4">
+          {title && (
+            <h2 className="text-3xl md:text-4xl tracking-tight lg:max-w-xl font-serif font-semibold text-primary-foreground text-center mx-auto">
+              {title}
+            </h2>
+          )}
 
           <div className="relative">
             {/* Left hover zone */}
@@ -136,16 +137,13 @@ function Testimonials({
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
                   <CarouselItem className="lg:basis-1/2" key={index}>
-                    <div className="bg-muted/30 rounded-lg h-full lg:col-span-2 p-5 flex flex-col gap-3 border border-border/30">
-                      <User className="w-6 h-6 stroke-1 text-muted-foreground" />
-                      <div className="flex flex-col gap-2">
-                        <h3 className="text-lg tracking-tight font-serif font-semibold text-foreground">
-                          {testimonial.quote}
-                        </h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                          {testimonial.description}
-                        </p>
-                      </div>
+                    <div className="bg-primary-foreground/10 rounded-lg h-full p-4 flex flex-col gap-2 border border-primary-foreground/20">
+                      <h3 className="text-base tracking-tight font-serif font-semibold text-primary-foreground">
+                        {testimonial.quote}
+                      </h3>
+                      <p className="text-primary-foreground/70 text-sm leading-relaxed">
+                        {testimonial.description}
+                      </p>
                     </div>
                   </CarouselItem>
                 ))}
@@ -160,4 +158,3 @@ function Testimonials({
 
 export { Testimonials };
 export type { Testimonial, TestimonialsProps };
-
