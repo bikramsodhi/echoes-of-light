@@ -12,8 +12,8 @@ const Header = ({ showFullNav = true }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/40 lg:left-[260px] left-0">
-      <div className="px-6 h-16 flex items-center justify-between">
+    <header className="fixed top-0 right-0 z-50 bg-muted border-b border-border/40 lg:left-[220px] left-0">
+      <div className="px-6 h-14 flex items-center justify-between">
         {/* Mobile: Show logo - Desktop: hide since it's in sidebar */}
         <div className="lg:hidden">
           <Link to="/" className="flex items-center">
