@@ -26,9 +26,9 @@ const Hero = () => {
                 background: `
                   radial-gradient(
                     ellipse 80% 60% at 50% 50%,
-                    hsl(var(--accent) / 0.12) 0%,
-                    hsl(var(--accent) / 0.06) 30%,
-                    hsl(280 30% 70% / 0.04) 50%,
+                    hsl(var(--accent) / 0.15) 0%,
+                    hsl(var(--accent) / 0.075) 30%,
+                    hsl(280 30% 70% / 0.05) 50%,
                     transparent 70%
                   )
                 `,
