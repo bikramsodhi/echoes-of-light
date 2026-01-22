@@ -88,10 +88,10 @@ export default function About() {
         </section>
 
         {/* Emotional Reflections Section */}
-        <section className="bg-navy py-16">
+        <section className="bg-primary/10 py-16">
           <div className="container px-4 md:px-6 max-w-5xl mx-auto">
             <div className="text-center pb-4">
-              <p className="text-sm italic text-primary-foreground/60 leading-relaxed max-w-xl mx-auto">
+              <p className="text-sm italic text-muted-foreground leading-relaxed max-w-xl mx-auto">
                 These aren't testimonials.
                 <br />
                 Just real words from people who've known loss—and recognize what EchoLight could have meant.
