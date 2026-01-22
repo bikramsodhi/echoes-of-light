@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Shield, Lock, Clock } from "lucide-react";
 import { ParticleTextEffect } from "@/components/ui/particle-text-effect";
-import heroEnvelopes from "@/assets/hero-envelopes.png";
+import heroVideo from "@/assets/hero-video.mp4";
 
 const Hero = () => {
   return (
@@ -80,14 +80,20 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Hero Image - Centered, ~62% width (25% larger than 50%) */}
+          {/* Hero Video - Centered, ~62% width (25% larger than 50%) */}
           <div className="relative animate-fade-in w-full flex justify-center">
             <div className="relative w-[100%] sm:w-[75%] lg:w-[62%] max-w-[625px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
-              <img 
-                src={heroEnvelopes} 
-                alt="Elegant sealed envelopes representing your legacy messages" 
+              <video
+                src={heroVideo}
                 className="w-full h-auto object-cover"
-              />
+                playsInline
+                muted
+                autoPlay
+                loop
+                preload="auto"
+              >
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
         </div>
