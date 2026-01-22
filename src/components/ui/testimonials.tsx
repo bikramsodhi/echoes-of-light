@@ -111,7 +111,7 @@ function Testimonials({
       <div className="container mx-auto">
         <div className="flex flex-col gap-4">
           {title && (
-            <h2 className="text-3xl md:text-4xl tracking-tight lg:max-w-xl font-serif font-semibold text-primary-foreground text-center mx-auto">
+            <h2 className="text-3xl md:text-4xl tracking-tight lg:max-w-xl font-serif font-semibold text-foreground text-center mx-auto">
               {title}
             </h2>
           )}
@@ -137,11 +137,11 @@ function Testimonials({
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
                 <CarouselItem className="basis-[280px] md:basis-[260px]" key={index}>
-                    <div className="bg-primary-foreground/10 rounded-lg p-5 flex flex-col gap-2 border border-primary-foreground/20 h-[160px]">
-                      <h3 className="text-base tracking-tight font-serif font-semibold text-primary-foreground">
+                    <div className="bg-card rounded-lg p-5 flex flex-col gap-2 border border-border h-[160px]">
+                      <h3 className="text-base tracking-tight font-serif font-semibold text-foreground">
                         {testimonial.quote}
                       </h3>
-                      <p className="text-primary-foreground/70 text-sm leading-relaxed">
+                      <p className="text-muted-foreground text-sm leading-relaxed">
                         {testimonial.description}
                       </p>
                     </div>
