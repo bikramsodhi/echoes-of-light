@@ -18,10 +18,10 @@ const Hero = () => {
           </div>
           
           {/* Headline - Particle Text Effect - Centered */}
-          <div className="mb-4 animate-fade-in-up h-[100px] md:h-[120px] lg:h-[140px] w-full max-w-2xl">
+          <div className="mb-4 animate-fade-in-up h-[140px] md:h-[160px] lg:h-[180px] w-full max-w-3xl">
             <ParticleTextEffect 
               words={["Leave Behind Words", "That light the way"]}
-              fontSize={42}
+              fontSize={63}
               fontFamily="Georgia, serif"
               centered={true}
             />
