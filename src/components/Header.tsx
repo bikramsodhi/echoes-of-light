@@ -1,11 +1,19 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Info, Shield, Sparkles, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import echolightLogo from "@/assets/echolight-logo.png";
+import { NavBar } from "@/components/ui/tubelight-navbar";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { name: "How It Works", url: "/how-it-works", icon: HelpCircle },
+    { name: "Features", url: "/features", icon: Sparkles },
+    { name: "Security", url: "/security", icon: Shield },
+    { name: "Why EchoLight", url: "/about", icon: Info },
+  ];
 
   const navLinks = [
     { to: "/how-it-works", label: "How It Works" },
@@ -26,18 +34,10 @@ const Header = () => {
           />
         </Link>
         
-        {/* Desktop Navigation - Bold, spaced nav links */}
-        <nav className="hidden lg:flex items-center gap-10">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm font-semibold tracking-wide uppercase"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        {/* Desktop Navigation - Tubelight NavBar */}
+        <div className="hidden lg:flex flex-1 justify-center">
+          <NavBar items={navItems} />
+        </div>
         
         {/* CTA Buttons */}
         <div className="flex items-center gap-3">
