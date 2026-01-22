@@ -137,7 +137,7 @@ function Testimonials({
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
                 <CarouselItem className="basis-[280px] md:basis-[260px]" key={index}>
-                    <div className="bg-primary-foreground/10 rounded-lg p-5 flex flex-col gap-2 border border-primary-foreground/20 h-[140px]">
+                    <div className="bg-primary-foreground/10 rounded-lg p-5 flex flex-col gap-2 border border-primary-foreground/20 h-[160px]">
                       <h3 className="text-base tracking-tight font-serif font-semibold text-primary-foreground">
                         {testimonial.quote}
                       </h3>
