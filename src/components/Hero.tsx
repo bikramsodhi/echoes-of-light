@@ -18,13 +18,31 @@ const Hero = () => {
           </div>
           
           {/* Headline - Particle Text Effect - Centered */}
-          <div className="mb-4 animate-fade-in-up h-[140px] md:h-[160px] lg:h-[180px] w-full max-w-3xl">
-            <ParticleTextEffect 
-              words={["Leave Behind Words", "That light the way"]}
-              fontSize={63}
-              fontFamily="Georgia, serif"
-              centered={true}
+          <div className="relative mb-4 animate-fade-in-up h-[140px] md:h-[160px] lg:h-[180px] w-full max-w-3xl">
+            {/* Subtle radial glow background */}
+            <div 
+              className="absolute inset-0 -inset-x-8 -inset-y-4 pointer-events-none"
+              style={{
+                background: `
+                  radial-gradient(
+                    ellipse 80% 60% at 50% 50%,
+                    hsl(var(--accent) / 0.12) 0%,
+                    hsl(var(--accent) / 0.06) 30%,
+                    hsl(280 30% 70% / 0.04) 50%,
+                    transparent 70%
+                  )
+                `,
+                filter: 'blur(8px)',
+              }}
             />
+            <div className="relative z-10 h-full">
+              <ParticleTextEffect 
+                words={["Leave Behind Words", "That light the way"]}
+                fontSize={63}
+                fontFamily="Georgia, serif"
+                centered={true}
+              />
+            </div>
           </div>
           
           {/* Supporting Paragraph - Smaller, centered */}
