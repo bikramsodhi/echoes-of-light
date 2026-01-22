@@ -133,6 +133,7 @@ interface ParticleTextEffectProps {
   particleColors?: { r: number; g: number; b: number }[]
   fontSize?: number
   fontFamily?: string
+  centered?: boolean
 }
 
 // Earthy palette: golden yellow, forest green, warm olive
@@ -149,7 +150,8 @@ export function ParticleTextEffect({
   className = "",
   particleColors = EARTHY_COLORS,
   fontSize = 48,
-  fontFamily = "serif"
+  fontFamily = "serif",
+  centered = false
 }: ParticleTextEffectProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -190,11 +192,11 @@ export function ParticleTextEffect({
 
     offscreenCtx.fillStyle = "white"
     offscreenCtx.font = `bold ${fontSize}px ${fontFamily}`
-    offscreenCtx.textAlign = "left"
+    offscreenCtx.textAlign = centered ? "center" : "left"
     offscreenCtx.textBaseline = "middle"
     
-    // Calculate text position (left-aligned with vertical centering)
-    const textX = 10 // Small left padding
+    // Calculate text position based on alignment
+    const textX = centered ? canvas.width / 2 : 10
     const textY = canvas.height / 2
     offscreenCtx.fillText(word, textX, textY)
 
