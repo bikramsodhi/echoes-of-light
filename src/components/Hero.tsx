@@ -18,7 +18,7 @@ const Hero = () => {
           </div>
           
           {/* Headline - Particle Text Effect - Centered */}
-          <div className="relative mb-4 animate-fade-in-up h-[140px] md:h-[160px] lg:h-[180px] w-full max-w-3xl">
+          <div className="relative mb-4 animate-fade-in-up h-[175px] md:h-[200px] lg:h-[225px] w-full max-w-4xl">
             {/* Subtle radial glow background */}
             <div 
               className="absolute inset-0 -inset-x-8 -inset-y-4 pointer-events-none"
@@ -38,7 +38,7 @@ const Hero = () => {
             <div className="relative z-10 h-full">
               <ParticleTextEffect 
                 words={["Leave Behind Words", "That light the way"]}
-                fontSize={63}
+                fontSize={79}
                 fontFamily="Georgia, serif"
                 centered={true}
               />
@@ -46,17 +46,17 @@ const Hero = () => {
           </div>
           
           {/* Supporting Paragraph - Smaller, centered */}
-          <p className="text-sm md:text-base text-muted-foreground mb-8 leading-relaxed animate-fade-in-up animation-delay-200 max-w-md">
+          <p className="text-base md:text-lg text-muted-foreground mb-8 leading-relaxed animate-fade-in-up animation-delay-200 max-w-lg">
             Create heartfelt messages for your loved ones — secured, private, 
             and delivered gently when the time is right.
           </p>
           
           {/* CTA Buttons - Centered */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8 animate-fade-in-up animation-delay-400">
-            <Button variant="premium" size="xl" asChild className="min-w-[180px]">
+            <Button variant="premium" size="xl" asChild className="min-w-[220px] px-8">
               <Link to="/vault/compose">Begin Your Legacy</Link>
             </Button>
-            <Button variant="trust" size="lg" asChild>
+            <Button variant="trust" size="lg" asChild className="min-w-[220px] px-8">
               <Link to="/security" className="flex items-center gap-2">
                 <Shield className="w-4 h-4" />
                 How We Protect You
@@ -80,9 +80,9 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Hero Image - Centered, 50% width */}
+          {/* Hero Image - Centered, ~62% width (25% larger than 50%) */}
           <div className="relative animate-fade-in w-full flex justify-center">
-            <div className="relative w-[80%] sm:w-[60%] lg:w-[50%] max-w-[500px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
+            <div className="relative w-[100%] sm:w-[75%] lg:w-[62%] max-w-[625px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
               <img 
                 src={heroEnvelopes} 
                 alt="Elegant sealed envelopes representing your legacy messages" 
