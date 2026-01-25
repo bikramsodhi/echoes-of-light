@@ -25,7 +25,7 @@ const reflections: TestimonialType[] = [
 
 const TestimonialSection = () => {
   return (
-    <section className="py-12 bg-secondary/20">
+    <section className="py-12 bg-secondary/35">
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center mb-4">
           <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-3 tracking-tight">
