@@ -29,7 +29,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-16 bg-secondary/30 relative overflow-hidden">
+    <section className="py-16 bg-background relative overflow-hidden">
       {/* Subtle texture overlay */}
       <div 
         className="absolute inset-0 opacity-5"
