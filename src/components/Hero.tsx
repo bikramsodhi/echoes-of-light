@@ -19,10 +19,10 @@ const Hero = () => {
           {/* Hero Video with Overlaid Text */}
           <div className="relative animate-fade-in w-full flex justify-center mb-8">
             <div className="relative w-[100%] sm:w-[85%] lg:w-[73%] max-w-[730px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
-              {/* Video - slightly translucent */}
+              {/* Video - full opacity */}
               <video
                 src={heroVideo}
-                className="w-full h-auto object-cover opacity-40"
+                className="w-full h-auto object-cover"
                 playsInline
                 muted
                 autoPlay
@@ -32,13 +32,25 @@ const Hero = () => {
                 Your browser does not support the video tag.
               </video>
               
+              {/* Radial gradient overlay - more translucent in center where text is */}
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `radial-gradient(ellipse 70% 50% at 50% 50%, 
+                    hsl(var(--background) / 0.85) 0%, 
+                    hsl(var(--background) / 0.6) 40%, 
+                    hsl(var(--background) / 0.2) 70%, 
+                    transparent 100%)`
+                }}
+              />
+              
               {/* Headline - Overlaid on video */}
               <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-serif text-foreground leading-tight drop-shadow-sm">
                   Leave Behind Words
                 </h1>
-                <p className="text-3xl md:text-4xl lg:text-6xl font-serif text-primary mt-2 drop-shadow-sm">
-                  That Light The Way
+                <p className="text-3xl md:text-4xl lg:text-6xl font-serif text-primary mt-2 drop-shadow-sm italic">
+                  that light the way
                 </p>
               </div>
             </div>
