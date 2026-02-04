@@ -78,13 +78,7 @@ export function NavBar({ items, className }: NavBarProps) {
                     stiffness: 300,
                     damping: 30,
                   }}
-                >
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-gold rounded-t-full">
-                    <div className="absolute inset-0 w-full h-full bg-gold/40 blur-sm" />
-                    <div className="absolute inset-0 w-full h-full bg-gold/30 blur-md" />
-                    <div className="absolute inset-0 w-full h-full bg-gold/20 blur-lg" />
-                  </div>
-                </motion.div>
+                />
               )}
             </Link>
           )
