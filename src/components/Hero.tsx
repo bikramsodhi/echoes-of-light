@@ -16,14 +16,32 @@ const Hero = () => {
             <span className="text-sm text-muted-foreground font-medium">Private & Secure • End-to-End Encrypted</span>
           </div>
           
-          {/* Headline - Static Text */}
-          <div className="mb-4 animate-fade-in-up">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground leading-tight">
-              Leave Behind Words
-            </h1>
-            <p className="text-4xl md:text-5xl lg:text-6xl font-serif text-primary mt-2">
-              That Light The Way
-            </p>
+          {/* Hero Video with Overlaid Text */}
+          <div className="relative animate-fade-in w-full flex justify-center mb-8">
+            <div className="relative w-[100%] sm:w-[85%] lg:w-[73%] max-w-[730px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
+              {/* Video - slightly translucent */}
+              <video
+                src={heroVideo}
+                className="w-full h-auto object-cover opacity-40"
+                playsInline
+                muted
+                autoPlay
+                loop
+                preload="auto"
+              >
+                Your browser does not support the video tag.
+              </video>
+              
+              {/* Headline - Overlaid on video */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-serif text-foreground leading-tight drop-shadow-sm">
+                  Leave Behind Words
+                </h1>
+                <p className="text-3xl md:text-4xl lg:text-6xl font-serif text-primary mt-2 drop-shadow-sm">
+                  That Light The Way
+                </p>
+              </div>
+            </div>
           </div>
           
           {/* Supporting Paragraph - Smaller, centered */}
@@ -58,23 +76,6 @@ const Hero = () => {
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="w-4 h-4 text-accent-foreground" strokeWidth={1.5} />
               <span className="text-sm font-medium">Your Timeline</span>
-            </div>
-          </div>
-          
-          {/* Hero Video - Centered, ~52% width */}
-          <div className="relative animate-fade-in w-full flex justify-center">
-            <div className="relative w-[100%] sm:w-[62%] lg:w-[52%] max-w-[520px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
-              <video
-                src={heroVideo}
-                className="w-full h-auto object-cover"
-                playsInline
-                muted
-                autoPlay
-                loop
-                preload="auto"
-              >
-                Your browser does not support the video tag.
-              </video>
             </div>
           </div>
         </div>
