@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Shield, Lock, Clock } from "lucide-react";
-import { ParticleTextEffect } from "@/components/ui/particle-text-effect";
 import heroVideo from "@/assets/hero-video.mp4";
 
 const Hero = () => {
@@ -17,32 +16,14 @@ const Hero = () => {
             <span className="text-sm text-muted-foreground font-medium">Private & Secure • End-to-End Encrypted</span>
           </div>
           
-          {/* Headline - Particle Text Effect - Centered */}
-          <div className="relative mb-4 animate-fade-in-up h-[175px] md:h-[200px] lg:h-[225px] w-full max-w-4xl">
-            {/* Subtle radial glow background */}
-            <div 
-              className="absolute inset-0 -inset-x-8 -inset-y-4 pointer-events-none"
-              style={{
-                background: `
-                  radial-gradient(
-                    ellipse 80% 60% at 50% 50%,
-                    hsl(var(--accent) / 0.15) 0%,
-                    hsl(var(--accent) / 0.075) 30%,
-                    hsl(280 30% 70% / 0.05) 50%,
-                    transparent 70%
-                  )
-                `,
-                filter: 'blur(8px)',
-              }}
-            />
-            <div className="relative z-10 h-full">
-              <ParticleTextEffect 
-                words={["Leave Behind Words", "That light the way"]}
-                fontSize={79}
-                fontFamily="Georgia, serif"
-                centered={true}
-              />
-            </div>
+          {/* Headline - Static Text */}
+          <div className="mb-4 animate-fade-in-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground leading-tight">
+              Leave Behind Words
+            </h1>
+            <p className="text-3xl md:text-4xl lg:text-5xl font-serif text-primary mt-2">
+              That Light The Way
+            </p>
           </div>
           
           {/* Supporting Paragraph - Smaller, centered */}
