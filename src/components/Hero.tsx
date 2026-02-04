@@ -18,10 +18,10 @@ const Hero = () => {
           
           {/* Headline - Static Text */}
           <div className="mb-4 animate-fade-in-up">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-foreground leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-8xl font-serif text-foreground leading-tight">
               Leave Behind Words
             </h1>
-            <p className="text-3xl md:text-4xl lg:text-5xl font-serif text-primary mt-2">
+            <p className="text-4xl md:text-5xl lg:text-7xl font-serif text-primary mt-2">
               That Light The Way
             </p>
           </div>
@@ -61,9 +61,9 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Hero Video - Centered, ~62% width (25% larger than 50%) */}
+          {/* Hero Video - Centered, ~47% width */}
           <div className="relative animate-fade-in w-full flex justify-center">
-            <div className="relative w-[100%] sm:w-[75%] lg:w-[62%] max-w-[625px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
+            <div className="relative w-[100%] sm:w-[56%] lg:w-[47%] max-w-[470px] rounded-xl overflow-hidden shadow-lg shadow-foreground/10">
               <video
                 src={heroVideo}
                 className="w-full h-auto object-cover"
